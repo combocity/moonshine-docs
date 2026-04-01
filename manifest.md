@@ -25,8 +25,10 @@ This document describes the complete manifest format and validation rules.
 ## Overview
 - The manifest is required and must be valid before a session can start.
 - JSON properties are case-insensitive.
-- `manifestVersion` and `apiVersion` are integers; only value `1` is supported.
+- `manifestApiVersion` is an integer; only value `1` is supported.
   Missing values default to `1`.
+- There is no separate manifest-schema version field today. `manifestApiVersion`
+  selects the Lua API/runtime compatibility level.
 - Identifiers (`id`) must be unique within their collection and must not
   collide across badges, variations, leaderboards, and menu entries.
 - Milestones define the progression tree and back the access/visibility rules
@@ -34,19 +36,15 @@ This document describes the complete manifest format and validation rules.
 
 ## Required metadata
 - `author` (string, required): informational display.
-- `manifestVersion` (int, required): only value `1` is supported.
-- `apiVersion` (int, required): only value `1` is supported.
+- `manifestApiVersion` (int, optional): only value `1` is supported. Defaults to `1`.
 - `name` (string, required): mode name.
 - `scriptVersion` (string, required): free-form.
-- `entryPoint` (string, required): relative path to the main Lua script.
-  - Must live under the manifest folder and under `GAME_ROOT/Lua`.
-  - Used to derive the module name (`path/to/file.lua` becomes `path.to.file`).
+- `main.lua` (file, required): must exist next to the manifest.
 - `description` (string, optional).
-- `modeType` (string, optional): present but not consumed yet.
 
 ## Progression and milestones
 - `milestones` (string array, required but may be empty).
-- Moonshine can also read `milestones.txt` next to the `entryPoint` to know which
+- Moonshine can also read `milestones.txt` next to the manifest to know which
   milestones are unlocked for the player. It is separate from `SaveState.txt`.
   - One milestone id per line; only the first token before whitespace is used.
   - Lines starting with `#` are treated as comments.
@@ -63,7 +61,7 @@ This document describes the complete manifest format and validation rules.
   - `id` (string, required, <= 32 chars).
   - `label` (string, required, <= 32).
   - `description` / `earnedDescription` (optional).
-  - `iconRect` (required): `width` and `height` must be > 0.
+  - `iconIndex` (required): integer between `0` and `31`, unique across badges.
   - `overrideBadge` (optional): badge being replaced.
   - `requiredMilestone` / `visibleFromMilestone` (optional) must target known
     milestones.
@@ -113,14 +111,18 @@ This document describes the complete manifest format and validation rules.
   - `label` (required, <= 32).
   - `type` (required): `Badge`, `Chrono`, or `Point`.
 
-## Resources (resources.images)
+## Resources (`resources`)
 - Optional `resources` block.
 - `images`: list of images keyed by `id` (uniqueness enforced).
-  - `source`: required relative path to an image under the manifest folder.
+  - `fileName`: required file name under `assets/images`.
   - `sprites` (optional): each sprite has `id` (unique per image), `x`, `y`,
     `width`, `height`.
     - `id` values may repeat across different images but not within the same
       image.
+- `sfx`: list of sound effects with `id` and `fileName` (`.ogg`).
+- `musics`: list of musics with `id` and `fileName` (`.ogg`).
+- `fonts`: list of fonts with `id`, `fileName` (`.ttf`), `ttfFontSize`,
+  optional `baseSet`, `outline`, and `localization`.
 
 ## Package obfuscation
 - `obfuscatePackageContent` (bool, default `true`):
@@ -130,11 +132,9 @@ This document describes the complete manifest format and validation rules.
     read as such.
 
 ## Integration reminders for modders
-- The manifest must live under `GAME_ROOT/Lua`; absolute paths are forbidden.
-- `entryPoint` must be inside the manifest folder; escaping the root is invalid.
-- Modder mode requires valid `playerId`/`accessToken` configuration; otherwise
-  the session will not start.
-- `SaveState.txt` next to the `entryPoint` is loaded automatically if present.
+- The manifest must live under `GAME_ROOT/Mods`; absolute paths are forbidden.
+- `main.lua` must live next to the manifest.
+- `SaveState.txt` next to the manifest is loaded automatically if present.
 - `milestones.txt` is read separately to drive access control; do not put
   modder state in that file.
 
@@ -156,5 +156,3 @@ This document describes the complete manifest format and validation rules.
 - **[Best Practices]({% link best-practices.md %})** - Design guidelines
 
 **Back to:** [Home]({% link index.md %})
-
-
