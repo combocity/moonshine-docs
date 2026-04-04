@@ -35,10 +35,11 @@ This document describes the complete manifest format and validation rules.
   of other blocks.
 
 ## Required metadata
-- `author` (string, required): informational display.
+- `author` (string, optional): informational display only.
 - `manifestApiVersion` (int, optional): only value `1` is supported. Defaults to `1`.
 - `name` (string, required): mode name.
-- `scriptVersion` (string, required): free-form.
+- `version` (string, required): SemVer string.
+- `modeType` (string, required): currently only `Solo` is supported.
 - `main.lua` (file, required): must exist next to the manifest.
 - `description` (string, optional).
 

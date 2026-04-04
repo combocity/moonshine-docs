@@ -25,7 +25,8 @@ tower-climber/
 {
   "author": "Example Designer",
   "name": "Tower Climber",
-  "scriptVersion": "1.0",
+  "version": "1.0.0",
+  "modeType": "Solo",
   "manifestApiVersion": 1,
   "description": "Climb towers of increasing difficulty. Beat each tower to unlock the next challenge.",
   "milestones": [

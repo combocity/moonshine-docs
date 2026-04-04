@@ -37,7 +37,8 @@ Create a file called `manifest.json` in your mod directory:
 {
   "author": "Your Name",
   "name": "My First Mode",
-  "scriptVersion": "1.0",
+  "version": "1.0.0",
+  "modeType": "Solo",
   "manifestApiVersion": 1,
   "description": "A simple solo game mode",
   "variations": [
@@ -54,9 +55,10 @@ Create a file called `manifest.json` in your mod directory:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `author` | Yes | Your name (informational) |
+| `author` | No | Your name (informational) |
 | `name` | Yes | Display name of your mode |
-| `scriptVersion` | Yes | Your mod's version (e.g., "1.0") |
+| `version` | Yes | Your mod's SemVer version (e.g., `1.0.0`) |
+| `modeType` | Yes | Use `Solo` for now |
 | `manifestApiVersion` | No | Use `1` (currently only version supported, defaults to `1`) |
 | `description` | No | Longer description of your mode |
 | `variations` | Yes | At least one variation (see below) |
