@@ -248,9 +248,9 @@ Don't track metrics that don't reflect skill/effort:
 
 ### Text Measurement
 
-`graphics.measure_text()` is safe for visual layout, but do not use its result to decide gameplay state.
+`api.graphics.measure_text()` is safe for visual layout, but do not use its result to decide gameplay state.
 
-During normal play Moonshine measures text through the renderer. During server audit/replay, the runtime uses a deterministic approximation because the server does not load SDL graphics. If a mod uses text measurements to update `SAVE_STATE`, submit scores, unlock milestones, award badges, or decide the session outcome, the audited result may diverge from the local play result.
+During normal play Moonshine measures text through the renderer. During server audit/replay, the runtime uses a deterministic approximation because the server does not load SDL graphics. If a mod uses text measurements to update `api.state.save`, submit scores, unlock milestones, award badges, or decide the session outcome, the audited result may diverge from the local play result.
 
 ### Menu Updates
 
