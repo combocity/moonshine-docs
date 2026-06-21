@@ -8,7 +8,8 @@ This guide walks you through creating your first Moonshine Lua mod.
 ## Prerequisites
 
 - Moonshine game installed
-- Text editor (Visual Studio Code, Sublime Text, Notepad++, etc.)
+- A player account linked to a Discord server.
+- VS Code installed with the EmmyLua extension.
 - Basic familiarity with JSON and Lua (or willingness to learn!)
 - An idea for a game you want to create
 
@@ -19,15 +20,19 @@ Create your mod under the Moonshine `Mods` directory:
 ```
 GAME_ROOT/Mods/
 └── my-first-mod/
+    ├── .emmyrc.json            # Recommended: EmmyLua workspace settings
     ├── manifest.json           # Required: mod configuration
     ├── main.lua                # Required: main Lua script
+    ├── sdk/                    # Recommended: Moonshine Lua SDK for autocomplete
+    │   └── api/
+    │       └── v1/
     ├── SaveState.txt           # Optional: player data
     ├── milestones.txt          # Optional: player progression
     └── assets/                 # Optional: images, resources
         └── images/
 ```
 
-**Important:** Your mod must live under `GAME_ROOT/Mods/`. `main.lua` must sit next to the manifest.
+**Important:** Your mod must live under `GAME_ROOT/Mods/my-first-mod`. `main.lua` must sit next to the manifest. Open `my-first-mod` folder itself in VS Code so EmmyLua picks up `.emmyrc.json` and the local `sdk/api` stubs for autocompletion and debugging.
 
 ## Step 1: Create the Manifest
 
