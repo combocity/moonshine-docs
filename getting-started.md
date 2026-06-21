@@ -14,20 +14,20 @@ This guide walks you through creating your first Moonshine Lua mod.
 
 ## Directory Structure
 
-Create your mod in the Moonshine Lua directory:
+Create your mod under the Moonshine `Mods` directory:
 
 ```
-GAME_ROOT/Lua/
+GAME_ROOT/Mods/
 └── my-first-mod/
     ├── manifest.json           # Required: mod configuration
-    ├── main.lua                # Required: entry point
+    ├── main.lua                # Required: main Lua script
     ├── SaveState.txt           # Optional: player data
     ├── milestones.txt          # Optional: player progression
     └── assets/                 # Optional: images, resources
         └── images/
 ```
 
-**Important:** Your mod must live under `GAME_ROOT/Lua/`. The `entryPoint` in your manifest must reference a file under this directory.
+**Important:** Your mod must live under `GAME_ROOT/Mods/`. `main.lua` must sit next to the manifest.
 
 ## Step 1: Create the Manifest
 
@@ -37,10 +37,9 @@ Create a file called `manifest.json` in your mod directory:
 {
   "author": "Your Name",
   "name": "My First Mode",
-  "scriptVersion": "1.0",
-  "manifestVersion": 1,
-  "apiVersion": 1,
-  "entryPoint": "main.lua",
+  "version": "1.0.0",
+  "modeType": "Solo",
+  "manifestApiVersion": 1,
   "description": "A simple solo game mode",
   "variations": [
     {
@@ -56,12 +55,11 @@ Create a file called `manifest.json` in your mod directory:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `author` | Yes | Your name (informational) |
+| `author` | No | Your name (informational) |
 | `name` | Yes | Display name of your mode |
-| `scriptVersion` | Yes | Your mod's version (e.g., "1.0") |
-| `manifestVersion` | Yes | Use `1` (currently only version supported) |
-| `apiVersion` | Yes | Use `1` (currently only version supported) |
-| `entryPoint` | Yes | Path to your main Lua script |
+| `version` | Yes | Your mod's SemVer version (e.g., `1.0.0`) |
+| `modeType` | Yes | Use `Solo` for now |
+| `manifestApiVersion` | No | Use `1` (currently only version supported, defaults to `1`) |
 | `description` | No | Longer description of your mode |
 | `variations` | Yes | At least one variation (see below) |
 | `milestones` | Yes | Can be empty for simple mods |
@@ -104,7 +102,7 @@ function draw()
 end
 ```
 
-The script should define functions that Moonshine calls during gameplay.
+The script must live in `main.lua` next to the manifest and define functions that Moonshine calls during gameplay.
 
 ## Step 3: Test Your Mod
 
@@ -240,8 +238,8 @@ This is automatically loaded on session restart.
 
 ### Mod Won't Load
 - Check manifest JSON syntax (use a JSON validator)
-- Verify `entryPoint` references an existing file
-- Ensure mod is in `GAME_ROOT/Lua/` directory
+- Verify `main.lua` exists next to the manifest
+- Ensure the mod is in the `GAME_ROOT/Mods/` directory
 
 ### Manifest Validation Error
 - Review error message carefully
@@ -250,7 +248,6 @@ This is automatically loaded on session restart.
 
 ### Script Not Running
 - Check console output for Lua errors
-- Verify `entryPoint` path is correct
 - Ensure `main.lua` has valid Lua syntax
 
 ## Next Steps
@@ -262,4 +259,3 @@ This is automatically loaded on session restart.
 ---
 
 **Back to:** [Introduction]({% link introduction.md %}) | [Home]({% link index.md %})
-

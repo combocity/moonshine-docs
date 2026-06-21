@@ -25,10 +25,9 @@ tower-climber/
 {
   "author": "Example Designer",
   "name": "Tower Climber",
-  "scriptVersion": "1.0",
-  "manifestVersion": 1,
-  "apiVersion": 1,
-  "entryPoint": "main.lua",
+  "version": "1.0.0",
+  "modeType": "Solo",
+  "manifestApiVersion": 1,
   "description": "Climb towers of increasing difficulty. Beat each tower to unlock the next challenge.",
   "milestones": [
     "beat_tower_1",
@@ -438,4 +437,3 @@ master_rank
 - **→ [Leaderboards]({% link leaderboards.md %})** - Score tracking
 
 **Back to:** [Home]({% link index.md %})
-

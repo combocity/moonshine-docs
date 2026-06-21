@@ -242,6 +242,8 @@ Each variation can have configuration menus:
 {
   "name": "Battle Royale Mini",
   "author": "Game Designer",
+  "version": "1.0.0",
+  "modeType": "Solo",
   "variations": [
     {
       "id": "training",
@@ -299,4 +301,3 @@ Each variation can have configuration menus:
 - **→ [Complete Example]({% link example-progression-mode.md %})** - See full working code
 
 **Back to:** [Home]({% link index.md %})
-

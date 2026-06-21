@@ -243,6 +243,8 @@ Milestones are automatically saved to `milestones.txt`.
 {
   "name": "Progressive Adventure",
   "author": "Designer",
+  "version": "1.0.0",
+  "modeType": "Solo",
   "milestones": [
     "tutorial_complete",
     "beat_chapter_1",
@@ -344,4 +346,3 @@ end
 - **→ [Complete Example]({% link example-progression-mode.md %})** - See full working code
 
 **Back to:** [Home]({% link index.md %})
-
