@@ -176,7 +176,7 @@ Each variation can have configuration menus:
 }
 ```
 
-(See [Menus & Configuration]({% link menus-configuration.md %}) for more details)
+(See [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %}) for more details)
 
 ## Design Patterns
 
@@ -293,11 +293,11 @@ Each variation can have configuration menus:
 ---
 
 **Next:**
-- **→ [Menus & Configuration]({% link menus-configuration.md %})** - Add options and configuration
-- **→ [Progression System]({% link progression-milestones.md %})** - Gate features with milestones
+- **→ [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Add options and configuration
+- **→ [Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Gate features with milestones
 
 **Related:**
-- **← [Getting Started]({% link getting-started.md %})** - Create your first mod
-- **→ [Complete Example]({% link example-progression-mode.md %})** - See full working code
+- **← [Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create your first mod
+- **→ [Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - See full working code
 
-**Back to:** [Home]({% link index.md %})
+**Back to:** [Home]({{ site.baseurl }}{% link index.md %})

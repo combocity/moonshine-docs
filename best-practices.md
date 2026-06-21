@@ -362,10 +362,10 @@ Before shipping your mod:
 ---
 
 **Next:**
-- **→ [Complete Example]({% link example-progression-mode.md %})** - See full working code
+- **→ [Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - See full working code
 
 **Related:**
-- **← [Progression System]({% link progression-milestones.md %})** - Gate features with milestones
-- **← [Leaderboards]({% link leaderboards.md %})** - Track player performance
+- **← [Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Gate features with milestones
+- **← [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Track player performance
 
-**Back to:** [Home]({% link index.md %})
+**Back to:** [Home]({{ site.baseurl }}{% link index.md %})

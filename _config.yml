@@ -1,4 +1,15 @@
 title: Moonshine Docs
+baseurl: /moonshine-docs
 theme: minima
+header_pages:
+  - introduction.md
+  - getting-started.md
+  - manifest.md
+  - variations-and-modes.md
+  - menus-configuration.md
+  - progression-milestones.md
+  - leaderboards.md
+  - best-practices.md
+  - example-progression-mode.md
 exclude:
   - internal

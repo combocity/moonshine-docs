@@ -337,12 +337,12 @@ end
 ---
 
 **Next:**
-- **→ [Leaderboards]({% link leaderboards.md %})** - Track and display scores
-- **→ [Best Practices]({% link best-practices.md %})** - Design guidelines
+- **→ [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Track and display scores
+- **→ [Best Practices]({{ site.baseurl }}{% link best-practices.md %})** - Design guidelines
 
 **Related:**
-- **← [Variations & Modes]({% link variations-and-modes.md %})** - Create game variants
-- **← [Menus & Configuration]({% link menus-configuration.md %})** - Add configuration options
-- **→ [Complete Example]({% link example-progression-mode.md %})** - See full working code
+- **← [Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %})** - Create game variants
+- **← [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Add configuration options
+- **→ [Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - See full working code
 
-**Back to:** [Home]({% link index.md %})
+**Back to:** [Home]({{ site.baseurl }}{% link index.md %})

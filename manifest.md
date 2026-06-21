@@ -5,7 +5,7 @@ title: Manifest Reference
 
 Complete technical reference for the manifest.json file. This document describes the JSON manifest format used by Moonshine games in detail.
 
-For modders just getting started, see [Getting Started]({% link getting-started.md %}) or [Variations & Modes]({% link variations-and-modes.md %}).
+For modders just getting started, see [Getting Started]({{ site.baseurl }}{% link getting-started.md %}) or [Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %}).
 
 ## Overview
 
@@ -144,16 +144,16 @@ This document describes the complete manifest format and validation rules.
 ## Quick Navigation
 
 **Beginner? Start here:**
-- **[Getting Started]({% link getting-started.md %})** - Create your first mod
-- **[Variations & Modes]({% link variations-and-modes.md %})** - Multiple game types
+- **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create your first mod
+- **[Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %})** - Multiple game types
 
 **Learn by doing:**
-- **[Complete Example]({% link example-progression-mode.md %})** - Full working mod
+- **[Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - Full working mod
 
 **Specific topics:**
-- **[Menus & Configuration]({% link menus-configuration.md %})** - Player options
-- **[Progression System]({% link progression-milestones.md %})** - Milestone gates
-- **[Leaderboards]({% link leaderboards.md %})** - Score tracking
-- **[Best Practices]({% link best-practices.md %})** - Design guidelines
+- **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Player options
+- **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestone gates
+- **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Score tracking
+- **[Best Practices]({{ site.baseurl }}{% link best-practices.md %})** - Design guidelines
 
-**Back to:** [Home]({% link index.md %})
+**Back to:** [Home]({{ site.baseurl }}{% link index.md %})

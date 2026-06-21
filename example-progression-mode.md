@@ -431,9 +431,9 @@ master_rank
 ---
 
 **Learn more:**
-- **→ [Variations & Modes]({% link variations-and-modes.md %})** - Multiple game types
-- **→ [Menus & Configuration]({% link menus-configuration.md %})** - Player choices
-- **→ [Progression System]({% link progression-milestones.md %})** - Progress tracking
-- **→ [Leaderboards]({% link leaderboards.md %})** - Score tracking
+- **→ [Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %})** - Multiple game types
+- **→ [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Player choices
+- **→ [Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Progress tracking
+- **→ [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Score tracking
 
-**Back to:** [Home]({% link index.md %})
+**Back to:** [Home]({{ site.baseurl }}{% link index.md %})

@@ -370,12 +370,12 @@ local rank = GetLeaderboardRank("high_scores")
 ---
 
 **Next:**
-- **→ [Best Practices]({% link best-practices.md %})** - Design guidelines
-- **→ [Complete Example]({% link example-progression-mode.md %})** - Full working code
+- **→ [Best Practices]({{ site.baseurl }}{% link best-practices.md %})** - Design guidelines
+- **→ [Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - Full working code
 
 **Related:**
-- **← [Progression System]({% link progression-milestones.md %})** - Gate features with milestones
-- **← [Getting Started]({% link getting-started.md %})** - Create your first mod
+- **← [Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Gate features with milestones
+- **← [Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create your first mod
 
-**Back to:** [Home]({% link index.md %})
+**Back to:** [Home]({{ site.baseurl }}{% link index.md %})
 

@@ -409,12 +409,12 @@ SaveToFile("player_choices.json", selections)
 ---
 
 **Next:**
-- **→ [Progression System]({% link progression-milestones.md %})** - Gate features with milestones
-- **→ [Leaderboards]({% link leaderboards.md %})** - Track player performance
+- **→ [Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Gate features with milestones
+- **→ [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Track player performance
 
 **Related:**
-- **← [Variations & Modes]({% link variations-and-modes.md %})** - Create different game variants
-- **→ [Complete Example]({% link example-progression-mode.md %})** - See full working code
+- **← [Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %})** - Create different game variants
+- **→ [Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - See full working code
 
-**Back to:** [Home]({% link index.md %})
+**Back to:** [Home]({{ site.baseurl }}{% link index.md %})
 

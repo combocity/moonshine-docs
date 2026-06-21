@@ -20,5 +20,5 @@ Milestones work like achievements, so you need to keep track of them and the pla
 
 When your game variation ends, it can submit the player's score to a **Leaderboard** whose format is totally up to you. Moonshine's server will verify the score and update the leaderboards accordingly.
 
-**Ready to start?** → [Getting Started]({% link getting-started.md %})
+**Ready to start?** → [Getting Started]({{ site.baseurl }}{% link getting-started.md %})
 

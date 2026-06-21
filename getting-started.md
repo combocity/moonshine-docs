@@ -252,10 +252,10 @@ This is automatically loaded on session restart.
 
 ## Next Steps
 
-- **→ [Manifest Essentials]({% link manifest.md %})** - Deep dive into manifest options
-- **→ [Variations & Modes]({% link variations-and-modes.md %})** - Create multiple game variations
-- **→ [Menus & Configuration]({% link menus-configuration.md %})** - Build interactive menus
+- **→ [Manifest Essentials]({{ site.baseurl }}{% link manifest.md %})** - Deep dive into manifest options
+- **→ [Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %})** - Create multiple game variations
+- **→ [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Build interactive menus
 
 ---
 
-**Back to:** [Introduction]({% link introduction.md %}) | [Home]({% link index.md %})
+**Back to:** [Introduction]({{ site.baseurl }}{% link introduction.md %}) | [Home]({{ site.baseurl }}{% link index.md %})
