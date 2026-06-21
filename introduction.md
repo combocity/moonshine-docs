@@ -16,9 +16,8 @@ In Moonshine, a game is atomically a **bundle** (packaged into a single `*.t3pkg
 
 Additionally, you could propose an *Extreme* mode that shows up only after beating the *Hard* mode. That's possible too with the use of **Milestones**. Milestones allow you to customize the visibility and accessibility of variations, menu options, and leaderboards depending on player progression.
 
-Milestones work like achievements, so you need to keep track of them and the player's progression. Moonshine provides a **saveState** that is passed to your script at each initialization.
+Milestones work like achievements internally, but they are not displayed directly to players. If you want a visible achievement-like reward, you can define **Badges** instead, although when and how they are shown in the UI is still a work in progress. When your script starts, Moonshine provides the current **Milestones**, **Badges**, and **saveState**, so your game can react to the player's progression.
 
 When your game variation ends, it can submit the player's score to a **Leaderboard** whose format is totally up to you. Moonshine's server will verify the score and update the leaderboards accordingly.
 
 **Ready to start?** → [Getting Started]({{ site.baseurl }}{% link getting-started.md %})
-
