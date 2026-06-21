@@ -3,7 +3,7 @@ layout: page
 title: Introduction
 ---
 
-This documentation is designed for content creators and game designers who want to build and publish their own games on the Moonshine platform using Lua scripting. While Moonshine was originally built for puzzle games, it's now flexible enough to support many types of games, including challenging puzzles, roguelike adventures, progression-based challenges, and more.
+This documentation is designed for content creators and game designers who want to build and publish their own games on the Moonshine platform using Lua scripting. Moonshine was originally built for puzzle games with a basic API, but its current features can already support other kinds of game ideas. The API is expected to evolve with feedback from modders.
 
 This guide covers the entire process, from designing your game mechanics to integrating progression systems, building interactive menus, and publishing your creation to the Moonshine community.
 
@@ -12,7 +12,7 @@ In Moonshine, a game is atomically a **bundle** (packaged into a single `*.t3pkg
 - one or more Lua scripts
 - optional resources (images, sounds, and music).
 
- you can create several **variations**, for example flavoring your game in *Easy*, *Normal* or *Hard* difficulty, all directly accessible from the *Play Menu*. For each **variation** you might want the player to be able to tweak settings. So you can define a **Custom Menu** for each of your variations. Imagine the player completes your *Hard* variation that contained 100 levels; you could then allow them to start from a specific level.
+ You can create several **variations**, such as *Easy*, *Normal*, or *Hard* modes. A variation can be seen as a game mode that appears as an entry in the *Play Menu*. Each **variation** can also have its own **Custom Menu**, letting the player tweak settings before starting. For example, if the player completes your *Hard* variation with 100 levels, you could then allow them to start from a specific level.
 
 Additionally, you could propose an *Extreme* mode that shows up only after beating the *Hard* mode. That's possible too with the use of **Milestones**. Milestones allow you to customize the visibility and accessibility of variations, menu options, and leaderboards depending on player progression.
 

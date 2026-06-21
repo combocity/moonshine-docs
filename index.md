@@ -11,7 +11,7 @@ Like many programmers, I created a Tetris clone, specifically a *Tetris The Gran
 
 Over the years, people in the TGM community have built amazing projects, each with its own ideas and strengths. Still, I wanted to revisit my own game, this time on a foundation designed with online and community features in mind from the start.
 
-**Moonshine is my attempt to address that.** It aims to be a platform that lets anyone create a puzzle game simply (I hope), while providing built-in community features out of the box: player progression tracking, leaderboards, online replay, and hopefully versus play soon. No need to rebuild the foundation every time, focus on your game design instead.
+**Moonshine is my new attempt.** It aims to be a platform that lets anyone create a puzzle game simply (I hope), while providing built-in community features out of the box: player progression tracking, leaderboards, online replay, and hopefully versus play soon. No need to rebuild the foundation every time, focus on your game design instead.
 
 ## Getting Started
 
