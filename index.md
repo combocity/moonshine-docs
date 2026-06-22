@@ -18,7 +18,8 @@ Over the years, people in the TGM community have built amazing projects, each wi
 New to Moonshine modding? Start here:
 
 1. **[Introduction]({{ site.baseurl }}{% link introduction.md %})** - Learn what Moonshine modding is and what you can create
-2. **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Set up your development environment and create your first mod
+2. **[Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %})** - Understand players, authors, Discord communities, and Avalon
+3. **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Set up your development environment and create your first mod
 
 ## Core Concepts
 
@@ -40,6 +41,7 @@ Master the key features of Moonshine modding:
 | Section | Purpose |
 |---------|---------|
 | Introduction | Understand what's possible |
+| Moonshine Ecosystem | Understand roles and publication stages |
 | Getting Started | Set up your environment |
 | Core Concepts | Learn key features |
 | Reference | Look up technical details |
@@ -47,4 +49,4 @@ Master the key features of Moonshine modding:
 
 ---
 
-**Last Updated:** January 2026
+**Last Updated:** June 2026

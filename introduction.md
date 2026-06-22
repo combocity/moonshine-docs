@@ -7,6 +7,8 @@ This documentation is designed for content creators and game designers who want 
 
 This guide covers the entire process, from designing your game mechanics to integrating progression systems, building interactive menus, and publishing your creation to the Moonshine community.
 
+Before publishing, it helps to understand how Moonshine, Avalon, and Discord work together. See the [Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %}) page for the player, author, and Discord administrator roles.
+
 In Moonshine, a game is atomically a **bundle** (packaged into a single `*.t3pkg` file) that contains :
 - a manifest
 - one or more Lua scripts

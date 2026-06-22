@@ -8,7 +8,7 @@ This guide walks you through creating your first Moonshine Lua mod.
 ## Prerequisites
 
 - Moonshine game installed
-- A player account linked to a Discord server.
+- A player account linked to a Discord server. See [Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %}) if you are not sure why Discord is part of the flow.
 - VS Code installed with the EmmyLua extension.
 - Basic familiarity with JSON and Lua (or willingness to learn!)
 - An idea for a game you want to create
@@ -257,6 +257,7 @@ This is automatically loaded on session restart.
 
 ## Next Steps
 
+- **→ [Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %})** - Understand Discord communities, author access, and publication stages
 - **→ [Manifest Essentials]({{ site.baseurl }}{% link manifest.md %})** - Deep dive into manifest options
 - **→ [Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %})** - Create multiple game variations
 - **→ [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Build interactive menus

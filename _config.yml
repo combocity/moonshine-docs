@@ -3,6 +3,7 @@ baseurl: /moonshine-docs
 theme: minima
 header_pages:
   - introduction.md
+  - ecosystem.md
   - getting-started.md
   - manifest.md
   - variations-and-modes.md
