@@ -264,4 +264,4 @@ This is automatically loaded on session restart.
 
 ---
 
-**Back to:** [Introduction]({{ site.baseurl }}{% link introduction.md %}) | [Home]({{ site.baseurl }}{% link index.md %})
+**Back to:** [Authoring Introduction]({{ site.baseurl }}{% link introduction.md %}) | [Home]({{ site.baseurl }}{% link index.md %})

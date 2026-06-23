@@ -80,7 +80,7 @@ Draft and Preview workflows are the early publishing path for authors. Guild Liv
 
 ## Where to go next
 
-- New to Moonshine modding? Start with the [Introduction]({{ site.baseurl }}{% link introduction.md %}).
+- New to Moonshine modding? Start with the [Authoring Introduction]({{ site.baseurl }}{% link introduction.md %}).
 - Creating your first mod? Follow [Getting Started]({{ site.baseurl }}{% link getting-started.md %}).
 - Preparing a valid package? Read the [Manifest Reference]({{ site.baseurl }}{% link manifest.md %}).
 - Designing unlocks, menus, or leaderboards? See [Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %}), [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %}), [Progression System]({{ site.baseurl }}{% link progression-milestones.md %}), and [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %}).

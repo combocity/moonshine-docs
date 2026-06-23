@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Introduction
+title: Authoring Introduction
 ---
 
 This documentation is designed for content creators and game designers who want to build and publish their own games on the Moonshine platform using Lua scripting. Moonshine was originally built for puzzle games with a basic API, but its current features can already support other kinds of game ideas. The API is expected to evolve with feedback from modders.
