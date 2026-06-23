@@ -94,9 +94,6 @@ The ecosystem is still growing. These notes separate what exists today from the 
 |------|----------------|
 | Discord community discovery | Moonshine does not currently list the Discord servers where the Moonshine bot is available. Players need an invite or an external announcement to find a community. In-game community discovery is planned. |
 | Player registration | The current player registration path starts from Discord with `/public moonshine`, then finishes in Moonshine with the registration PIN. A non-Discord registration path is planned, but it is not available yet. |
-| Server linking | Existing players can link additional Discord servers with `/player link-server` when those servers have the Moonshine bot. |
 | Author access | Author access requests and administrator review are available through `/author request` and `/admin author-requests`. Access remains scoped to the Discord server that approved it. |
-| Draft upload | Moonshine can upload a Draft to Avalon for an approved author server. If the author has several approved servers, Moonshine lets the author choose which server owns the Draft. |
-| Preview publishing | Draft-to-Preview publishing is available through `/author publish-preview`. Preview publishing requires a SemVer version and can replace the previous Preview. |
 | Crash review | Avalon groups confirmed Lua crashes for Preview mods, and authors can inspect them with `/author mod-crashes` and `/author mod-crash`. Automatic community notification around those crash groups is still expected to evolve. |
 | Guild Live and Public Live | Avalon and Moonshine already model server-scoped and global catalog visibility. The full Discord/admin promotion workflow from Preview to Guild Live or Public Live is still being defined. |
