@@ -11,14 +11,14 @@ Like many programmers, I created a Tetris clone, specifically a *Tetris The Gran
 
 Over the years, people in the TGM community have built amazing projects, each with its own ideas and strengths. Still, I wanted to revisit my own game, this time on a foundation designed with online and community features in mind from the start.
 
-**Moonshine is my new attempt.** It aims to be a platform that lets anyone create a puzzle game simply (I hope), while providing built-in community features out of the box: player progression tracking, leaderboards, online replay, and hopefully versus play soon. No need to rebuild the foundation every time, focus on your game design instead.
+Moonshine is an attempt to be a platform that lets anyone create a puzzle game simply (I hope), while providing built-in community features out of the box: player progression tracking, leaderboards, online replay, and hopefully versus play soon. No need to rebuild the foundation every time, focus on your game design instead.
 
 ## Getting Started
 
 New to Moonshine modding? Start here:
 
-1. **[Introduction]({{ site.baseurl }}{% link introduction.md %})** - Learn what Moonshine modding is and what you can create
-2. **[Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %})** - Understand players, authors, Discord communities, and Avalon
+1. **[Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %})** - get the gist of moonshine
+2. **[Introduction]({{ site.baseurl }}{% link introduction.md %})** - Learn what Moonshine modding is and what you can create
 3. **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Set up your development environment and create your first mod
 
 ## Core Concepts
@@ -35,17 +35,6 @@ Master the key features of Moonshine modding:
 - **[Manifest Essentials]({{ site.baseurl }}{% link manifest.md %})** - Complete technical reference for manifest.json configuration
 - **[Best Practices & Edge Cases]({{ site.baseurl }}{% link best-practices.md %})** - Design patterns, guidelines, and how to avoid common pitfalls
 - **[Complete Example: Tower Climber]({{ site.baseurl }}{% link example-progression-mode.md %})** - Full working example with variations, menus, progression, and leaderboards
-
-## Quick Navigation
-
-| Section | Purpose |
-|---------|---------|
-| Introduction | Understand what's possible |
-| Moonshine Ecosystem | Understand roles and publication stages |
-| Getting Started | Set up your environment |
-| Core Concepts | Learn key features |
-| Reference | Look up technical details |
-| Examples | See working code |
 
 ---
 
