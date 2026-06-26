@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Moonshine Lua Modding Documentation
+title: Moonshine Lua ROM Authoring Documentation
 ---
 
 **Create, integrate, and share your own games.**
@@ -15,17 +15,17 @@ Moonshine is an attempt to be a platform that lets anyone create a puzzle game s
 
 ## Getting Started
 
-New to Moonshine modding? Start here:
+New to Moonshine ROM authoring? Start here:
 
 1. **[Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %})** - get the gist of moonshine
-2. **[Authoring Introduction]({{ site.baseurl }}{% link introduction.md %})** - Learn what Moonshine modding is and what you can create
-3. **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Set up your development environment and create your first mod
+2. **[Authoring Introduction]({{ site.baseurl }}{% link introduction.md %})** - Learn what Moonshine ROM authoring is and what you can create
+3. **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Set up your development environment and create your first ROM
 
 ## Core Concepts
 
-Master the key features of Moonshine modding:
+Master the key features of Moonshine ROM authoring:
 
-- **[Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %})** - Design multiple game variations, difficulty tiers, and parallel game modes
+- **[Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Design multiple game variants, difficulty tiers, and parallel game modes
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Create interactive menus and let players customize their experience before playing
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Build progression paths using milestones to unlock content and gate features
 - **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Track player performance and create competitive rankings
@@ -34,7 +34,7 @@ Master the key features of Moonshine modding:
 
 - **[Manifest Essentials]({{ site.baseurl }}{% link manifest.md %})** - Complete technical reference for manifest.json configuration
 - **[Best Practices & Edge Cases]({{ site.baseurl }}{% link best-practices.md %})** - Design patterns, guidelines, and how to avoid common pitfalls
-- **[Complete Example: Tower Climber]({{ site.baseurl }}{% link example-progression-mode.md %})** - Full working example with variations, menus, progression, and leaderboards
+- **[Complete Example: Tower Climber]({{ site.baseurl }}{% link example-progression-mode.md %})** - Full working example with variants, menus, progression, and leaderboards
 
 ---
 

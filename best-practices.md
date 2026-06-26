@@ -48,40 +48,40 @@ This creates a broken menu where nothing can be selected:
 }
 ```
 
-## Variation Design
+## Variant Design
 
 ### ✅ DO: Provide Entry Points
 
-Always have at least one playable variation accessible at game start:
+Always have at least one playable variant accessible at game start:
 
 ```json
 {
-  "variations": [
+  "variants": [
     { "id": "intro", "label": "Tutorial" },  // Always accessible
     { "id": "main", "label": "Main Game", "requiredMilestone": "beat_intro" }
   ]
 }
 ```
 
-### ❌ DON'T: Gate All Variations
+### ❌ DON'T: Gate All Variants
 
 This traps the player:
 
 ```json
 {
-  "variations": [
+  "variants": [
     { "id": "main", "label": "Main Game", "requiredMilestone": "has_played" },
     { "id": "hard", "label": "Hard", "requiredMilestone": "beat_main" }
   ]
 }
 ```
 
-**Problem:** No variation is playable on first launch.
+**Problem:** No variant is playable on first launch.
 
 **Fix:** Provide an unlocked entry point:
 ```json
 {
-  "variations": [
+  "variants": [
     { "id": "main", "label": "Main Game" },  // No requirement
     { "id": "hard", "label": "Hard", "requiredMilestone": "beat_main" }
   ]
@@ -97,7 +97,7 @@ Design progression that feels like advancement:
 ```json
 {
   "milestones": ["beat_t1", "beat_t2", "beat_t3"],
-  "variations": [
+  "variants": [
     { "id": "tier_1", "label": "Tier 1" },
     { "id": "tier_2", "label": "Tier 2", "requiredMilestone": "beat_t1" },
     { "id": "tier_3", "label": "Tier 3", "requiredMilestone": "beat_t2" }
@@ -114,7 +114,7 @@ Unclear progression confuses players:
 ```json
 {
   "milestones": ["x", "y", "z"],  // Meaningless names
-  "variations": [
+  "variants": [
     { "id": "a", "label": "A" },
     { "id": "b", "label": "B", "requiredMilestone": "x" },
     { "id": "c", "label": "C", "requiredMilestone": "y" }
@@ -126,7 +126,7 @@ Unclear progression confuses players:
 ```json
 {
   "milestones": ["beat_campaign", "master_rank", "skilled_enough"],
-  "variations": [...]
+  "variants": [...]
 }
 ```
 
@@ -250,12 +250,12 @@ Don't track metrics that don't reflect skill/effort:
 
 `api.graphics.measure_text()` is safe for visual layout, but do not use its result to decide gameplay state.
 
-During normal play Moonshine measures text through the renderer. During server audit/replay, the runtime uses a deterministic approximation because the server does not load SDL graphics. If a mod uses text measurements to update `api.state.save`, submit scores, unlock milestones, award badges, or decide the session outcome, the audited result may diverge from the local play result.
+During normal play Moonshine measures text through the renderer. During server audit/replay, the runtime uses a deterministic approximation because the server does not load SDL graphics. If a ROM uses text measurements to update `api.state.save`, submit scores, unlock milestones, award badges, or decide the session outcome, the audited result may diverge from the local play result.
 
 ### Menu Updates
 
 - **Menus built once** at initialization
-- **Switching variations** hides/shows pre-built menus (fast)
+- **Switching variants** hides/shows pre-built menus (fast)
 - **Selecting options** expands/collapses children as needed
 
 No performance concerns for normal-sized menus.
@@ -289,7 +289,7 @@ end
 ### Single Difficulty
 ```json
 {
-  "variations": [
+  "variants": [
     { "id": "game", "label": "Play Game" }
   ]
 }
@@ -298,7 +298,7 @@ end
 ### Difficulty Tiers
 ```json
 {
-  "variations": [
+  "variants": [
     { "id": "easy", "label": "Easy" },
     { "id": "normal", "label": "Normal", "requiredMilestone": "beat_easy" },
     { "id": "hard", "label": "Hard", "requiredMilestone": "beat_normal" }
@@ -309,7 +309,7 @@ end
 ### Multiple Parallel Modes
 ```json
 {
-  "variations": [
+  "variants": [
     { "id": "campaign", "label": "Campaign" },
     { "id": "sandbox", "label": "Sandbox" },
     { "id": "arcade", "label": "Arcade Mode" }
@@ -320,7 +320,7 @@ end
 ### Progression + Parallel
 ```json
 {
-  "variations": [
+  "variants": [
     { "id": "tutorial", "label": "Tutorial" },
     { "id": "main", "label": "Main Game", "requiredMilestone": "beat_tutorial" },
     { "id": "sandbox", "label": "Sandbox", "requiredMilestone": "beat_main" },
@@ -331,10 +331,10 @@ end
 
 ## Testing Checklist
 
-Before shipping your mod:
+Before shipping your ROM:
 
 - [ ] Can a new player start the game?
-- [ ] Does at least one variation always work?
+- [ ] Does at least one variant always work?
 - [ ] Can every menu selection be made?
 - [ ] Are all milestones actually achievable?
 - [ ] Do progression gates feel natural?
@@ -344,9 +344,9 @@ Before shipping your mod:
 
 ## Debugging
 
-### Mod Won't Start
+### ROM Won't Start
 - Check manifest JSON syntax
-- Verify at least one variation is accessible
+- Verify at least one variant is accessible
 - Ensure entry point file exists
 
 ### Menu Broken

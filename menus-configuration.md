@@ -7,7 +7,7 @@ Menus let players customize their game experience before playing. Players make s
 
 ## Basic Menu
 
-Add a simple menu to a variation:
+Add a simple menu to a variant:
 
 ```json
 {
@@ -397,7 +397,7 @@ local time_limit = GetMenuSelection("time_limit")  -- Always set
 Your Lua script receives player selections and can save them:
 
 ```lua
--- In your mod's save/load logic
+-- In your ROM's save/load logic
 local selections = {
   difficulty = GetMenuSelection("difficulty"),
   map_size = GetMenuSelection("map_size")
@@ -413,7 +413,7 @@ SaveToFile("player_choices.json", selections)
 - **→ [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Track player performance
 
 **Related:**
-- **← [Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %})** - Create different game variants
+- **← [Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Create different game variants
 - **→ [Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - See full working code
 
 **Back to:** [Home]({{ site.baseurl }}{% link index.md %})

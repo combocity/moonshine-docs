@@ -3,7 +3,7 @@ layout: page
 title: Getting Started
 ---
 
-This guide walks you through creating your first Moonshine Lua mod.
+This guide walks you through creating your first Moonshine Lua ROM.
 
 ## Prerequisites
 
@@ -15,13 +15,13 @@ This guide walks you through creating your first Moonshine Lua mod.
 
 ## Directory Structure
 
-Create your mod under the Moonshine `Mods` directory:
+Create your ROM under the Moonshine local ROM workspace root named `Roms`:
 
 ```
-GAME_ROOT/Mods/
-└── my-first-mod/
+GAME_ROOT/Roms/
+└── my-first-rom/
     ├── .emmyrc.json            # Recommended: EmmyLua workspace settings
-    ├── manifest.json           # Required: mod configuration
+    ├── manifest.json           # Required: ROM configuration
     ├── main.lua                # Required: main Lua script
     ├── sdk/                    # Recommended: Moonshine Lua SDK for autocomplete
     │   └── api/
@@ -32,11 +32,11 @@ GAME_ROOT/Mods/
         └── images/
 ```
 
-**Important:** Your mod must live under `GAME_ROOT/Mods/my-first-mod`. `main.lua` must sit next to the manifest. Open `my-first-mod` folder itself in VS Code so EmmyLua picks up `.emmyrc.json` and the local `sdk/api` stubs for autocompletion and debugging.
+**Important:** Your ROM must live under `GAME_ROOT/Roms/my-first-rom`. `main.lua` must sit next to the manifest. Open `my-first-rom` folder itself in VS Code so EmmyLua picks up `.emmyrc.json` and the local `sdk/api` stubs for autocompletion and debugging.
 
 ## Step 1: Create the Manifest
 
-Create a file called `manifest.json` in your mod directory:
+Create a file called `manifest.json` in your ROM directory:
 
 ```json
 {
@@ -46,7 +46,7 @@ Create a file called `manifest.json` in your mod directory:
   "modeType": "Solo",
   "manifestApiVersion": 1,
   "description": "A simple solo game mode",
-  "variations": [
+  "variants": [
     {
       "id": "classic",
       "label": "Classic Mode"
@@ -62,19 +62,19 @@ Create a file called `manifest.json` in your mod directory:
 |-------|----------|-------------|
 | `author` | No | Your name (informational) |
 | `name` | Yes | Display name of your mode |
-| `version` | Yes | Your mod's SemVer version (e.g., `1.0.0`) |
+| `version` | Yes | Your ROM's SemVer version (e.g., `1.0.0`) |
 | `modeType` | Yes | Use `Solo` for now |
 | `manifestApiVersion` | No | Use `1` (currently only version supported, defaults to `1`) |
 | `description` | No | Longer description of your mode |
-| `variations` | Yes | At least one variation (see below) |
-| `milestones` | Yes | Can be empty for simple mods |
+| `variants` | Yes | At least one variant (see below) |
+| `milestones` | Yes | Can be empty for simple ROMs |
 
-### Variations
+### Variants
 
-Each variation is a playable mode. At minimum you need one:
+Each variant is a playable mode. At minimum you need one:
 
 ```json
-"variations": [
+"variants": [
   {
     "id": "classic",
     "label": "Classic Mode",
@@ -89,11 +89,11 @@ Each variation is a playable mode. At minimum you need one:
 
 ## Step 2: Create Your Lua Script
 
-Create `main.lua` in your mod directory:
+Create `main.lua` in your ROM directory:
 
 ```lua
 -- My First Mode
-print("Welcome to my first Moonshine mod!")
+print("Welcome to my first Moonshine ROM!")
 
 -- Your game logic goes here
 function update()
@@ -109,17 +109,17 @@ end
 
 The script must live in `main.lua` next to the manifest and define functions that Moonshine calls during gameplay.
 
-## Step 3: Test Your Mod
+## Step 3: Test Your ROM
 
-### Using Modder Mode
+### Using Maker Mode
 
 1. Launch Moonshine
-2. Navigate to **Modder Mode**
-3. Select your mod from the available mods list
-4. Choose a variation
+2. Navigate to **Maker Mode**
+3. Select your ROM from the available ROMs list
+4. Choose a variant
 5. Press **Start**
 
-Your mod should launch and print welcome message to the console.
+Your ROM should launch and print welcome message to the console.
 
 ### Viewing Logs
 
@@ -129,7 +129,7 @@ Check the game logs to see console output:
 
 ## Step 4: Add a Menu (Optional)
 
-To add player configuration options, add `menuInputs` to your variation:
+To add player configuration options, add `menuInputs` to your variant:
 
 ```json
 {
@@ -159,7 +159,7 @@ To track player progress with milestones:
 ```json
 {
   "milestones": ["completed_easy", "completed_hard"],
-  "variations": [
+  "variants": [
     {
       "id": "easy",
       "label": "Easy Mode"
@@ -173,20 +173,20 @@ To track player progress with milestones:
 }
 ```
 
-The "Hard Mode" variation will only be accessible after the player earns the "completed_easy" milestone.
+The "Hard Mode" variant will only be accessible after the player earns the "completed_easy" milestone.
 
 ## Directory Examples
 
-### Simple Mod (No Progression)
+### Simple ROM (No Progression)
 ```
-my-simple-mod/
+my-simple-rom/
 ├── manifest.json
 ├── main.lua
 ```
 
 ### Mode with Menus
 ```
-my-menu-mod/
+my-menu-rom/
 ├── manifest.json
 ├── main.lua
 └── assets/
@@ -196,7 +196,7 @@ my-menu-mod/
 
 ### Mode with Progression
 ```
-my-progression-mod/
+my-progression-rom/
 ├── manifest.json
 ├── main.lua
 ├── SaveState.txt
@@ -241,10 +241,10 @@ This is automatically loaded on session restart.
 
 ## Troubleshooting
 
-### Mod Won't Load
+### ROM Won't Load
 - Check manifest JSON syntax (use a JSON validator)
 - Verify `main.lua` exists next to the manifest
-- Ensure the mod is in the `GAME_ROOT/Mods/` directory
+- Ensure the ROM is in the `GAME_ROOT/Roms/` directory
 
 ### Manifest Validation Error
 - Review error message carefully
@@ -259,7 +259,7 @@ This is automatically loaded on session restart.
 
 - **→ [Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %})** - Understand Discord communities, author access, and publication stages
 - **→ [Manifest Essentials]({{ site.baseurl }}{% link manifest.md %})** - Deep dive into manifest options
-- **→ [Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %})** - Create multiple game variations
+- **→ [Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Create multiple game variants
 - **→ [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Build interactive menus
 
 ---

@@ -14,7 +14,7 @@ A **milestone** is an achievement or checkpoint. Examples:
 - "defeated_boss_1"
 
 Milestones are identifiers (strings) that represent progress. Use them to:
-- Gate features (unlock harder variations after beating easy)
+- Gate features (unlock harder variants after beating easy)
 - Show hints (display "coming soon" for locked content)
 - Create progression tiers (tier 1 → tier 2 → tier 3)
 
@@ -62,11 +62,11 @@ One milestone per line. Lines starting with `#` are comments.
 
 Use milestones to control what's accessible:
 
-### Gating Variations
+### Gating Variants
 
 ```json
 {
-  "variations": [
+  "variants": [
     {
       "id": "easy",
       "label": "Easy Mode"
@@ -156,7 +156,7 @@ Control how locked content appears to players:
 ```json
 {
   "milestones": ["beat_easy", "beat_hard"],
-  "variations": [
+  "variants": [
     { "id": "easy", "label": "Easy" },
     { "id": "hard", "label": "Hard", "requiredMilestone": "beat_easy" }
   ]
@@ -167,7 +167,7 @@ Control how locked content appears to players:
 ```json
 {
   "milestones": ["beat_tier_1", "beat_tier_2", "beat_tier_3"],
-  "variations": [
+  "variants": [
     { "id": "tier_1", "label": "Tier 1" },
     { "id": "tier_2", "label": "Tier 2", "requiredMilestone": "beat_tier_1" },
     { "id": "tier_3", "label": "Tier 3", "requiredMilestone": "beat_tier_2" }
@@ -179,7 +179,7 @@ Control how locked content appears to players:
 ```json
 {
   "milestones": ["story_complete", "sandbox_unlocked"],
-  "variations": [
+  "variants": [
     { "id": "story", "label": "Story Mode" },
     { "id": "sandbox", "label": "Sandbox", "requiredMilestone": "story_complete" }
   ]
@@ -190,7 +190,7 @@ Control how locked content appears to players:
 ```json
 {
   "milestones": ["season_1_done", "season_2_available"],
-  "variations": [
+  "variants": [
     { "id": "season_1", "label": "Season 1" },
     {
       "id": "season_2",
@@ -206,7 +206,7 @@ Control how locked content appears to players:
 ```json
 {
   "milestones": ["ranked_qualified", "ranked_elite"],
-  "variations": [
+  "variants": [
     { "id": "casual", "label": "Casual" },
     { "id": "ranked", "label": "Ranked", "requiredMilestone": "ranked_qualified" },
     { "id": "elite", "label": "Elite", "requiredMilestone": "ranked_elite" }
@@ -252,7 +252,7 @@ Milestones are automatically saved to `milestones.txt`.
     "beat_chapter_3",
     "master_rank"
   ],
-  "variations": [
+  "variants": [
     {
       "id": "story",
       "label": "Story Mode"
@@ -310,7 +310,7 @@ end
 
 ❌ **DON'T:**
 - Create milestones that are never earned
-- Gate the only playable variation
+- Gate the only playable variant
 - Make all options locked at game start
 - Use confusing milestone names
 - Create impossible progression paths
@@ -341,7 +341,7 @@ end
 - **→ [Best Practices]({{ site.baseurl }}{% link best-practices.md %})** - Design guidelines
 
 **Related:**
-- **← [Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %})** - Create game variants
+- **← [Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Create game variants
 - **← [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Add configuration options
 - **→ [Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - See full working code
 

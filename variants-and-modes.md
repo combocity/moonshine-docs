@@ -1,41 +1,41 @@
 ---
 layout: page
-title: Variations & Modes
+title: Variants & Modes
 ---
 
-Variations allow players to choose different ways to play your mod. Each variation can have its own configuration, menus, and progression gates.
+Variants allow players to choose different ways to play your ROM. Each variant can have its own configuration, menus, and progression gates.
 
-## What are Variations?
+## What are Variants?
 
-A **variation** is a distinct playable mode or configuration of your game. Think of it as "a different way to play."
+A **variant** is a distinct playable mode or configuration of your game. Think of it as "a different way to play."
 
-Players see variations in a selector screen and choose which one to play.
+Players see variants in a selector screen and choose which one to play.
 
 ### Examples
 
-**Puzzle Mod:**
-- Variation 1: "Beginner Puzzles"
-- Variation 2: "Intermediate Puzzles"
-- Variation 3: "Expert Puzzles"
+**Puzzle ROM:**
+- Variant 1: "Beginner Puzzles"
+- Variant 2: "Intermediate Puzzles"
+- Variant 3: "Expert Puzzles"
 
-**Roguelike Mod:**
-- Variation 1: "Story Mode"
-- Variation 2: "Classic Mode"
-- Variation 3: "Daily Challenge"
+**Roguelike ROM:**
+- Variant 1: "Story Mode"
+- Variant 2: "Classic Mode"
+- Variant 3: "Daily Challenge"
 
-**Survival Mod:**
-- Variation 1: "Peaceful"
-- Variation 2: "Normal"
-- Variation 3: "Hard"
+**Survival ROM:**
+- Variant 1: "Peaceful"
+- Variant 2: "Normal"
+- Variant 3: "Hard"
 
-## Single Variation
+## Single Variant
 
-Every mod needs at least one variation. A simple mod with one variation:
+Every ROM needs at least one variant. A simple ROM with one variant:
 
 ```json
 {
   "name": "My Game",
-  "variations": [
+  "variants": [
     {
       "id": "default",
       "label": "Play Game"
@@ -44,16 +44,16 @@ Every mod needs at least one variation. A simple mod with one variation:
 }
 ```
 
-Players won't see a selector screen. They'll go straight into your mod.
+Players won't see a selector screen. They'll go straight into your ROM.
 
-## Multiple Variations
+## Multiple Variants
 
-With multiple variations, players choose which one to play:
+With multiple variants, players choose which one to play:
 
 ```json
 {
   "name": "My Game",
-  "variations": [
+  "variants": [
     {
       "id": "easy",
       "label": "Easy Mode",
@@ -73,7 +73,7 @@ With multiple variations, players choose which one to play:
 }
 ```
 
-### Variation Properties
+### Variant Properties
 
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
@@ -81,17 +81,17 @@ With multiple variations, players choose which one to play:
 | `label` | string | Yes | Display name (≤32 chars) |
 | `description` | string | No | Longer description |
 | `menuInputs` | array | No | Configuration options (see Menus) |
-| `requiredMilestone` | string | No | Milestone to unlock this variation |
+| `requiredMilestone` | string | No | Milestone to unlock this variant |
 | `visibleFromMilestone` | string | No | Milestone to show as "coming soon" |
 
-## Progression-Gated Variations
+## Progression-Gated Variants
 
-Use milestones to require completion before unlocking harder variations:
+Use milestones to require completion before unlocking harder variants:
 
 ```json
 {
   "milestones": ["beat_easy", "beat_normal"],
-  "variations": [
+  "variants": [
     {
       "id": "easy",
       "label": "Easy Mode"
@@ -117,8 +117,8 @@ Use milestones to require completion before unlocking harder variations:
 
 ### Visibility vs. Accessibility
 
-- **`requiredMilestone`** - Variation is greyed out until milestone earned
-- **`visibleFromMilestone`** - Variation hidden until milestone earned (doesn't appear in selector)
+- **`requiredMilestone`** - Variant is greyed out until milestone earned
+- **`visibleFromMilestone`** - Variant hidden until milestone earned (doesn't appear in selector)
 
 ```json
 {
@@ -136,25 +136,25 @@ Use milestones to require completion before unlocking harder variations:
 
 ## Communicating with Lua
 
-Your Lua script needs to know which variation was selected:
+Your Lua script needs to know which variant was selected:
 
 ```lua
--- Access the selected variation
-local variation_id = GetSelectedVariation()  -- Returns "easy", "normal", etc.
+-- Access the selected variant
+local variant_id = api.session.variant_id  -- Returns "easy", "normal", etc.
 
--- Adjust difficulty based on variation
-if variation_id == "easy" then
+-- Adjust difficulty based on variant
+if variant_id == "easy" then
   difficulty_multiplier = 0.5
-elseif variation_id == "normal" then
+elseif variant_id == "normal" then
   difficulty_multiplier = 1.0
-elseif variation_id == "hard" then
+elseif variant_id == "hard" then
   difficulty_multiplier = 2.0
 end
 ```
 
-## Adding Menus to Variations
+## Adding Menus to Variants
 
-Each variation can have configuration menus:
+Each variant can have configuration menus:
 
 ```json
 {
@@ -182,7 +182,7 @@ Each variation can have configuration menus:
 
 ### Progression Tiers
 ```json
-"variations": [
+"variants": [
   { "id": "t1", "label": "Tier 1" },
   { "id": "t2", "label": "Tier 2", "requiredMilestone": "completed_t1" },
   { "id": "t3", "label": "Tier 3", "requiredMilestone": "completed_t2" }
@@ -191,17 +191,17 @@ Each variation can have configuration menus:
 
 ### Parallel Modes
 ```json
-"variations": [
+"variants": [
   { "id": "story", "label": "Story Mode" },
   { "id": "sandbox", "label": "Sandbox Mode" },
   { "id": "challenge", "label": "Challenge Mode" }
 ]
 ```
-(No progression gates. All variations are accessible.)
+(No progression gates. All variants are accessible.)
 
 ### Content Packs
 ```json
-"variations": [
+"variants": [
   { "id": "standard", "label": "Standard Pack" },
   { "id": "expansion1", "label": "Expansion 1", "requiredMilestone": "dlc_purchased" },
   { "id": "expansion2", "label": "Expansion 2", "requiredMilestone": "dlc_purchased" }
@@ -210,7 +210,7 @@ Each variation can have configuration menus:
 
 ### Teaser Pattern
 ```json
-"variations": [
+"variants": [
   { "id": "current", "label": "Current Season" },
   {
     "id": "next",
@@ -224,16 +224,16 @@ Each variation can have configuration menus:
 ## Best Practices
 
 ✅ **DO:**
-- Keep variation labels short and clear
+- Keep variant labels short and clear
 - Use progression gates for content tiers
 - Show "coming soon" teases for unreleased content
-- Provide descriptions for hard-to-understand variations
-- Make the first variation accessible to all players
+- Provide descriptions for hard-to-understand variants
+- Make the first variant accessible to all players
 
 ❌ **DON'T:**
-- Create variations with all menu options locked
-- Use unclear variation names
-- Gate the only variation (always have at least one free option)
+- Create variants with all menu options locked
+- Use unclear variant names
+- Gate the only variant (always have at least one free option)
 - Make progression paths confusing
 
 ## Complete Example
@@ -244,7 +244,7 @@ Each variation can have configuration menus:
   "author": "Game Designer",
   "version": "1.0.0",
   "modeType": "Solo",
-  "variations": [
+  "variants": [
     {
       "id": "training",
       "label": "Training",
@@ -297,7 +297,7 @@ Each variation can have configuration menus:
 - **→ [Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Gate features with milestones
 
 **Related:**
-- **← [Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create your first mod
+- **← [Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create your first ROM
 - **→ [Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - See full working code
 
 **Back to:** [Home]({{ site.baseurl }}{% link index.md %})

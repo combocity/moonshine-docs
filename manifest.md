@@ -5,7 +5,7 @@ title: Manifest Reference
 
 Complete technical reference for the manifest.json file. This document describes the JSON manifest format used by Moonshine games in detail.
 
-For modders just getting started, see [Getting Started]({{ site.baseurl }}{% link getting-started.md %}) or [Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %}).
+For makers just getting started, see [Getting Started]({{ site.baseurl }}{% link getting-started.md %}) or [Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %}).
 
 ## Overview
 
@@ -16,11 +16,11 @@ This document describes the complete manifest format and validation rules.
 - [Required metadata](#required-metadata)
 - [Progression and milestones](#progression-and-milestones)
 - [Badges](#badges)
-- [Variations and menus](#variations-and-menus)
+- [Variants and menus](#variants-and-menus)
 - [Leaderboards (rankingTables)](#leaderboards-rankingtables)
 - [Resources (resources.images)](#resources-resourcesimages)
-- [Package obfuscation](#package-obfuscation)
-- [Integration reminders for modders](#integration-reminders-for-modders)
+- [Cartridge obfuscation](#cartridge-obfuscation)
+- [Integration reminders for makers](#integration-reminders-for-makers)
 
 ## Overview
 - The manifest is required and must be valid before a session can start.
@@ -30,7 +30,7 @@ This document describes the complete manifest format and validation rules.
 - There is no separate manifest-schema version field today. `manifestApiVersion`
   selects the Lua API/runtime compatibility level.
 - Identifiers (`id`) must be unique within their collection and must not
-  collide across badges, variations, leaderboards, and menu entries.
+  collide across badges, variants, leaderboards, and menu entries.
 - Milestones define the progression tree and back the access/visibility rules
   of other blocks.
 
@@ -49,7 +49,7 @@ This document describes the complete manifest format and validation rules.
   milestones are unlocked for the player. It is separate from `SaveState.txt`.
   - One milestone id per line; only the first token before whitespace is used.
   - Lines starting with `#` are treated as comments.
-- Any `AccessControlledElement` (badges, variations, menu entries/options,
+- Any `AccessControlledElement` (badges, variants, menu entries/options,
   leaderboards) may define:
   - `requiredMilestone`: milestone that unlocks access.
   - `visibleFromMilestone`: milestone that makes the element visible before
@@ -66,12 +66,12 @@ This document describes the complete manifest format and validation rules.
   - `overrideBadge` (optional): badge being replaced.
   - `requiredMilestone` / `visibleFromMilestone` (optional) must target known
     milestones.
-- `id` values must be unique and must not collide with variation, leaderboard,
+- `id` values must be unique and must not collide with variant, leaderboard,
   or menu ids.
 
-## Variations and menus
-- `variations` array is required (at least one variation).
-- Variation:
+## Variants and menus
+- `variants` array is required (at least one variant).
+- Variant:
   - `id` (required, <= 32).
   - `label` (required, <= 32).
   - `description` / `earnedDescription` (optional).
@@ -95,9 +95,9 @@ This document describes the complete manifest format and validation rules.
   - `inputs` (optional): allows nesting new `menuInputs`.
   - `requiredMilestone` / `visibleFromMilestone` (optional).
 - Uniqueness:
-  - Variation ids are unique.
-  - `menuInputs` ids must be unique across all variations.
-  - Id collisions across `Badge`, `Variation`, `RankingTable`, and `MenuInput`
+  - Variant ids are unique.
+  - `menuInputs` ids must be unique across all variants.
+  - Id collisions across `Badge`, `Variant`, `RankingTable`, and `MenuInput`
     are not allowed.
 
 ## Leaderboards (rankingTables)
@@ -125,30 +125,30 @@ This document describes the complete manifest format and validation rules.
 - `fonts`: list of fonts with `id`, `fileName` (`.ttf`), `ttfFontSize`,
   optional `baseSet`, `outline`, and `localization`.
 
-## Package obfuscation
+## Cartridge obfuscation
 - `obfuscatePackageContent` (bool, default `true`):
   - If `true` (default), manifest, scripts, and images are obfuscated in the
-    package to avoid trivial inspection.
-  - If `false`, the package stores files in clear text and is expected to be
+    cartridge to avoid trivial inspection.
+  - If `false`, the cartridge stores files in clear text and is expected to be
     read as such.
 
-## Integration reminders for modders
-- The manifest must live under `GAME_ROOT/Mods`; absolute paths are forbidden.
+## Integration reminders for makers
+- The manifest must live under `GAME_ROOT/Roms`; absolute paths are forbidden in current builds.
 - `main.lua` must live next to the manifest.
 - `SaveState.txt` next to the manifest is loaded automatically if present.
 - `milestones.txt` is read separately to drive access control; do not put
-  modder state in that file.
+  maker state in that file.
 
 ---
 
 ## Quick Navigation
 
 **Beginner? Start here:**
-- **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create your first mod
-- **[Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %})** - Multiple game types
+- **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create your first ROM
+- **[Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Multiple game types
 
 **Learn by doing:**
-- **[Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - Full working mod
+- **[Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - Full working ROM
 
 **Specific topics:**
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Player options

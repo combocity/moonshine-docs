@@ -375,7 +375,7 @@ local rank = GetLeaderboardRank("high_scores")
 
 **Related:**
 - **← [Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Gate features with milestones
-- **← [Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create your first mod
+- **← [Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create your first ROM
 
 **Back to:** [Home]({{ site.baseurl }}{% link index.md %})
 

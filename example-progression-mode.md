@@ -3,9 +3,9 @@ layout: page
 title: Complete Example
 ---
 
-A full working example that demonstrates variations, menus, progression, and leaderboards all working together.
+A full working example that demonstrates variants, menus, progression, and leaderboards all working together.
 
-## Mod: "Tower Climber"
+## ROM: "Tower Climber"
 
 A difficulty-based game where players climb progressively harder towers. Each tower conquered unlocks the next difficulty level.
 
@@ -35,7 +35,7 @@ tower-climber/
     "beat_tower_3",
     "master_rank"
   ],
-  "variations": [
+  "variants": [
     {
       "id": "tower_1",
       "label": "Tower 1: Beginner",
@@ -172,24 +172,24 @@ local game_state = {
 function initialize()
   print("Tower Climber initialized!")
 
-  -- Get selected variation
-  local variation = GetSelectedVariation()
-  print("Playing variation: " .. variation)
+  -- Get selected variant
+  local variant = api.session.variant_id
+  print("Playing variant: " .. variant)
 
-  -- Determine tower based on variation
-  if variation == "tower_1" then
+  -- Determine tower based on variant
+  if variant == "tower_1" then
     game_state.current_tower = 1
-  elseif variation == "tower_2" then
+  elseif variant == "tower_2" then
     game_state.current_tower = 2
-  elseif variation == "tower_3" then
+  elseif variant == "tower_3" then
     game_state.current_tower = 3
-  elseif variation == "sandbox" then
+  elseif variant == "sandbox" then
     local tower_select = GetMenuSelection("tower_select")
     game_state.current_tower = tonumber(tower_select:match("%d+"))
   end
 
   -- Get difficulty modifier
-  if variation == "sandbox" then
+  if variant == "sandbox" then
     game_state.current_difficulty = GetMenuSelection("sandbox_difficulty")
   else
     game_state.current_difficulty = GetMenuSelection("difficulty")
@@ -420,7 +420,7 @@ master_rank
 
 ## Key Features Demonstrated
 
-✓ Multiple variations with progression gates
+✓ Multiple variants with progression gates
 ✓ Nested menu options
 ✓ Milestone tracking and recording
 ✓ Conditional feature availability
@@ -431,7 +431,7 @@ master_rank
 ---
 
 **Learn more:**
-- **→ [Variations & Modes]({{ site.baseurl }}{% link variations-and-modes.md %})** - Multiple game types
+- **→ [Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Multiple game types
 - **→ [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Player choices
 - **→ [Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Progress tracking
 - **→ [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Score tracking
