@@ -226,10 +226,10 @@ and must be 32 characters or fewer.
 
 Resource file names are relative to the matching asset folder in the ROM.
 
-## Cartridge Option
+## ROM File Obfuscation
 
 `obfuscatePackageContent` controls whether manifest, scripts, and resources are
-stored obfuscated inside the packed `.t3rom` cartridge. It defaults to `true`.
+stored obfuscated inside the packed `.t3rom` ROM file. It defaults to `true`.
 
 ```json
 {

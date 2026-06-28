@@ -5,14 +5,14 @@ title: Moonshine Ecosystem
 
 Moonshine is a place to play, create, and share community-made games. The ecosystem is built around players, authors, and Discord communities so new content can start privately, be tested with a trusted group, and later become available more broadly.
 
-This page explains how Moonshine, Avalon, and Discord work together before you dive into ROM manifests, Lua scripts, cartridges, or publication workflows.
+This page explains how Moonshine, Avalon, and Discord work together before you dive into ROM manifests, Lua scripts, ROM files, or publication workflows.
 
 ## The three parts
 
 | Part | Purpose |
 |------|---------|
 | **Moonshine** | The game client. Players use it to play and browse available content. Authors use it to create, test, and upload their work. Moonshine is online by design. |
-| **Avalon** | The trusted backend server. It owns player identity, author permissions, ROM identity, ROM versions, cartridge storage, session data, replays, and ranking tables. |
+| **Avalon** | The trusted backend server and source of truth. It owns player identities, community roles and permissions, ROM identity and versioning, ROM file storage, session records, audits, replays, and ranking tables. |
 | **Discord** | The community and governance layer. A Discord server acts as a Moonshine community where players gather, administrators review trust decisions, and authors coordinate testing and publication. |
 
 Moonshine is where the game happens. Avalon is where the authoritative decisions live. Discord is where identity and community boundaries start.
@@ -49,7 +49,7 @@ Moonshine is an online game, so your account can be used from any computer or ar
 1. Register as a Moonshine player.
 2. Join the Discord server where you want to publish content. This is often the community where you first registered as a player, but it can be another Moonshine community linked to your account.
 3. Request author access for that server with `/author request`.
-4. Once author access is granted, the Moonshine maker tools let you create, test, debug, and upload a cartridge for your Draft ROM.
+4. Once author access is granted, the Moonshine maker tools let you create, test, debug, and upload a ROM file for your Draft ROM.
 5. Publish a Preview with `/author publish-preview` when you are ready for community testing.
 6. Use `/author rom-crashes` and `/author rom-crash` to inspect confirmed Lua crash groups for your Preview ROMs.
 7. Iterate with feedback before moving toward a wider release.
