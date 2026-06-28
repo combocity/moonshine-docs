@@ -105,7 +105,7 @@ local start_level = api.session.selection["start-level"]
 ## `api.state`
 
 `api.state.save` is a persistent table loaded before `init()` and included in
-the end-session result when the game ends normally.
+the session result when the host finalizes the session.
 
 ```lua
 function init()
@@ -116,11 +116,39 @@ end
 `api.state` itself is read-only, but `api.state.save` is mutable:
 
 ```lua
-api.state.save.best_score = math.max(api.state.save.best_score or 0, score)
+function finish_game(score)
+  local previous_best = api.state.save.best_score or 0
+  api.state.save.best_score = math.max(previous_best, score)
+  api.session.end_game()
+end
 ```
 
-Keep save data simple and serializable: strings, numbers, booleans, and plain
-tables.
+Save state should contain plain data only: strings, numbers, booleans, and
+simple tables. Do not store runtime objects, functions, or tables that reference
+themselves. The encoded save state is currently limited to 16 KiB; if Moonshine
+cannot encode the save table, it keeps the previous save state instead.
+Assigning `nil` to a save field removes that field from the next saved state.
+Nested tables can be updated in place:
+
+```lua
+api.state.save.settings.speed = "fast"
+```
+
+Lists are tables too. Use `table.insert` and `table.remove` to keep list indexes
+compact:
+
+```lua
+if type(api.state.save.items) ~= "table" then
+  api.state.save.items = {}
+end
+
+table.insert(api.state.save.items, "new item")
+table.remove(api.state.save.items, 1)
+```
+
+Only insert plain save data into lists. If a list contains a runtime object,
+function, self-reference, or too much data, Moonshine will keep the previous save
+state instead of saving the invalid value.
 
 ## `api.progress`
 
