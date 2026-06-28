@@ -3,21 +3,22 @@ layout: page
 title: Menus & Configuration
 ---
 
-Menus let players customize their game experience before playing. Players make selections that your Lua script receives and uses to configure the game.
+Menus let players configure a variant before the Lua session starts. The
+selected values are provided to Lua in `api.session.selection`.
 
 ## Basic Menu
 
-Add a simple menu to a variant:
+Add `menuInputs` to a variant:
 
 ```json
 {
   "id": "classic",
-  "label": "Classic Mode",
+  "label": "Classic",
   "menuInputs": [
     {
       "id": "difficulty",
       "label": "Difficulty",
-      "type": "select",
+      "type": "Select",
       "options": [
         { "label": "Easy" },
         { "label": "Normal" },
@@ -28,78 +29,74 @@ Add a simple menu to a variant:
 }
 ```
 
-**Result:** Player sees a menu with three difficulty options to choose from.
+The option `label` is the value sent to Lua.
 
 ## Menu Input Properties
 
-Each menu input is a configuration option:
-
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
-| `id` | string | Yes | Internal ID (≤32 chars, unique) |
-| `label` | string | Yes | Display name (≤32 chars) |
-| `type` | string | No | Input type (currently only "select") |
-| `options` | array | Yes | Available choices |
-| `requiredMilestone` | string | No | Milestone to access this input |
-| `visibleFromMilestone` | string | No | Milestone to show as "coming soon" |
+| `id` | string | Yes | Internal id, max 32 chars, unique across menu inputs. |
+| `label` | string | Yes | Display label, max 32 chars. |
+| `type` | string | No | `Select` by default. `Radio` is also accepted. |
+| `description` | string | No | Longer text shown by the UI when supported. |
+| `earnedDescription` | string | No | Text for already-earned/available states when supported. |
+| `options` | array | Yes | At least two options. |
+| `requiredMilestone` | string | No | Milestone required to access this input. |
+| `visibleFromMilestone` | string | No | Milestone required before this input is visible. |
 
-## Options
+The first option of a menu input must not be milestone-gated. This guarantees a
+new player always has a selectable value.
 
-Each option represents a choice the player can make:
+## Option Properties
 
 ```json
-"options": [
-  {
-    "label": "Easy",
-    "description": "Perfect for beginners"
-  },
-  {
-    "label": "Normal",
-    "description": "Balanced challenge"
-  },
-  {
-    "label": "Hard",
-    "description": "For experienced players"
-  }
-]
+{
+  "label": "Hard",
+  "description": "For experienced players",
+  "requiredMilestone": "completed_normal"
+}
 ```
-
-### Option Properties
 
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
-| `label` | string | Yes | Display name & selection value (≤32 chars) |
-| `description` | string | No | Longer description |
-| `requiredMilestone` | string | No | Milestone to access this option |
-| `visibleFromMilestone` | string | No | Milestone to show as "coming soon" |
-| `inputs` | array | No | Nested sub-options (see Hierarchical Menus) |
+| `label` | string | Yes | Display label and Lua selection value, max 32 chars. |
+| `description` | string | No | Longer text shown by the UI when supported. |
+| `earnedDescription` | string | No | Text for already-earned/available states when supported. |
+| `requiredMilestone` | string | No | Milestone required to select this option. |
+| `visibleFromMilestone` | string | No | Milestone required before this option is visible. |
+| `inputs` | array | No | Nested menu inputs revealed by this option. |
 
-## Accessing Menu Selections
+## Reading Selections in Lua
 
-In your Lua script, access player choices:
+Use `api.session.selection`:
 
 ```lua
--- Get a single menu selection
-local difficulty = GetMenuSelection("difficulty")
--- Returns: "Easy", "Normal", or "Hard"
+function init()
+  local difficulty = api.session.selection.difficulty or "Easy"
 
-if difficulty == "Hard" then
-  enemy_health = 200
-elseif difficulty == "Normal" then
-  enemy_health = 100
-else  -- Easy
-  enemy_health = 50
+  if difficulty == "Hard" then
+    enemy_health = 200
+  elseif difficulty == "Normal" then
+    enemy_health = 100
+  else
+    enemy_health = 50
+  end
 end
 ```
 
-## Multiple Menu Options
+You can also index with brackets, which is useful for ids that are not valid Lua
+field names:
 
-Add multiple configuration options:
+```lua
+local start_level = api.session.selection["start-level"]
+```
+
+## Multiple Inputs
 
 ```json
 {
   "id": "custom",
-  "label": "Custom Mode",
+  "label": "Custom",
   "menuInputs": [
     {
       "id": "difficulty",
@@ -110,17 +107,8 @@ Add multiple configuration options:
       ]
     },
     {
-      "id": "map_size",
-      "label": "Map Size",
-      "options": [
-        { "label": "Small (10x10)" },
-        { "label": "Medium (20x20)" },
-        { "label": "Large (40x40)" }
-      ]
-    },
-    {
-      "id": "game_speed",
-      "label": "Game Speed",
+      "id": "speed",
+      "label": "Speed",
       "options": [
         { "label": "Slow" },
         { "label": "Normal" },
@@ -131,51 +119,33 @@ Add multiple configuration options:
 }
 ```
 
-**In Lua:**
 ```lua
-local difficulty = GetMenuSelection("difficulty")
-local map_size = GetMenuSelection("map_size")
-local speed = GetMenuSelection("game_speed")
+function init()
+  local difficulty = api.session.selection.difficulty
+  local speed = api.session.selection.speed
+end
 ```
 
-## Hierarchical Menus
+## Nested Inputs
 
-Create nested options where selecting one reveals sub-options:
+Nested inputs are attached to a specific option. They are only relevant when
+that option is selected.
 
 ```json
 {
-  "id": "advanced",
-  "label": "Advanced Mode",
-  "menuInputs": [
+  "id": "game_type",
+  "label": "Game Type",
+  "options": [
+    { "label": "Campaign" },
     {
-      "id": "game_type",
-      "label": "Game Type",
-      "options": [
-        { "label": "Campaign" },
+      "label": "Sandbox",
+      "inputs": [
         {
-          "label": "Sandbox",
-          "inputs": [
-            {
-              "id": "sandbox_size",
-              "label": "Sandbox Size",
-              "options": [
-                { "label": "Tiny" },
-                { "label": "Large" }
-              ]
-            }
-          ]
-        },
-        {
-          "label": "Survival",
-          "inputs": [
-            {
-              "id": "survival_difficulty",
-              "label": "Survival Difficulty",
-              "options": [
-                { "label": "Easy" },
-                { "label": "Hardcore" }
-              ]
-            }
+          "id": "sandbox_size",
+          "label": "Sandbox Size",
+          "options": [
+            { "label": "Small" },
+            { "label": "Large" }
           ]
         }
       ]
@@ -184,30 +154,18 @@ Create nested options where selecting one reveals sub-options:
 }
 ```
 
-**Structure:**
-```
-Game Type [select]
-├── Campaign
-├── Sandbox
-│   └── Sandbox Size [select]
-│       ├── Tiny
-│       └── Large
-└── Survival
-    └── Survival Difficulty [select]
-        ├── Easy
-        └── Hardcore
+```lua
+function init()
+  local game_type = api.session.selection.game_type
+  local sandbox_size = api.session.selection.sandbox_size
+end
 ```
 
-**In Lua:**
-```lua
-local game_type = GetMenuSelection("game_type")
-local sandbox_size = GetMenuSelection("sandbox_size")  -- nil if Sandbox not selected
-local survival_diff = GetMenuSelection("survival_difficulty")  -- nil if Survival not selected
-```
+If `Campaign` is selected, `sandbox_size` is not expected to be present.
 
 ## Progression-Gated Options
 
-Lock options until milestones are earned:
+Use milestones to control access:
 
 ```json
 {
@@ -222,199 +180,27 @@ Lock options until milestones are earned:
     {
       "label": "Hard",
       "requiredMilestone": "completed_normal"
-    },
-    {
-      "label": "Extreme",
-      "requiredMilestone": "completed_hard"
     }
   ]
 }
 ```
 
-**Result:**
-- Easy: Always accessible
-- Normal: Greyed out until "completed_easy"
-- Hard: Greyed out until "completed_normal"
-- Extreme: Greyed out until "completed_hard"
-
-### Visibility vs. Accessibility
-
-- **`requiredMilestone`** - Option is greyed out until milestone earned
-- **`visibleFromMilestone`** - Option hidden until milestone earned (doesn't appear)
-
-```json
-{
-  "label": "Secret Difficulty",
-  "visibleFromMilestone": "unlocked_secret",
-  "requiredMilestone": "completed_all"
-}
-```
-
-## Design Patterns
-
-### Progressive Difficulty
-```json
-"options": [
-  { "label": "Tutorial" },
-  { "label": "Easy", "requiredMilestone": "beat_tutorial" },
-  { "label": "Normal", "requiredMilestone": "beat_easy" },
-  { "label": "Hard", "requiredMilestone": "beat_normal" },
-  { "label": "Extreme", "requiredMilestone": "beat_hard" }
-]
-```
-
-### Feature Unlocking
-```json
-{
-  "id": "modifiers",
-  "label": "Game Modifiers",
-  "options": [
-    { "label": "None" },
-    { "label": "Double Speed", "requiredMilestone": "expert_status" },
-    { "label": "Low Health", "requiredMilestone": "expert_status" },
-    { "label": "Darkness", "requiredMilestone": "master_status" }
-  ]
-}
-```
-
-### Two-Level Configuration
-```json
-"menuInputs": [
-  {
-    "id": "game_mode",
-    "label": "Game Mode",
-    "options": [
-      {
-        "label": "Campaign",
-        "inputs": [
-          {
-            "id": "campaign_difficulty",
-            "label": "Difficulty",
-            "options": [...]
-          }
-        ]
-      },
-      {
-        "label": "Arena",
-        "inputs": [
-          {
-            "id": "arena_size",
-            "label": "Arena Size",
-            "options": [...]
-          },
-          {
-            "id": "arena_hazards",
-            "label": "Hazards",
-            "options": [...]
-          }
-        ]
-      }
-    ]
-  }
-]
-```
-
-## Complete Example
-
-```json
-{
-  "id": "multiplayer",
-  "label": "Multiplayer",
-  "menuInputs": [
-    {
-      "id": "mode",
-      "label": "Game Mode",
-      "options": [
-        {
-          "label": "Free For All",
-          "inputs": [
-            {
-              "id": "ffa_map",
-              "label": "Map",
-              "options": [
-                { "label": "Arena" },
-                { "label": "Forest" },
-                { "label": "Urban" }
-              ]
-            }
-          ]
-        },
-        {
-          "label": "Team Deathmatch",
-          "inputs": [
-            {
-              "id": "tdm_team_size",
-              "label": "Team Size",
-              "options": [
-                { "label": "1v1" },
-                { "label": "2v2" },
-                { "label": "4v4" }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "time_limit",
-      "label": "Time Limit",
-      "options": [
-        { "label": "Unlimited" },
-        { "label": "5 Minutes" },
-        { "label": "10 Minutes" }
-      ]
-    }
-  ]
-}
-```
-
-**In Lua:**
-```lua
-local mode = GetMenuSelection("mode")  -- "Free For All" or "Team Deathmatch"
-local ffa_map = GetMenuSelection("ffa_map")  -- nil if not FFA
-local tdm_size = GetMenuSelection("tdm_team_size")  -- nil if not TDM
-local time_limit = GetMenuSelection("time_limit")  -- Always set
-```
-
-## Best Practices
-
-✅ **DO:**
-- Keep option labels short (≤32 chars)
-- Provide descriptions for non-obvious options
-- Use progression gates to unlock advanced options
-- Set sensible defaults (first option is usually default)
-- Organize related options logically
-
-❌ **DON'T:**
-- Create menus where all options are locked
-- Use vague option names
-- Nest menus too deeply (3+ levels get confusing)
-- Make all options require different milestones
-- Create unused/non-functional options
+- `requiredMilestone` keeps the element visible but unavailable until earned.
+- `visibleFromMilestone` hides the element until the milestone is earned.
+- Both properties must reference a milestone declared in the manifest.
 
 ## Saving Player Choices
 
-Your Lua script receives player selections and can save them:
+Selections are provided at session start. If your ROM wants to remember the last
+choice, write it into `api.state.save`:
 
 ```lua
--- In your ROM's save/load logic
-local selections = {
-  difficulty = GetMenuSelection("difficulty"),
-  map_size = GetMenuSelection("map_size")
-}
-
-SaveToFile("player_choices.json", selections)
+function init()
+  api.state.save.last_difficulty = api.session.selection.difficulty
+end
 ```
 
----
+## Next
 
-**Next:**
-- **→ [Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Gate features with milestones
-- **→ [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Track player performance
-
-**Related:**
-- **← [Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Create different game variants
-- **→ [Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - See full working code
-
-**Back to:** [Home]({{ site.baseurl }}{% link index.md %})
-
+- **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Gate features with milestones.
+- **[Manifest Reference]({{ site.baseurl }}{% link manifest.md %})** - Full validation rules.

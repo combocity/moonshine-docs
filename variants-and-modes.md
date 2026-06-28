@@ -298,6 +298,6 @@ Each variant can have configuration menus:
 
 **Related:**
 - **← [Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create your first ROM
-- **→ [Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - See full working code
+- **→ [Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - TODO rewrite for the current Lua API
 
 **Back to:** [Home]({{ site.baseurl }}{% link index.md %})

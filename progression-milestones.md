@@ -3,87 +3,90 @@ layout: page
 title: Progression System
 ---
 
-Milestones track player achievements and gate features based on progress. Players earn milestones by completing challenges, and new features unlock as they progress.
+Milestones and badges represent player progression for a ROM. They are declared
+in the manifest and handled in Lua through `api.progress`.
 
-## What are Milestones?
+## Milestones
 
-A **milestone** is an achievement or checkpoint. Examples:
-- "beat_easy_mode"
-- "reached_level_10"
-- "earned_master_rank"
-- "defeated_boss_1"
-
-Milestones are identifiers (strings) that represent progress. Use them to:
-- Gate features (unlock harder variants after beating easy)
-- Show hints (display "coming soon" for locked content)
-- Create progression tiers (tier 1 → tier 2 → tier 3)
-
-## Defining Milestones
-
-List all possible milestones in your manifest:
+A milestone is an internal progression flag:
 
 ```json
 {
   "milestones": [
     "tutorial_completed",
     "beat_easy",
-    "beat_normal",
-    "beat_hard",
-    "earned_rank_master"
+    "beat_normal"
   ]
 }
 ```
 
-These milestone IDs are referenced throughout your manifest to gate content.
+Milestone ids must contain only letters, numbers, `_`, or `-`, and must be 32
+characters or fewer.
 
-## How Players Earn Milestones
+Use milestones to:
 
-Players earn milestones through gameplay. Your Lua script detects achievements and records them:
+- Unlock variants.
+- Unlock or reveal menu inputs and options.
+- Unlock or reveal ranking table definitions.
+- Let Lua check whether a player has already completed something.
+
+## Unlocking Milestones in Lua
 
 ```lua
--- In your Lua script
-if player_defeated_boss then
-  RecordMilestone("beat_easy")
+if boss_defeated then
+  api.progress.unlock_milestone("beat_easy")
 end
 ```
 
-Earned milestones are saved in `milestones.txt` next to your entry point:
+Check existing progression:
 
+```lua
+if api.progress.has_milestone("beat_easy") then
+  bonus_available = true
+end
+
+local earned = api.progress.get_milestones()
+for _, milestone in ipairs(earned) do
+  api.log.info("Earned milestone: " .. milestone)
+end
 ```
-# milestones.txt
-tutorial_completed
-beat_easy
-beat_normal
-```
 
-One milestone per line. Lines starting with `#` are comments.
+`get_milestones()` returns a snapshot. Mutating that Lua table does not change
+the player's progression. Use `unlock_milestone` to add progress.
 
-## Gating Features with Milestones
+## Session Sync
 
-Use milestones to control what's accessible:
+For a server-backed session, Avalon sends the player's earned milestones when
+the catalog and session are prepared. When the session ends, Moonshine reports
+newly unlocked milestones back to Avalon.
 
-### Gating Variants
+In local maker mode, Moonshine may persist test progress locally so authors can
+try gates without a server round-trip. Public ROM code should still use
+`api.progress`; do not rely on hand-edited progress files as an authoring API.
+
+## Gating Variants
 
 ```json
 {
+  "milestones": ["beat_easy"],
   "variants": [
     {
       "id": "easy",
-      "label": "Easy Mode"
+      "label": "Easy"
     },
     {
       "id": "hard",
-      "label": "Hard Mode",
+      "label": "Hard",
       "requiredMilestone": "beat_easy"
     }
   ]
 }
 ```
 
-- Easy Mode: Always accessible
-- Hard Mode: Locked until player earns "beat_easy"
+`easy` is available immediately. `hard` becomes available once the player earns
+`beat_easy`.
 
-### Gating Menu Options
+## Gating Menu Options
 
 ```json
 {
@@ -99,163 +102,76 @@ Use milestones to control what's accessible:
 }
 ```
 
-### Gating Specific Menu Inputs
+The first option of a menu input cannot be milestone-gated.
+
+## Visibility vs Access
+
+`requiredMilestone` and `visibleFromMilestone` work on variants, menu inputs,
+menu options, badges, and ranking table definitions.
 
 ```json
 {
-  "id": "advanced_settings",
-  "label": "Advanced Settings",
-  "requiredMilestone": "expert_unlocked",
-  "options": [...]
+  "id": "extreme",
+  "label": "Extreme",
+  "visibleFromMilestone": "beat_normal",
+  "requiredMilestone": "beat_hard"
 }
 ```
 
-The entire menu input is locked until "expert_unlocked" is earned.
+- Before `beat_normal`: hidden.
+- After `beat_normal`: visible but unavailable.
+- After `beat_hard`: available.
 
-## Visibility vs. Accessibility
+## Badges
 
-Control how locked content appears to players:
-
-### Required Milestone (Greyed Out)
-
-```json
-{
-  "requiredMilestone": "beat_easy"
-}
-```
-
-**Result:** Content appears but is greyed out. Shows "coming soon" or similar message.
-
-### Visible From Milestone (Hidden Until Hint)
+Badges are visible rewards declared separately from milestones:
 
 ```json
 {
-  "visibleFromMilestone": "teaser_hint"
-}
-```
-
-**Result:** Content completely hidden until "teaser_hint" is earned. Then appears greyed out.
-
-### Both (Progressive Reveal)
-
-```json
-{
-  "visibleFromMilestone": "teaser_hint",
-  "requiredMilestone": "full_unlock"
-}
-```
-
-**Timeline:**
-1. Initially: Hidden completely
-2. After "teaser_hint": Shows as greyed out ("Coming Soon")
-3. After "full_unlock": Fully accessible
-
-## Design Patterns
-
-### Simple Progression (Easy → Hard)
-```json
-{
-  "milestones": ["beat_easy", "beat_hard"],
-  "variants": [
-    { "id": "easy", "label": "Easy" },
-    { "id": "hard", "label": "Hard", "requiredMilestone": "beat_easy" }
-  ]
-}
-```
-
-### Multi-Tier Progression
-```json
-{
-  "milestones": ["beat_tier_1", "beat_tier_2", "beat_tier_3"],
-  "variants": [
-    { "id": "tier_1", "label": "Tier 1" },
-    { "id": "tier_2", "label": "Tier 2", "requiredMilestone": "beat_tier_1" },
-    { "id": "tier_3", "label": "Tier 3", "requiredMilestone": "beat_tier_2" }
-  ]
-}
-```
-
-### Parallel Unlocks
-```json
-{
-  "milestones": ["story_complete", "sandbox_unlocked"],
-  "variants": [
-    { "id": "story", "label": "Story Mode" },
-    { "id": "sandbox", "label": "Sandbox", "requiredMilestone": "story_complete" }
-  ]
-}
-```
-
-### Teaser Content
-```json
-{
-  "milestones": ["season_1_done", "season_2_available"],
-  "variants": [
-    { "id": "season_1", "label": "Season 1" },
+  "badges": [
     {
-      "id": "season_2",
-      "label": "Season 2 (Coming Soon)",
-      "visibleFromMilestone": "season_1_done",
-      "requiredMilestone": "season_2_available"
+      "id": "gm",
+      "label": "GM",
+      "description": "Reached GM rank",
+      "iconIndex": 0,
+      "requiredMilestone": "beat_hard"
     }
   ]
 }
 ```
 
-### Ranked Unlock
-```json
-{
-  "milestones": ["ranked_qualified", "ranked_elite"],
-  "variants": [
-    { "id": "casual", "label": "Casual" },
-    { "id": "ranked", "label": "Ranked", "requiredMilestone": "ranked_qualified" },
-    { "id": "elite", "label": "Elite", "requiredMilestone": "ranked_elite" }
-  ]
-}
-```
-
-## Recording Milestones in Lua
-
-Your script detects when players complete challenges and records milestones:
+Lua can unlock and query badges:
 
 ```lua
--- Check if player beat the level
-if player_health > 0 and level_boss_defeated then
-  RecordMilestone("beat_easy")
+if rank == "GM" then
+  api.progress.unlock_badge("gm")
 end
 
--- Track progression
-if current_level >= 10 then
-  RecordMilestone("level_10_reached")
-end
-
-if total_score >= 5000 then
-  RecordMilestone("expert_scorer")
+if api.progress.has_badge("gm") then
+  api.log.info("GM badge already earned")
 end
 ```
 
-Milestones are automatically saved to `milestones.txt`.
+Badge UI presentation is still evolving, but the manifest and Lua progress API
+already support badge ids.
 
 ## Complete Example
 
-**manifest.json:**
 ```json
 {
   "name": "Progressive Adventure",
-  "author": "Designer",
   "version": "1.0.0",
   "modeType": "Solo",
+  "manifestApiVersion": 1,
   "milestones": [
-    "tutorial_complete",
     "beat_chapter_1",
     "beat_chapter_2",
-    "beat_chapter_3",
     "master_rank"
   ],
   "variants": [
     {
-      "id": "story",
-      "label": "Story Mode"
+      "id": "chapter_1",
+      "label": "Chapter 1"
     },
     {
       "id": "chapter_2",
@@ -263,86 +179,28 @@ Milestones are automatically saved to `milestones.txt`.
       "requiredMilestone": "beat_chapter_1"
     },
     {
-      "id": "chapter_3",
-      "label": "Chapter 3",
-      "requiredMilestone": "beat_chapter_2"
-    },
-    {
-      "id": "extreme",
-      "label": "Extreme Challenge",
-      "requiredMilestone": "beat_chapter_3",
-      "visibleFromMilestone": "master_rank"
+      "id": "master",
+      "label": "Master",
+      "visibleFromMilestone": "beat_chapter_2",
+      "requiredMilestone": "master_rank"
     }
   ]
 }
 ```
 
-**main.lua:**
 ```lua
 function update()
-  -- Game logic here
-
   if chapter_completed then
-    if current_chapter == 1 then
-      RecordMilestone("beat_chapter_1")
-    elseif current_chapter == 2 then
-      RecordMilestone("beat_chapter_2")
-    elseif current_chapter == 3 then
-      RecordMilestone("beat_chapter_3")
-    end
+    api.progress.unlock_milestone("beat_chapter_" .. current_chapter)
   end
 
-  if player_score >= 10000 then
-    RecordMilestone("master_rank")
+  if api.progress.has_milestone("beat_chapter_2") and score >= 10000 then
+    api.progress.unlock_milestone("master_rank")
   end
 end
 ```
 
-## Best Practices
+## Next
 
-✅ **DO:**
-- Create milestone IDs that clearly describe what was achieved
-- Use snake_case for milestone names (e.g., "beat_level_1")
-- Gate content progressively (don't lock everything)
-- Always have at least one fully accessible option
-- Use "visibleFromMilestone" for teasers
-- Design progression that feels natural
-
-❌ **DON'T:**
-- Create milestones that are never earned
-- Gate the only playable variant
-- Make all options locked at game start
-- Use confusing milestone names
-- Create impossible progression paths
-- Gate tutorial content behind milestones
-
-## Checking Milestones in Lua
-
-Query earned milestones in your script:
-
-```lua
--- Check if player has earned a milestone
-if HasMilestone("beat_easy") then
-  -- Player completed easy mode
-  show_hard_mode = true
-end
-
--- Get all earned milestones
-local earned = GetAllMilestones()
-for i, milestone in ipairs(earned) do
-  print("Player earned: " .. milestone)
-end
-```
-
----
-
-**Next:**
-- **→ [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Track and display scores
-- **→ [Best Practices]({{ site.baseurl }}{% link best-practices.md %})** - Design guidelines
-
-**Related:**
-- **← [Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Create game variants
-- **← [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Add configuration options
-- **→ [Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - See full working code
-
-**Back to:** [Home]({{ site.baseurl }}{% link index.md %})
+- **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Configure variants before launch.
+- **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Ranking table manifest definitions.

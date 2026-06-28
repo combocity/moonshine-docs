@@ -3,157 +3,243 @@ layout: page
 title: Manifest Reference
 ---
 
-Complete technical reference for the manifest.json file. This document describes the JSON manifest format used by Moonshine games in detail.
+Complete reference for `manifest.json`, the file that describes a Moonshine Lua
+ROM.
 
-For makers just getting started, see [Getting Started]({{ site.baseurl }}{% link getting-started.md %}) or [Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %}).
-
-## Overview
-
-This document describes the complete manifest format and validation rules.
-
-## Table of contents
-- [Overview](#overview)
-- [Required metadata](#required-metadata)
-- [Progression and milestones](#progression-and-milestones)
-- [Badges](#badges)
-- [Variants and menus](#variants-and-menus)
-- [Leaderboards (rankingTables)](#leaderboards-rankingtables)
-- [Resources (resources.images)](#resources-resourcesimages)
-- [Cartridge obfuscation](#cartridge-obfuscation)
-- [Integration reminders for makers](#integration-reminders-for-makers)
+For a first ROM, start with [Getting Started]({{ site.baseurl }}{% link getting-started.md %}).
 
 ## Overview
-- The manifest is required and must be valid before a session can start.
+
 - JSON properties are case-insensitive.
-- `manifestApiVersion` is an integer; only value `1` is supported.
-  Missing values default to `1`.
-- There is no separate manifest-schema version field today. `manifestApiVersion`
-  selects the Lua API/runtime compatibility level.
-- Identifiers (`id`) must be unique within their collection and must not
-  collide across badges, variants, leaderboards, and menu entries.
-- Milestones define the progression tree and back the access/visibility rules
-  of other blocks.
+- `manifestApiVersion` currently supports only `1`.
+- `modeType` currently supports only `Solo`.
+- `variants` is required and must contain at least one variant.
+- `milestones` is required and may be empty.
+- Ids must contain only letters, numbers, `_`, or `-`, and must be 32
+  characters or fewer.
+- Ids must not collide across variants, menu inputs, badges, and ranking tables.
 
-## Required metadata
-- `author` (string, optional): informational display only.
-- `manifestApiVersion` (int, optional): only value `1` is supported. Defaults to `1`.
-- `name` (string, required): mode name.
-- `version` (string, required): SemVer string.
-- `modeType` (string, required): currently only `Solo` is supported.
-- `main.lua` (file, required): must exist next to the manifest.
-- `description` (string, optional).
+## Minimal Manifest
 
-## Progression and milestones
-- `milestones` (string array, required but may be empty).
-- Moonshine can also read `milestones.txt` next to the manifest to know which
-  milestones are unlocked for the player. It is separate from `SaveState.txt`.
-  - One milestone id per line; only the first token before whitespace is used.
-  - Lines starting with `#` are treated as comments.
-- Any `AccessControlledElement` (badges, variants, menu entries/options,
-  leaderboards) may define:
-  - `requiredMilestone`: milestone that unlocks access.
-  - `visibleFromMilestone`: milestone that makes the element visible before
-    unlock.
-- References to unknown milestones are invalid.
+```json
+{
+  "author": "Your Name",
+  "name": "My ROM",
+  "version": "1.0.0",
+  "modeType": "Solo",
+  "manifestApiVersion": 1,
+  "milestones": [],
+  "variants": [
+    {
+      "id": "classic",
+      "label": "Classic"
+    }
+  ]
+}
+```
+
+## Metadata
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `author` | No | Informational author display name. |
+| `name` | Yes | ROM display name. |
+| `version` | Yes | SemVer version string. |
+| `modeType` | Yes | Must be `Solo`. |
+| `manifestApiVersion` | No | Defaults to `1`; only `1` is supported. |
+| `description` | No | Longer ROM description. |
+| `scripts` | No | Relative Lua script paths. If provided, it must include `main.lua`. |
+
+`main.lua` must be present in the ROM. Script paths cannot be absolute, cannot
+use `..`, and must end with `.lua`.
+
+## Milestones
+
+```json
+{
+  "milestones": ["beat_easy", "beat_normal"]
+}
+```
+
+- Required, but can be an empty array.
+- Maximum 120 milestones.
+- Each id must be 32 characters or fewer.
+- Each id may contain only letters, numbers, `_`, or `-`.
+- Manifest gates must reference milestones declared here.
+
+Runtime progression is handled through `api.progress`, not through public
+author-managed files.
+
+## Access Gates
+
+Variants, menu inputs, menu options, badges, and ranking tables can define:
+
+| Property | Meaning |
+|----------|---------|
+| `requiredMilestone` | Element is visible but unavailable until this milestone is earned. |
+| `visibleFromMilestone` | Element is hidden until this milestone is earned. |
+
+Both must reference known milestone ids.
+
+## Variants
+
+```json
+{
+  "id": "hard",
+  "label": "Hard",
+  "description": "A harder ruleset",
+  "refreshRate": 60,
+  "inputBuffer": 3,
+  "requiredMilestone": "beat_easy",
+  "menuInputs": []
+}
+```
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `id` | Yes | Unique variant id, max 32 chars. |
+| `label` | Yes | Display label, max 32 chars. |
+| `description` | No | Longer description. |
+| `earnedDescription` | No | Text for earned/available states when supported. |
+| `refreshRate` | No | Valid range is 30 to 120. |
+| `inputBuffer` | No | Valid range is 0 to 5. |
+| `menuInputs` | No | Variant-specific menu inputs. |
+
+## Menu Inputs
+
+```json
+{
+  "id": "difficulty",
+  "label": "Difficulty",
+  "type": "Select",
+  "options": [
+    { "label": "Easy" },
+    { "label": "Hard", "requiredMilestone": "beat_easy" }
+  ]
+}
+```
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `id` | Yes | Unique menu input id, max 32 chars. |
+| `label` | Yes | Display label, max 32 chars. |
+| `type` | No | `Select` by default. `Radio` is also valid. |
+| `description` | No | Longer description. |
+| `earnedDescription` | No | Text for earned/available states when supported. |
+| `options` | Yes | At least two options. |
+
+The first option cannot define `requiredMilestone` or `visibleFromMilestone`.
+
+Options support:
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `label` | Yes | Display label and Lua selection value, max 32 chars. |
+| `description` | No | Longer description. |
+| `earnedDescription` | No | Text for earned/available states when supported. |
+| `inputs` | No | Nested menu inputs. |
+
+Lua reads selected values from `api.session.selection`.
 
 ## Badges
-- Optional `badges` array.
-- Fields:
-  - `id` (string, required, <= 32 chars).
-  - `label` (string, required, <= 32).
-  - `description` / `earnedDescription` (optional).
-  - `iconIndex` (required): integer between `0` and `31`, unique across badges.
-  - `overrideBadge` (optional): badge being replaced.
-  - `requiredMilestone` / `visibleFromMilestone` (optional) must target known
-    milestones.
-- `id` values must be unique and must not collide with variant, leaderboard,
-  or menu ids.
 
-## Variants and menus
-- `variants` array is required (at least one variant).
-- Variant:
-  - `id` (required, <= 32).
-  - `label` (required, <= 32).
-  - `description` / `earnedDescription` (optional).
-  - `refreshRate` (optional): when present, must be between `30` and `120`
-    (currently validated but not used at runtime).
-  - `inputBuffer` (optional): when present, must be between `0` and `5`
-    (currently validated but not used at runtime).
-  - `requiredMilestone` / `visibleFromMilestone` (optional).
-  - `menuInputs` (optional).
-- `menuInputs` (top-level or nested in options):
-  - `id` (required, <= 32) and `label` (required, <= 32).
-  - `type` (optional): currently only `select` is supported. When missing or
-    `select` (case-insensitive), `options` is required and must contain at
-    least 2 entries.
-  - `options` (optional otherwise).
-  - `requiredMilestone` / `visibleFromMilestone` (optional).
-- `options` (required for `select`):
-  - `label` (required, <= 32): used as the selection value passed to Lua and
-    the override file.
-  - `description` / `earnedDescription` (optional).
-  - `inputs` (optional): allows nesting new `menuInputs`.
-  - `requiredMilestone` / `visibleFromMilestone` (optional).
-- Uniqueness:
-  - Variant ids are unique.
-  - `menuInputs` ids must be unique across all variants.
-  - Id collisions across `Badge`, `Variant`, `RankingTable`, and `MenuInput`
-    are not allowed.
+```json
+{
+  "badges": [
+    {
+      "id": "gm",
+      "label": "GM",
+      "description": "Reached GM rank",
+      "iconIndex": 0,
+      "requiredMilestone": "beat_hard"
+    }
+  ]
+}
+```
 
-## Leaderboards (rankingTables)
-- Optional `rankingTables` array.
-- Fields:
-  - `id` (required, <= 32, unique).
-  - `label` (required, <= 32).
-  - `columns` (required, non-empty).
-  - `requiredMilestone` / `visibleFromMilestone` (optional, must target known
-    milestones).
-- Columns:
-  - `label` (required, <= 32).
-  - `type` (required): `Badge`, `Chrono`, or `Point`.
+| Property | Required | Description |
+|----------|----------|-------------|
+| `id` | Yes | Unique badge id, max 32 chars. |
+| `label` | Yes | Display label, max 32 chars. |
+| `description` | No | Locked/unearned description. |
+| `earnedDescription` | No | Earned description. |
+| `iconIndex` | Yes | Integer from 0 to 31, unique across badges. |
+| `overrideBadge` | No | Badge id replaced by this badge. |
 
-## Resources (`resources`)
-- Optional `resources` block.
-- `images`: list of images keyed by `id` (uniqueness enforced).
-  - `fileName`: required file name under `assets/images`.
-  - `sprites` (optional): each sprite has `id` (unique per image), `x`, `y`,
-    `width`, `height`.
-    - `id` values may repeat across different images but not within the same
-      image.
-- `sfx`: list of sound effects with `id` and `fileName` (`.ogg`).
-- `musics`: list of musics with `id` and `fileName` (`.ogg`).
-- `fonts`: list of fonts with `id`, `fileName` (`.ttf`), `ttfFontSize`,
-  optional `baseSet`, `outline`, and `localization`.
+At most 32 badges can be declared.
 
-## Cartridge obfuscation
-- `obfuscatePackageContent` (bool, default `true`):
-  - If `true` (default), manifest, scripts, and images are obfuscated in the
-    cartridge to avoid trivial inspection.
-  - If `false`, the cartridge stores files in clear text and is expected to be
-    read as such.
+## Ranking Tables
 
-## Integration reminders for makers
-- The manifest must live under `GAME_ROOT/Roms`; absolute paths are forbidden in current builds.
-- `main.lua` must live next to the manifest.
-- `SaveState.txt` next to the manifest is loaded automatically if present.
-- `milestones.txt` is read separately to drive access control; do not put
-  maker state in that file.
+Ranking tables are currently a manifest definition. Score submission from Lua is
+not available yet.
 
----
+```json
+{
+  "rankingTables": [
+    {
+      "id": "master",
+      "label": "Master",
+      "columns": [
+        { "label": "Time", "type": "Chrono" },
+        { "label": "Score", "type": "Point" }
+      ]
+    }
+  ]
+}
+```
 
-## Quick Navigation
+| Property | Required | Description |
+|----------|----------|-------------|
+| `id` | Yes | Unique ranking table id, max 32 chars. |
+| `label` | Yes | Display label, max 32 chars. |
+| `columns` | Yes | At least one column. |
 
-**Beginner? Start here:**
-- **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create your first ROM
-- **[Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Multiple game types
+Column `type` must be `Badge`, `Chrono`, or `Point`. Column `label` is required
+and must be 32 characters or fewer.
 
-**Learn by doing:**
-- **[Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - Full working ROM
+## Resources
 
-**Specific topics:**
-- **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Player options
-- **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestone gates
-- **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Score tracking
-- **[Best Practices]({{ site.baseurl }}{% link best-practices.md %})** - Design guidelines
+```json
+{
+  "resources": {
+    "images": [
+      {
+        "id": "blocks",
+        "fileName": "blocks.png",
+        "sprites": [
+          { "id": "red", "x": 0, "y": 0, "width": 8, "height": 8 }
+        ]
+      }
+    ],
+    "sfx": [
+      { "id": "clear", "fileName": "clear.ogg" }
+    ],
+    "musics": [
+      { "id": "theme", "fileName": "theme.ogg" }
+    ],
+    "fonts": [
+      { "id": "main", "fileName": "main.ttf", "ttfFontSize": 16 }
+    ]
+  }
+}
+```
 
-**Back to:** [Home]({{ site.baseurl }}{% link index.md %})
+Resource file names are relative to the matching asset folder in the ROM.
+
+## Cartridge Option
+
+`obfuscatePackageContent` controls whether manifest, scripts, and resources are
+stored obfuscated inside the packed `.t3rom` cartridge. It defaults to `true`.
+
+```json
+{
+  "obfuscatePackageContent": true
+}
+```
+
+## Related
+
+- **[Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Variant design.
+- **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Menu definitions.
+- **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestones and badges.
+- **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - WIP ranking table definitions.

@@ -3,143 +3,127 @@ layout: page
 title: Getting Started
 ---
 
-This guide walks you through creating your first Moonshine Lua ROM.
+This guide walks you through creating a first Moonshine Lua ROM with the current
+Lua API.
 
 ## Prerequisites
 
-- Moonshine game installed
-- A player account linked to a Discord server. See [Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %}) if you are not sure why Discord is part of the flow.
-- VS Code installed with the EmmyLua extension.
-- Basic familiarity with JSON and Lua (or willingness to learn!)
-- An idea for a game you want to create
+- Moonshine game installed.
+- A player account linked to a Discord server. See [Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %}) for the community flow.
+- VS Code with the EmmyLua extension.
+- Basic JSON and Lua familiarity.
 
 ## Directory Structure
 
 Create your ROM under the Moonshine local ROM workspace root named `Roms`:
 
-```
+```text
 GAME_ROOT/Roms/
 └── my-first-rom/
-    ├── .emmyrc.json            # Recommended: EmmyLua workspace settings
-    ├── manifest.json           # Required: ROM configuration
-    ├── main.lua                # Required: main Lua script
-    ├── sdk/                    # Recommended: Moonshine Lua SDK for autocomplete
+    ├── .emmyrc.json
+    ├── manifest.json
+    ├── main.lua
+    ├── sdk/
     │   └── api/
     │       └── v1/
-    ├── SaveState.txt           # Optional: player data
-    ├── milestones.txt          # Optional: player progression
-    └── assets/                 # Optional: images, resources
-        └── images/
+    └── assets/
+        ├── images/
+        ├── sfx/
+        ├── musics/
+        └── fonts/
 ```
 
-**Important:** Your ROM must live under `GAME_ROOT/Roms/my-first-rom`. `main.lua` must sit next to the manifest. Open `my-first-rom` folder itself in VS Code so EmmyLua picks up `.emmyrc.json` and the local `sdk/api` stubs for autocompletion and debugging.
+`manifest.json` and `main.lua` are the important files. Open the ROM folder
+itself in VS Code so EmmyLua can use `.emmyrc.json` and the local `sdk/api`
+stubs for autocompletion.
 
 ## Step 1: Create the Manifest
 
-Create a file called `manifest.json` in your ROM directory:
+Create `manifest.json`:
 
 ```json
 {
   "author": "Your Name",
-  "name": "My First Mode",
+  "name": "My First ROM",
   "version": "1.0.0",
   "modeType": "Solo",
   "manifestApiVersion": 1,
-  "description": "A simple solo game mode",
+  "description": "A simple solo ROM",
+  "milestones": [],
   "variants": [
     {
       "id": "classic",
-      "label": "Classic Mode"
+      "label": "Classic"
     }
-  ],
-  "milestones": []
+  ]
 }
 ```
 
-### Manifest Fields Explained
+Important fields:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `author` | No | Your name (informational) |
-| `name` | Yes | Display name of your mode |
-| `version` | Yes | Your ROM's SemVer version (e.g., `1.0.0`) |
-| `modeType` | Yes | Use `Solo` for now |
-| `manifestApiVersion` | No | Use `1` (currently only version supported, defaults to `1`) |
-| `description` | No | Longer description of your mode |
-| `variants` | Yes | At least one variant (see below) |
-| `milestones` | Yes | Can be empty for simple ROMs |
+| `name` | Yes | Display name of your ROM. |
+| `version` | Yes | SemVer version, for example `1.0.0`. |
+| `modeType` | Yes | Use `Solo`. |
+| `manifestApiVersion` | No | Use `1`; this is the only supported API version today. |
+| `milestones` | Yes | List of possible progression milestones. Can be empty. |
+| `variants` | Yes | At least one playable variant. |
 
-### Variants
+## Step 2: Create `main.lua`
 
-Each variant is a playable mode. At minimum you need one:
-
-```json
-"variants": [
-  {
-    "id": "classic",
-    "label": "Classic Mode",
-    "description": "The original game mode"
-  }
-]
-```
-
-- **`id`** - Internal identifier (used in code, ≤32 chars)
-- **`label`** - Display name shown to players (≤32 chars)
-- **`description`** - Optional longer text
-
-## Step 2: Create Your Lua Script
-
-Create `main.lua` in your ROM directory:
+Create `main.lua` next to the manifest:
 
 ```lua
--- My First Mode
-print("Welcome to my first Moonshine ROM!")
+local frame = 0
 
--- Your game logic goes here
+function init()
+  api.log.info("My First ROM started")
+  api.state.save.play_count = (api.state.save.play_count or 0) + 1
+end
+
 function update()
-  -- Called each frame
-  -- Add game mechanics here
+  frame = frame + 1
+
+  if frame >= 600 then
+    api.session.end_game()
+  end
 end
 
 function draw()
-  -- Called each frame to render
-  -- Add graphics here
+  api.graphics.draw_text(24, 24, "Hello Moonshine")
 end
 ```
 
-The script must live in `main.lua` next to the manifest and define functions that Moonshine calls during gameplay.
+Moonshine calls `init`, `update`, and `draw` during the session. The current
+runtime API is exposed through the global `api` table.
 
-## Step 3: Test Your ROM
+Useful starting points:
 
-### Using Maker Mode
+| API | Purpose |
+|-----|---------|
+| `api.session.variant_id` | Selected variant id. |
+| `api.session.selection` | Menu choices keyed by menu input id. |
+| `api.state.save` | Mutable persistent save table for this ROM/player context. |
+| `api.progress` | Milestone and badge helpers. |
+| `api.input` | Runtime input state. |
+| `api.graphics` | Drawing helpers. |
+| `api.audio` | Sound and music helpers. |
+| `api.log` | Runtime logging helpers. |
 
-1. Launch Moonshine
-2. Navigate to **Maker Mode**
-3. Select your ROM from the available ROMs list
-4. Choose a variant
-5. Press **Start**
+## Step 3: Add a Menu
 
-Your ROM should launch and print welcome message to the console.
-
-### Viewing Logs
-
-Check the game logs to see console output:
-- Console.log file in the game directory
-- In-game debug console (if available)
-
-## Step 4: Add a Menu (Optional)
-
-To add player configuration options, add `menuInputs` to your variant:
+Add `menuInputs` to a variant:
 
 ```json
 {
   "id": "classic",
-  "label": "Classic Mode",
+  "label": "Classic",
   "menuInputs": [
     {
       "id": "difficulty",
       "label": "Difficulty",
-      "type": "select",
+      "type": "Select",
       "options": [
         { "label": "Easy" },
         { "label": "Normal" },
@@ -150,118 +134,77 @@ To add player configuration options, add `menuInputs` to your variant:
 }
 ```
 
-Access the selected value in your Lua script using the selection context.
+Read the selected value from Lua:
 
-## Step 5: Add Progression (Optional)
+```lua
+function init()
+  local difficulty = api.session.selection.difficulty or "Easy"
+  api.log.info("Difficulty: " .. difficulty)
+end
+```
 
-To track player progress with milestones:
+## Step 4: Add Progression
+
+Declare possible milestones in the manifest:
 
 ```json
 {
-  "milestones": ["completed_easy", "completed_hard"],
+  "milestones": ["completed_easy"],
   "variants": [
     {
       "id": "easy",
-      "label": "Easy Mode"
+      "label": "Easy"
     },
     {
       "id": "hard",
-      "label": "Hard Mode",
+      "label": "Hard",
       "requiredMilestone": "completed_easy"
     }
   ]
 }
 ```
 
-The "Hard Mode" variant will only be accessible after the player earns the "completed_easy" milestone.
-
-## Directory Examples
-
-### Simple ROM (No Progression)
-```
-my-simple-rom/
-├── manifest.json
-├── main.lua
-```
-
-### Mode with Menus
-```
-my-menu-rom/
-├── manifest.json
-├── main.lua
-└── assets/
-    └── images/
-        └── icon.png
-```
-
-### Mode with Progression
-```
-my-progression-rom/
-├── manifest.json
-├── main.lua
-├── SaveState.txt
-├── milestones.txt
-└── assets/
-```
-
-## Common Tasks
-
-### Access Player Selections from Menus
-
-In your Lua script, access menu selections through the provided API:
+Unlock milestones from Lua when the player earns them:
 
 ```lua
--- Get player's menu choices
-local difficulty = GetMenuSelection("difficulty")  -- "Easy", "Normal", or "Hard"
+if boss_defeated then
+  api.progress.unlock_milestone("completed_easy")
+end
 ```
 
-### Track Player Milestones
+For server-backed sessions, Avalon sends the player's earned milestones when
+the catalog/session is created and receives newly unlocked milestones when the
+session ends. In local maker mode, Moonshine may persist local test progress for
+development, but authors should use the `api.progress` functions rather than
+editing progress files by hand.
 
-Create a `milestones.txt` file to track progress:
+## Step 5: Test Your ROM
 
-```
-# milestones.txt
-completed_easy
-completed_normal
-```
+1. Launch Moonshine.
+2. Open Maker Mode.
+3. Select your local ROM.
+4. Choose a variant and menu options.
+5. Start the session.
 
-Each line is a milestone ID the player has earned.
-
-### Save Game Data
-
-Create a `SaveState.txt` file for persistent data:
-
-```
-score=1000
-level=5
-time=3600
-```
-
-This is automatically loaded on session restart.
+Check the logs for Lua errors or `api.log` output.
 
 ## Troubleshooting
 
 ### ROM Won't Load
-- Check manifest JSON syntax (use a JSON validator)
-- Verify `main.lua` exists next to the manifest
-- Ensure the ROM is in the `GAME_ROOT/Roms/` directory
 
-### Manifest Validation Error
-- Review error message carefully
-- Check for unknown milestones
-- Verify all required fields are present
+- Check that `manifest.json` is valid JSON.
+- Verify `main.lua` exists next to the manifest.
+- Ensure the ROM is under `GAME_ROOT/Roms/`.
+- Check manifest validation errors for invalid ids or milestone references.
 
 ### Script Not Running
-- Check console output for Lua errors
-- Ensure `main.lua` has valid Lua syntax
+
+- Ensure `main.lua` defines valid Lua.
+- Use `init`, `update`, and `draw` as entry points.
+- Check the Moonshine logs for Lua runtime errors.
 
 ## Next Steps
 
-- **→ [Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %})** - Understand Discord communities, author access, and publication stages
-- **→ [Manifest Essentials]({{ site.baseurl }}{% link manifest.md %})** - Deep dive into manifest options
-- **→ [Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Create multiple game variants
-- **→ [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Build interactive menus
-
----
-
-**Back to:** [Authoring Introduction]({{ site.baseurl }}{% link introduction.md %}) | [Home]({{ site.baseurl }}{% link index.md %})
+- **[Manifest Reference]({{ site.baseurl }}{% link manifest.md %})** - Full manifest fields and validation rules.
+- **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Variant menu inputs.
+- **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestones and badges.

@@ -16,10 +16,10 @@ In Moonshine, a **ROM** is the playable content you author. When it is uploaded 
 
 You can create several **variants**, such as *Easy*, *Normal*, or *Hard* modes. A variant can be seen as a game mode that appears as an entry in the *Play Menu*. Each **variant** can also have its own **Custom Menu**, letting the player tweak settings before starting. For example, if the player completes your *Hard* variant with 100 levels, you could then allow them to start from a specific level.
 
-Additionally, you could propose an *Extreme* mode that shows up only after beating the *Hard* mode. That's possible too with the use of **Milestones**. Milestones allow you to customize the visibility and accessibility of variants, menu options, and leaderboards depending on player progression.
+Additionally, you could propose an *Extreme* mode that shows up only after beating the *Hard* mode. That's possible with **Milestones**. Milestones allow you to customize the visibility and accessibility of variants, menu options, badges, and ranking table definitions depending on player progression.
 
-Milestones work like achievements internally, but they are not displayed directly to players. If you want a visible achievement-like reward, you can define **Badges** instead, although when and how they are shown in the UI is still a work in progress. When your script starts, Moonshine provides the current **Milestones**, **Badges**, and **saveState**, so your game can react to the player's progression.
+Milestones work like achievements internally, but they are not displayed directly to players. If you want a visible achievement-like reward, you can define **Badges** instead, although when and how they are shown in the UI is still a work in progress. When your script starts, Moonshine provides the current progression and persistent save table through `api.progress` and `api.state.save`.
 
-When your game variant ends, it can submit the player's score to a **Leaderboard** whose format is totally up to you. Moonshine's server will verify the score and update the leaderboards accordingly.
+Leaderboards are still work in progress. The manifest can describe `rankingTables`, but Moonshine does not yet expose a public Lua API for score submission.
 
 **Ready to start?** → [Getting Started]({{ site.baseurl }}{% link getting-started.md %})
