@@ -9,7 +9,7 @@ This guide covers the entire process, from designing your game mechanics to inte
 
 Before publishing, it helps to understand how Moonshine, Avalon, and Discord work together. See the [Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %}) page for the player, author, and Discord administrator roles.
 
-In Moonshine, a **ROM** is the playable content you author. When it is uploaded or distributed, it is packed into a **cartridge** (`*.t3pkg`) that contains:
+In Moonshine, a **ROM** is the playable content you author. When it is uploaded or distributed, it is packed into a **cartridge** (`*.t3rom`) that contains:
 - a manifest
 - one or more Lua scripts
 - optional resources (images, sounds, and music).
