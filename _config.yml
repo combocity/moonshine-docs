@@ -5,6 +5,7 @@ header_pages:
   - ecosystem.md
   - introduction.md
   - getting-started.md
+  - lua-api-v1.md
   - manifest.md
   - variants-and-modes.md
   - menus-configuration.md

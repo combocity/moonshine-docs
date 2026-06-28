@@ -205,6 +205,7 @@ Check the logs for Lua errors or `api.log` output.
 
 ## Next Steps
 
+- **[Lua API v1 Reference]({{ site.baseurl }}{% link lua-api-v1.md %})** - Runtime lifecycle and `api.*` modules.
 - **[Manifest Reference]({{ site.baseurl }}{% link manifest.md %})** - Full manifest fields and validation rules.
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Variant menu inputs.
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestones and badges.

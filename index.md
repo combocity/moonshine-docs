@@ -32,6 +32,7 @@ Master the key features of Moonshine ROM authoring:
 
 ## Reference & Examples
 
+- **[Lua API v1 Reference]({{ site.baseurl }}{% link lua-api-v1.md %})** - Runtime lifecycle and `api.*` modules
 - **[Manifest Essentials]({{ site.baseurl }}{% link manifest.md %})** - Complete technical reference for manifest.json configuration
 - **[Best Practices & Edge Cases]({{ site.baseurl }}{% link best-practices.md %})** - TODO rewrite from concrete behavior
 - **[Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - TODO rewrite for the current Lua API
