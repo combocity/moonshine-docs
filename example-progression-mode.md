@@ -11,7 +11,7 @@ removed from the public guide until it can be rebuilt around the current Lua API
 - `init`, `update`, and `draw`.
 - `api.session.variant_id`.
 - `api.session.selection`.
-- `api.state.save`.
+- `api.save`.
 - `api.progress.unlock_milestone`.
 - `api.progress.has_milestone`.
 - `api.session.end_game`.

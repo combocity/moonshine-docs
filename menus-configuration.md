@@ -192,11 +192,11 @@ Use milestones to control access:
 ## Saving Player Choices
 
 Selections are provided at session start. If your ROM wants to remember the last
-choice, write it into `api.state.save`:
+choice, write it into `api.save`:
 
 ```lua
 function init()
-  api.state.save.last_difficulty = api.session.selection.difficulty
+  api.save.last_difficulty = api.session.selection.difficulty
 end
 ```
 

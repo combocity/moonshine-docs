@@ -13,6 +13,6 @@ Topics to cover later:
 - Manifest id rules and readable naming.
 - Keeping one variant and one first menu option available for a new player.
 - Using `api.session.selection` instead of hard-coded assumptions.
-- Using `api.state.save` for ROM save data.
+- Using `api.save` for ROM save data.
 - Using `api.progress` for milestones and badges.
 - Avoiding leaderboard guidance until score submission exists in Moonshine.

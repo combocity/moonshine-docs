@@ -79,7 +79,7 @@ local frame = 0
 
 function init()
   api.log.info("My First ROM started")
-  api.state.save.play_count = (api.state.save.play_count or 0) + 1
+  api.save.play_count = (api.save.play_count or 0) + 1
 end
 
 function update()
@@ -95,21 +95,10 @@ function draw()
 end
 ```
 
-Moonshine calls `init`, `update`, and `draw` during the session. The current
-runtime API is exposed through the global `api` table.
-
-Useful starting points:
-
-| API | Purpose |
-|-----|---------|
-| `api.session.variant_id` | Selected variant id. |
-| `api.session.selection` | Menu choices keyed by menu input id. |
-| `api.state.save` | Mutable persistent save table for this ROM/player context. |
-| `api.progress` | Milestone and badge helpers. |
-| `api.input` | Runtime input state. |
-| `api.graphics` | Drawing helpers. |
-| `api.audio` | Sound and music helpers. |
-| `api.log` | Runtime logging helpers. |
+Moonshine calls `init`, `update`, and `draw` during the session. Your script can
+use the global `api` table to read the session context, react to inputs, draw,
+play sounds, save progress, and end the game. For the complete runtime surface,
+see the [Lua API v1 Reference]({{ site.baseurl }}{% link lua-api-v1.md %}).
 
 ## Step 3: Add a Menu
 

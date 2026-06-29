@@ -4,8 +4,8 @@ title: Lua API v1 Reference
 ---
 
 Moonshine exposes its runtime API through a global `api` table. The API version
-is selected by `manifestApiVersion` in `manifest.json`; this page describes
-version `1`.
+is selected by `manifestApiVersion` in `manifest.json`. API v1 may still change
+while the project evolves before release.
 
 The SDK stubs shipped with Moonshine mirror this API and should be used for
 EmmyLua autocompletion:
@@ -21,19 +21,18 @@ sdk/api/v1/
 ├── progress.lua
 ├── safety.lua
 ├── session.lua
-├── state.lua
 └── types.lua
 ```
 
 ## Lifecycle
 
-Moonshine calls these global Lua functions when they are defined:
+Moonshine requires `update` and `draw` to start a ROM. `init` is optional.
 
-| Function | Called when |
-|----------|-------------|
-| `init()` | Once after the API tables are ready. Initialize state and load handles here. |
-| `update()` | Every frame. Update gameplay state and react to input here. |
-| `draw()` | Every frame after `update()`. Render the current frame here. |
+| Function | Required | Called when |
+|----------|----------|-------------|
+| `init()` | No | Once after the API tables are ready, when defined. Initialize state and load handles here. |
+| `update()` | Yes | Every frame. Update gameplay state and react to input here. |
+| `draw()` | Yes | Every frame after `update()`. Render the current frame here. |
 
 ```lua
 local ticks = 0
@@ -61,7 +60,7 @@ end
 |-------|-------------|
 | `api.version` | Current Lua API version. For this page, `1`. |
 | `api.session` | Session context and lifecycle helpers. |
-| `api.state` | Persistent save state. |
+| `api.save` | Mutable persistent save table. |
 | `api.progress` | Milestone and badge helpers. |
 | `api.input` | Per-frame input snapshot. |
 | `api.graphics` | Rendering helpers. |
@@ -69,8 +68,8 @@ end
 | `api.log` | Logging helpers. |
 | `api.safety` | Reserved safety hooks. Currently no-op. |
 
-Most API tables are read-only. `api.state.save` is the mutable table intended
-for ROM save data.
+Most API tables are read-only. `api.save` is the mutable table intended for ROM
+save data.
 
 ## `api.session`
 
@@ -83,8 +82,8 @@ helpers.
 | `api.session.variant_id` | `string` | Selected variant id from the manifest. |
 | `api.session.debug` | `boolean` | `true` when launched in local maker mode. |
 | `api.session.selection` | `table<string, string>` | Selected menu values keyed by menu input id. |
-| `api.session.end_game()` | function | Ends the game and submits the end-session result. |
-| `api.session.shutdown()` | function | Stops the Lua session without treating it as a normal game result. |
+| `api.session.end_game()` | function | Submits the session result once. The ROM keeps control until it calls `shutdown()`; later changes are not included in the submitted result. |
+| `api.session.shutdown()` | function | Ends the ROM immediately and returns control to Moonshine. |
 
 ```lua
 function init()
@@ -102,23 +101,27 @@ Use bracket access for menu ids that are not valid Lua field names:
 local start_level = api.session.selection["start-level"]
 ```
 
-## `api.state`
+## `api.save`
 
-`api.state.save` is a persistent table loaded before `init()` and included in
+`api.save` is a persistent table loaded before `init()` and included in
 the session result when the host finalizes the session.
+
+`api.save` is always a table. On a fresh save it is empty, so initialize your
+own fields when they are `nil`.
 
 ```lua
 function init()
-  api.state.save.play_count = (api.state.save.play_count or 0) + 1
+  api.save.play_count = (api.save.play_count or 0) + 1
 end
 ```
 
-`api.state` itself is read-only, but `api.state.save` is mutable:
+The API root is read-only, so the ROM cannot replace `api.save`. The content of
+`api.save` is mutable:
 
 ```lua
 function finish_game(score)
-  local previous_best = api.state.save.best_score or 0
-  api.state.save.best_score = math.max(previous_best, score)
+  local previous_best = api.save.best_score or 0
+  api.save.best_score = math.max(previous_best, score)
   api.session.end_game()
 end
 ```
@@ -131,19 +134,19 @@ Assigning `nil` to a save field removes that field from the next saved state.
 Nested tables can be updated in place:
 
 ```lua
-api.state.save.settings.speed = "fast"
+api.save.settings.speed = "fast"
 ```
 
 Lists are tables too. Use `table.insert` and `table.remove` to keep list indexes
 compact:
 
 ```lua
-if type(api.state.save.items) ~= "table" then
-  api.state.save.items = {}
+if type(api.save.items) ~= "table" then
+  api.save.items = {}
 end
 
-table.insert(api.state.save.items, "new item")
-table.remove(api.state.save.items, 1)
+table.insert(api.save.items, "new item")
+table.remove(api.save.items, 1)
 ```
 
 Only insert plain save data into lists. If a list contains a runtime object,
