@@ -9,7 +9,7 @@ Lua API.
 ## Prerequisites
 
 - Moonshine game installed.
-- A player account linked to a Discord server. See [Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %}) for the community flow.
+- An Author account linked to a Discord server. See [Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %}) for the community flow.
 - VS Code with the EmmyLua extension.
 - Basic JSON and Lua familiarity.
 
@@ -35,7 +35,7 @@ GAME_ROOT/Roms/
 
 `manifest.json` and `main.lua` are the important files. Open the ROM folder
 itself in VS Code so EmmyLua can use `.emmyrc.json` and the local `sdk/api`
-stubs for autocompletion.
+stubs for autocompletion (initially in the /Roms folder, move them accordingly).
 
 ## Step 1: Create the Manifest
 
@@ -72,102 +72,35 @@ Important fields:
 
 ## Step 2: Create `main.lua`
 
-Create `main.lua` next to the manifest:
+Create the LUA entry point `main.lua` next to the manifest:
 
 ```lua
 local frame = 0
 
-function init()
+function init() -- called once before update()
   api.log.info("My First ROM started")
   api.save.play_count = (api.save.play_count or 0) + 1
 end
 
-function update()
+function update() -- called every frame
   frame = frame + 1
-
   if frame >= 600 then
     api.session.end_game()
   end
+
+  if frame >= 800 then
+    api.session.shutdown()
+  end
 end
 
-function draw()
+function draw() -- called every frame (will try)
   api.graphics.draw_text(24, 24, "Hello Moonshine")
 end
 ```
 
-Moonshine calls `init`, `update`, and `draw` during the session. Your script can
-use the global `api` table to read the session context, react to inputs, draw,
-play sounds, save progress, and end the game. For the complete runtime surface,
-see the [Lua API v1 Reference]({{ site.baseurl }}{% link lua-api-v1.md %}).
+Moonshine calls `init`, `update`, and `draw` when running this script. You will need to call `api.session.shutdown()` to explicitely end your session, so Moonshine can terminate your script. For the full flow, see [Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %}).
 
-## Step 3: Add a Menu
-
-Add `menuInputs` to a variant:
-
-```json
-{
-  "id": "classic",
-  "label": "Classic",
-  "menuInputs": [
-    {
-      "id": "difficulty",
-      "label": "Difficulty",
-      "type": "Select",
-      "options": [
-        { "label": "Easy" },
-        { "label": "Normal" },
-        { "label": "Hard" }
-      ]
-    }
-  ]
-}
-```
-
-Read the selected value from Lua:
-
-```lua
-function init()
-  local difficulty = api.session.selection.difficulty or "Easy"
-  api.log.info("Difficulty: " .. difficulty)
-end
-```
-
-## Step 4: Add Progression
-
-Declare possible milestones in the manifest:
-
-```json
-{
-  "milestones": ["completed_easy"],
-  "variants": [
-    {
-      "id": "easy",
-      "label": "Easy"
-    },
-    {
-      "id": "hard",
-      "label": "Hard",
-      "requiredMilestone": "completed_easy"
-    }
-  ]
-}
-```
-
-Unlock milestones from Lua when the player earns them:
-
-```lua
-if boss_defeated then
-  api.progress.unlock_milestone("completed_easy")
-end
-```
-
-For server-backed sessions, Avalon sends the player's earned milestones when
-the catalog/session is created and receives newly unlocked milestones when the
-session ends. In local maker mode, Moonshine may persist local test progress for
-development, but authors should use the `api.progress` functions rather than
-editing progress files by hand.
-
-## Step 5: Test Your ROM
+## Step 3: Test Your ROM
 
 1. Launch Moonshine.
 2. Open Maker Mode.
@@ -181,20 +114,16 @@ Check the logs for Lua errors or `api.log` output.
 
 ### ROM Won't Load
 
-- Check that `manifest.json` is valid JSON.
-- Verify `main.lua` exists next to the manifest.
-- Ensure the ROM is under `GAME_ROOT/Roms/`.
-- Check manifest validation errors for invalid ids or milestone references.
+Moonshine validates your manifest before offering to run the ROM. If something is invalid or inconsistent, it reports the issues with a list of human-readable messages. Read them, fix the manifest, then try loading the ROM again.
 
-### Script Not Running
+### Script is crashing
 
-- Ensure `main.lua` defines valid Lua.
-- Use `init`, `update`, and `draw` as entry points.
-- Check the Moonshine logs for Lua runtime errors.
+Crashes happen; nothing wrong with moonshing here (i hope). Read the error message, check the stack trace, and use EmmyLua debugging tools to inspect what happened.
 
 ## Next Steps
 
 - **[Lua API v1 Reference]({{ site.baseurl }}{% link lua-api-v1.md %})** - Runtime lifecycle and `api.*` modules.
+- **[Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %})** - How a Lua session starts, submits, and ends.
 - **[Manifest Reference]({{ site.baseurl }}{% link manifest.md %})** - Full manifest fields and validation rules.
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Variant menu inputs.
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestones and badges.

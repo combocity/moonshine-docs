@@ -366,6 +366,7 @@ does not yet expose a public Lua score API.
 ## Related
 
 - **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - First ROM setup.
+- **[Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %})** - Session start, result submission, and shutdown flow.
 - **[Manifest Reference]({{ site.baseurl }}{% link manifest.md %})** - Manifest fields and validation.
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - `api.session.selection`.
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestones and badges.

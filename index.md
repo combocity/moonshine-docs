@@ -26,6 +26,7 @@ New to Moonshine ROM authoring? Start here:
 Master the key features of Moonshine ROM authoring:
 
 - **[Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Design multiple game variants, difficulty tiers, and parallel game modes
+- **[Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %})** - Understand how a Lua session starts, submits results, and ends
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Create interactive menus and let players customize their experience before playing
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Build progression paths using milestones to unlock content and gate features
 - **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Work-in-progress ranking table definitions
