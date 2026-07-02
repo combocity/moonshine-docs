@@ -5,7 +5,7 @@ title: Moonshine Ecosystem
 
 Moonshine is a place to play, create, and share community-made games. The ecosystem is built around players, authors, and Discord communities so new content can start privately, be tested with a trusted group, and later become available more broadly.
 
-This page explains how Moonshine, Avalon, and Discord work together before you dive into ROM manifests, Lua scripts, ROM files, or publication workflows.
+This page explains how Moonshine, Avalon, and Discord work together before you dive into ROM creation and publication workflows.
 
 ## The three parts
 
@@ -47,7 +47,7 @@ Moonshine is an online game, so your account can be used from any computer or ar
 ## Author path
 
 1. Register as a Moonshine player.
-2. Join the Discord server where you want to publish content. This is often the community where you first registered as a player, but it can be another Moonshine community linked to your account.
+2. Join the Discord server where you want to create and publish content. This is often the community where you first registered as a player, but it can be another Moonshine community linked to your account.
 3. Request author access for that server with `/author request`.
 4. Once author access is granted, the Moonshine maker tools let you create, test, debug, and upload a ROM file for your Draft ROM.
 5. Publish a Preview with `/author publish-preview` when you are ready for community testing.
@@ -60,28 +60,16 @@ An author is still a player first. The author role adds publishing permissions f
 
 1. Add the Moonshine bot to your Discord server.
 2. Review and grant author access requests from players in your server with `/admin author-requests` when they fit your community's rules or expectations.
-3. Organize preview testing channels, tester groups, or feedback processes.
+3. Organize preview testing channels, tester groups, or feedback processes (WIP).
 4. Decide when content is mature enough for broader community visibility.
 
 Administrators provide the human governance layer. Avalon can enforce permissions, but the community decides who is trusted.
-
-## Publication stages
-
-Moonshine does not treat content as only private or public. A ROM can move through staged visibility levels as it matures.
-
-| Stage | Meaning | Use it when |
-|-------|---------|-------------|
-| **Draft** | Private author work associated with a Discord server. | You are building, testing locally, or making frequent changes. |
-| **Preview** | A test candidate promoted from Draft, with an explicit SemVer version. | You want people in the community to try a version before a stable release. |
-| **Guild Live** | A community release intended for a Discord server. | The community accepts the version for wider server visibility. |
-| **Public Live** | A global release intended for all Moonshine players. | The content is ready to be visible beyond one Discord community. |
-
-Draft and Preview workflows are the early publishing path for authors. Guild Live and Public Live describe the broader publication model; their exact promotion rules may evolve as the ecosystem grows.
 
 ## Where to go next
 
 - New to Moonshine ROM authoring? Start with the [Authoring Introduction]({{ site.baseurl }}{% link introduction.md %}).
 - Creating your first ROM? Follow [Getting Started]({{ site.baseurl }}{% link getting-started.md %}).
+- add a link to Rom and Session lifecycle.
 - Preparing a valid ROM manifest? Read the [Manifest Reference]({{ site.baseurl }}{% link manifest.md %}).
 - Designing unlocks, menus, or leaderboards? See [Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %}), [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %}), [Progression System]({{ site.baseurl }}{% link progression-milestones.md %}), and [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %}).
 - Polishing a ROM before sharing it? Check [Best Practices & Edge Cases]({{ site.baseurl }}{% link best-practices.md %}).
