@@ -9,7 +9,7 @@ Lua API.
 ## Prerequisites
 
 - Moonshine game installed.
-- An Author account linked to a Discord server. See [Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %}) for the community flow.
+- An Author account linked to a Discord server. See [Moonshine Roles Ecosystem]({{ site.baseurl }}{% link roles-ecosystem.md %}) for the community flow.
 - VS Code with the EmmyLua extension.
 - Basic JSON and Lua familiarity.
 
