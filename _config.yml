@@ -2,7 +2,7 @@ title: Moonshine Docs
 baseurl: /moonshine-docs
 theme: minima
 header_pages:
-  - ecosystem.md
+  - roles-ecosystem.md
   - introduction.md
   - getting-started.md
   - session-lifecycle.md
