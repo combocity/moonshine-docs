@@ -7,7 +7,7 @@ This documentation is designed for content creators and game designers who want 
 
 This guide covers the entire process, from designing your game mechanics to integrating progression systems, building interactive menus, and publishing your creation to the Moonshine community.
 
-Before publishing, it helps to understand how Moonshine, Avalon, and Discord work together. See the [Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %}) page for the player, author, and Discord administrator roles.
+Before publishing, it helps to understand how Moonshine, Avalon, and Discord work together. See the [Moonshine Roles Ecosystem]({{ site.baseurl }}{% link roles-ecosystem.md %}) page for the player, author, and Discord administrator roles.
 
 In Moonshine, a **ROM** is the playable content you author: basically, a game. When it is uploaded or distributed, it is packed into a **ROM file** (`*.t3rom`) that contains:
 - a manifest
