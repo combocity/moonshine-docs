@@ -17,7 +17,7 @@ Moonshine is an attempt to be a platform that lets anyone create a puzzle game s
 
 New to Moonshine ROM authoring? Start here:
 
-1. **[Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %})** - get the gist of moonshine
+1. **[Moonshine Roles Ecosystem]({{ site.baseurl }}{% link roles-ecosystem.md %})** - get the gist of moonshine
 2. **[Authoring Introduction]({{ site.baseurl }}{% link introduction.md %})** - Learn what Moonshine ROM authoring is and what you can create
 3. **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Set up your development environment and create your first ROM
 
