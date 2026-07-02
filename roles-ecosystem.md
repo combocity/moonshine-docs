@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Moonshine Ecosystem
+title: Moonshine Roles Ecosystem
 ---
 
 Moonshine is a place to play, create, and share community-made games. The ecosystem is built around players, authors, and Discord communities so new content can start privately, be tested with a trusted group, and later become available more broadly.
