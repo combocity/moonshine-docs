@@ -7,7 +7,7 @@ Complete reference for `manifest.json`, the file that describes a Moonshine Lua
 ROM.
 
 For a first ROM, start with [Getting Started]({{ site.baseurl }}{% link getting-started.md %}).
-
+ 
 ## Overview
 
 - JSON properties are case-insensitive.
