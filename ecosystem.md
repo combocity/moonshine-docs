@@ -19,21 +19,6 @@ Moonshine is where games are played and authored. Avalon is where authoritative 
 
 Using Discord as the entry point keeps early community workflows simple. One Moonshine player is linked to one Discord user, and each Discord server can act as a separate Moonshine community with its own trusted authors, testers, and content visibility decisions.
 
-## ROM lifecycle and session lifecycle
-
-Moonshine has two related lifecycles that are useful to understand before creating or publishing content.
-
-The **ROM lifecycle** is the broad authoring and distribution flow. It covers how a ROM is created, tested, uploaded, published as a Preview, reviewed by a community, and eventually made available more broadly.
-
-The **session lifecycle** is narrower. It describes what happens when a player starts one playable run of one ROM variant, and what happens when that run ends.
-
-| Lifecycle | Scope | Example |
-|----------|-------|---------|
-| **ROM lifecycle** | The life of authored content as it moves through creation, testing, publication, and visibility states. | An author creates a ROM, uploads it, publishes a Preview, collects feedback, then moves toward wider availability. |
-| **Session lifecycle** | One playable run started from one ROM variant. | A player selects a variant, Moonshine starts Lua, the game runs, then the result is submitted and the session shuts down. |
-
-In local maker mode, Moonshine can create sessions locally so authors can test quickly. In server-backed play, Moonshine asks Avalon to create the session and later submits the result back to Avalon. This is where online features such as progression, replays, audits, and ranking-related data become part of the broader ecosystem.
-
 ## Roles at a glance
 
 | Role | What they do |
