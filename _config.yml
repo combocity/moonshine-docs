@@ -3,7 +3,6 @@ baseurl: /moonshine-docs
 theme: minima
 header_pages:
   - roles-ecosystem.md
-  - introduction.md
   - getting-started.md
   - session-lifecycle.md
   - lua-api-v1.md
