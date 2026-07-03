@@ -7,11 +7,15 @@ title: Moonshine Lua ROM Authoring Documentation
 
 ## Why Moonshine?
 
-Like many programmers, I created a Tetris clone, specifically a *Tetris The Grandmaster* variant. Twenty years ago, clones were one of the only ways for the emerging Western player community to experience this arcade-exclusive, Japan-only game at home. Beyond recreation, I saw an opportunity to experiment with online features. Unfortunately, it didn't stay online long due to technical limitations and licensing issues.
+Like many programmers, I once created a Tetris clone, specifically a *Tetris The Grandmaster* variant. Twenty years ago, clones were one of the only ways for the emerging Western player community to experience this arcade-exclusive, Japan-only game at home. Beyond recreation, I also wanted to experiment with online features. Unfortunately, it did not stay online for long due to technical limitations and licensing issues.
 
-Over the years, people in the TGM community have built amazing projects, each with its own ideas and strengths. Still, I wanted to revisit my own game, this time on a foundation designed with online and community features in mind from the start.
+Over the years, people in the TGM community have built amazing projects, each with its own ideas and strengths. Still, I wanted to revisit the online and community-driven ambitions behind my own game, this time on a foundation designed for them from the start.
 
-Moonshine is an attempt to be a platform that lets anyone create a puzzle game simply, while providing built-in community features out of the box: player progression tracking, server-backed sessions, and foundations for rankings and replays. No need to rebuild the foundation every time: focus on your game design instead.
+Moonshine is that foundation: an online-first platform where people can play, create, compete, and share community-made games without every author having to rebuild the same surrounding systems from scratch.
+
+New content can start privately, be tested with a trusted Discord group, and later become available more broadly. Competitive play and replay visualization are also part of the experience I want Moonshine to grow toward, so players can compare performances, study runs, share memorable sessions, and follow how a community evolves around a game.
+
+The goal is simple: let makers focus on game design while Moonshine handles the surrounding structure.
 
 ## Authoring Overview
 
