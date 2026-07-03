@@ -3,113 +3,140 @@ layout: page
 title: ROM Lifecycle
 ---
 
-The ROM lifecycle describes how content moves from local development to community testing and, eventually, broader availability.
+A ROM does not become public content in one jump. It starts as a local folder on your machine, becomes a Draft stored by Avalon, can be published as a Preview for a Discord community, and may later move toward wider visibility.
 
-This page focuses on the ROM authoring and publication flow. For what happens during one playable run, see [Runtime Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %}).
+This page follows that authoring and publication flow. If you want to understand what happens during one playable run, read [Runtime Session Lifecycle]({% link session-lifecycle.md %}) instead.
 
-## Overview
+## The Big Picture
 
-A typical flow looks like this:
+Moonshine is the authoring and play client. Avalon is the server that owns identity, permissions, ROM records, versions, package storage, session records, crash groups, audit status, and progression. Discord is where human trust decisions happen.
 
-1. Create and edit the ROM locally.
-2. Test it in Moonshine maker tools.
-3. Upload it as a Draft ROM.
-4. Publish a Preview for community testing.
-5. Inspect crashes and collect feedback.
-6. Iterate on the ROM.
-7. Move toward broader visibility when the ROM is ready.
+In the code and API, Avalon still calls a ROM a **mod** in many places. The public documentation uses **ROM** because that is the author-facing concept: the playable game you are making. When you see API paths such as `api/author/mods`, they refer to the same thing.
 
-Some parts of this flow are available today, while others are still evolving as Moonshine, Avalon, and Discord workflows mature.
+The normal path is:
 
-## Local Development
+1. Build and test the ROM locally from its manifest folder.
+2. Upload it from Moonshine as a Draft attached to one Discord server.
+3. Update that Draft as many times as needed while iterating.
+4. Publish the current Draft as a Preview from Discord.
+5. Let trusted players test the Preview.
+6. Review confirmed Lua crash groups and feedback.
+7. Upload a new Draft and publish a new Preview when you are ready.
 
-A ROM starts locally. The author prepares a manifest, writes Lua scripts, adds optional resources, and tests the ROM through Moonshine maker tools.
+Guild/server live and global/public live states are already modeled by Avalon and Moonshine, but the full promotion workflow beyond Preview is still being defined. Today, Preview is the meaningful community testing state for authors.
 
-During local development, the goal is to iterate quickly. The author can test gameplay, menus, progression rules, save behavior, and runtime errors without going through the full community publication flow.
+## Local Work Comes First
 
-In this mode, Moonshine can create local sessions for testing. These are useful for development, but they are not the same as server-backed sessions created through Avalon.
+Your ROM begins as a manifest folder: a `manifest.json`, Lua files, and optional resources such as images, sounds, music, and fonts. Local maker mode loads that folder directly. It validates the manifest, discovers Lua scripts, resolves resources from disk, enables the local debugger when available, and starts local sessions without asking Avalon to create a server session.
 
-## Draft ROM
+This local loop is where you should solve the obvious problems: missing files, invalid manifest data, broken menu definitions, missing `update()` or `draw()`, Lua crashes, bad progression ids, and save state mistakes. Moonshine can show Lua crash details directly in local maker mode, including the phase, file, line, and reason when those details can be parsed.
 
-Once the ROM is ready to leave local development, the author can upload it as a **Draft ROM**.
+Local testing is not the same as server-backed play. It is intentionally faster and more permissive for iteration. The save state, milestones, badges, and menu choices are stored locally for the manifest folder. There is no server audit and no community visibility.
 
-A Draft ROM is still author-facing. It represents content that exists in Avalon but is not yet broadly visible to players.
+## Uploading the First Draft
 
-Drafts are useful for keeping ROM identity, versioning, and uploaded files attached to the authoring workflow before the ROM is shared with a community.
+When you upload a ROM for the first time, the manifest does not yet contain a `modId`. Moonshine therefore treats the upload as Draft creation.
 
-## Preview Publication
+Moonshine asks which Discord server the Draft belongs to, because author access is scoped to a server. Avalon checks that your Moonshine player account is allowed to author content for that server. If you were approved as an author in one Discord community, that does not automatically grant access in another.
 
-When the author is ready for community testing, they can publish a **Preview** version.
+Moonshine then packs the manifest folder into the current internal package format, sends the package to Avalon, and includes basic manifest metadata: API version, ROM name, optional version, and mode type. Avalon validates the uploaded package before it creates anything authoritative.
 
-A Preview is meant for testing with a trusted group before wider release. This fits the Discord-based community model: authors can share work with a server, gather feedback, inspect issues, and decide whether the ROM is mature enough to move forward.
+Several details matter here:
 
-Preview publication is also where server-backed behavior becomes more important. Avalon can track sessions, store submitted results, group confirmed Lua crashes, and provide data that helps authors debug real play sessions.
+- Only Solo ROMs are currently accepted by the author upload path.
+- The package limit is currently 20 MB.
+- Avalon rejects unsupported manifest API versions.
+- The declared upload metadata must match the manifest inside the package.
+- The package must contain a valid index, manifest, declared scripts, and declared resources.
+- Draft package contents must not already be obfuscated. Obfuscation is chosen later when publishing Preview.
+- An author can currently have only two Draft ROMs at the same time.
+- Avalon rejects another Draft with the same author, ROM name, and mode type.
 
-## Crash Review and Iteration
+If the upload succeeds, Avalon creates a ROM identity and a Draft version, stores the package, and returns the new ROM id. Moonshine writes that id back into your manifest as `modId`.
 
-After a Preview is played, authors may discover Lua crashes or unexpected behavior.
+Do not treat `modId` as a cosmetic field. It is the link between your local manifest and the server-side Draft. If you remove it or copy it into another unrelated project, Moonshine may create a new Draft or try to update the wrong one.
 
-Avalon groups confirmed Lua crashes for Preview ROMs, and authors can inspect them using Discord commands such as:
+## Updating a Draft
 
-```text
-/author rom-crashes
-/author rom-crash
-```
+After the first upload, the manifest contains `modId`, so Moonshine no longer creates a new Draft. It updates the existing one.
 
-Crash review is part of the iteration loop. An author can fix the ROM, upload a new version, publish another Preview, and continue testing with the community.
+The update flow is incremental. Moonshine packs the current folder, builds an index of the declared package files, and asks Avalon what changed compared with the current server Draft. If nothing changed, Avalon can report that the Draft is already up to date. If files changed, Moonshine uploads a Draft patch containing only changed or added files plus the list of deleted files.
 
-## Guild Live and Public Live
+Avalon applies the patch to the current Draft package, validates the rebuilt package, and replaces the Draft version if the resulting file index changed. This means a Draft can have several internal Draft version ids over time even though the ROM id stays the same.
 
-Moonshine and Avalon are designed to support different visibility levels.
+Avalon protects this flow with a base Draft version check. If the server Draft changed between the diff request and the patch upload, the patch is rejected with a Draft version mismatch. In practice, refresh and upload again.
 
-A ROM may eventually become visible within a specific Discord community, or more broadly across Moonshine. These broader publication states are usually described as **Guild Live** and **Public Live**.
+Changing the manifest name or mode type after a Draft exists is not treated as a rename. Avalon compares the uploaded metadata with the existing ROM identity and rejects mismatches. The safe path is to choose the public name and mode type before the first upload.
 
-| State | Meaning |
-|-------|---------|
-| **Preview** | A testable version shared with a trusted community group. |
-| **Guild Live** | A ROM made available within a specific Discord community. |
-| **Public Live** | A ROM made available more broadly across Moonshine. |
+## Publishing a Preview
 
-The full promotion workflow from Preview to Guild Live or Public Live is still being defined.
+Uploading a Draft does not make it visible to players. A Draft is author-side content stored by Avalon.
 
-## ROM Lifecycle vs Session Lifecycle
-
-The ROM lifecycle is about content publication.
-
-The session lifecycle is about playing.
-
-A ROM can go through many lifecycle states over time: local development, Draft, Preview, later versions, and wider publication. Each time a player starts one variant of that ROM, Moonshine creates a separate session.
-
-For example:
+When you are ready for community testing, publish the current Draft as a Preview from Discord:
 
 ```text
-One ROM
-→ has several versions over time
-→ may be published as Preview or Live
-→ can be played many times
-→ each play creates one session
+/author publish-preview
 ```
 
-A session starts when a player launches a ROM variant and ends when the ROM submits or exits that run. Session results, save data, progression unlocks, recorded inputs, and replay-related data belong to the runtime flow.
+The command runs inside a Discord server, and Avalon only lists Drafts that belong to that server and to your Moonshine player account. If there is one Draft, Discord shows the publish prompt directly. If there are several, Discord asks you to select one.
 
-For details, see [Runtime Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %}).
+Preview publication requires a valid SemVer. If the Draft manifest already contains a valid version, Discord can propose it. You can also provide another SemVer from the Discord prompt. If a Preview already exists, the new SemVer must be strictly greater than the current Preview version.
 
-## Current Limitations and Planned Work
+When the Preview is published, Avalon reads the current Draft package, writes the selected Preview version into the manifest stored inside the Preview package, signs the package, optionally obfuscates content, and creates a new Preview version. Obfuscation is enabled by default in the Discord prompt.
 
-The ROM publication workflow is still evolving.
+Publishing a new Preview replaces the previous active Preview for that ROM. Treat Preview data as test data tied to a specific Preview version. When a Preview is replaced, old Preview sessions and ranking data are not something an author should rely on as lasting public history.
 
-| Area | Current status |
-|------|----------------|
-| Draft ROMs | Authors can create and upload Draft ROMs through Moonshine maker tools. |
-| Preview publication | Authors can publish Preview versions for community testing. |
-| Crash review | Confirmed Lua crash groups can be inspected for Preview ROMs. |
-| Guild Live | Server-scoped catalog visibility is modeled, but the full promotion workflow is still being defined. |
-| Public Live | Global catalog visibility is modeled, but the full public release workflow is still being defined. |
-| Testing workflows | Tester groups, feedback channels, and Discord-side review processes are still expected to evolve. |
+## What Players See
+
+Players do not see Drafts. They see catalog entries that Avalon says they can access.
+
+A global live ROM can appear to any registered player. A server live ROM can appear to players who are active in that Discord server. A Preview can appear to players who have access to the server that owns the ROM. Moonshine downloads the package for a catalog entry only when needed, verifies the expected package hash, caches it locally, and then starts a server-backed session.
+
+The catalog can contain more than one entry for the same ROM when distinct visible versions exist. Moonshine labels catalog entries with a scope prefix in the version text: global, server, or preview. If two visible entries would have the same SemVer, Avalon avoids adding a duplicate catalog entry for that same version.
+
+This is why SemVer matters. It is not only display text. It helps authors, testers, Moonshine, and Avalon talk about which package is being played.
+
+## Crash Review Is Based on Confirmed Crashes
+
+Preview testing is useful because server-backed sessions produce server-side evidence. When a Lua session crashes, Moonshine can submit the crash outcome and structured crash information to Avalon. Avalon does not immediately turn every submitted crash into an author-facing crash group. It audits the session by replaying the submitted inputs against the stored package.
+
+If the replay reproduces the submitted crashed result, Avalon marks the session validated and groups the crash by mod version, phase, file, line, and normalized reason. Authors can inspect confirmed crash groups from Discord:
+
+```text
+/author mod-crashes
+/author mod-crash
+```
+
+The list command shows recent confirmed groups for your Preview ROMs on that server. The detail command shows one group, its count, phase, location, reason signature, and recent linked sessions.
+
+This distinction is important. A crash group is not merely "a player reported a crash"; it is a crash Avalon could confirm through the audit pipeline. If a session cannot be audited yet because of a technical failure, or if the replay does not match the submitted result, it will not become the same kind of confirmed author signal.
+
+## Draft, Preview, And Live States
+
+A ROM identity can have several kinds of versions over time:
+
+- **Draft** is the author's current editable upload.
+- **Preview** is the current testable community version.
+- **Server live** is modeled for server-scoped release.
+- **Global live** is modeled for broader public release.
+
+The current author workflow is strongest around Draft and Preview. Server live and global live are present in Avalon and Moonshine's catalog model, package access checks, and display scopes, but the final human workflow for promoting content into those states is still expected to evolve.
+
+## Practical Author Guidance
+
+Keep local iteration fast. Use local maker mode to test manifest validity, resource loading, menu behavior, save state, progression, and Lua crashes before involving a server.
+
+Upload Drafts when you want Avalon to remember the ROM identity and package. Publish Preview only when you want other people in the Discord community to test that exact package.
+
+Do not rely on Draft version ids. They can change on each upload. The stable identity is the `modId` in your manifest, and the testable public identity is the Preview SemVer you publish.
+
+Use Preview SemVer deliberately. A new Preview replaces the previous active Preview, and the next Preview must be strictly greater than the current one.
+
+Watch confirmed crash groups after testers play. They are often more useful than screenshots because they point to the phase and location that Avalon could reproduce.
 
 ## Related
 
-- **[Moonshine Roles Ecosystem]({{ site.baseurl }}{% link ecosystem.md %})** - Understand Moonshine, Avalon, Discord, roles, permissions, and community governance.
-- **[Runtime Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %})** - Understand what happens during one playable run.
-- **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create and test your first ROM.
-- **[Manifest Reference]({{ site.baseurl }}{% link manifest.md %})** - Prepare a valid ROM manifest.
+- **[Moonshine Roles Ecosystem]({% link ecosystem.md %})** - Moonshine, Avalon, Discord, roles, permissions, and community governance.
+- **[Runtime Session Lifecycle]({% link session-lifecycle.md %})** - What happens during one playable run.
+- **[Getting Started]({% link getting-started.md %})** - Create and test your first ROM.
+- **[Manifest Reference]({% link manifest.md %})** - Prepare a valid ROM manifest.
