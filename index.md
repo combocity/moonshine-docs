@@ -29,31 +29,29 @@ When it is uploaded or distributed, it is packed into a **ROM file** (`*.t3rom`)
 
 Internally, this packaged artifact may be called a cartridge, but authors and players can simply think of it as the ROM file.
 
-### Variants, Menus, and Progression
+### Core authoring Features
 
-You can create several **variants** per ROM, such as *Easy*, *Normal*, or *Hard* modes. A variant can be seen as a game mode that appears as an entry in the *Play Menu*.
+A ROM can define several **variants**, such as *Easy*, *Normal*, or *Hard*. A variant  can be seen as a game mode a game mode that appears as an entry in the *Play Menu*.
 
-Each **variant** can also have its own **Custom Menu**, letting the player tweak settings before starting. For example, if the player completes your *Hard* variant with 100 levels, you could then allow them to start from a specific level.
+Each variant can also provide its own **Custom Menu**, letting the player tweak settings before starting. For example, after completing a *Hard* variant with 100 levels, the player could unlock an option to start from a specific level.
 
-You can also define modes that only appear after specific conditions are met. For example, an *Extreme* mode could become visible only after the player beats *Hard* mode.
+You can also define content that only becomes visible or available after specific conditions are met. For example, an *Extreme* variant could remain hidden until the player beats *Hard* mode.
 
-This is possible with **Milestones**. Milestones allow you to customize the visibility and accessibility of variants, menu options, badges, and ranking table definitions depending on player progression.
+This is handled through **Milestones**. Milestones allow you to control the visibility and accessibility of variants, menu options, badges, and ranking tables depending on player progression.
 
-Milestones work like achievements internally, but they are not displayed directly to players. If you want a visible achievement-like reward, you can define **Badges** instead, although when and how they are shown in the UI is still a work in progress.
+Milestones work like internal achievements, but they are not displayed directly to players. If you want a visible achievement-like reward, you can define **Badges** instead, although when and how they are shown in the UI is still a work in progress.
 
-When a session starts, Moonshine provides the current player progression and the variant save state so your game can react to what the player has already done.
+When a player starts a ROM variant, Moonshine provides the current player progression and the ROM save state, so your game can react to what the player has already done.
 
-### Leaderboards
+The manifest can also define one or more custom **ranking tables** for your ROM. Each ranking table can represent a different way to compare players, such as score, time, level, or any other result your game exposes. Access to these ranking tables can also be controlled through Milestones, allowing you to reveal rankings only after the player reaches specific progression goals.
 
-Leaderboards are still work in progress.
-
-The manifest can describe `rankingTables`, but Moonshine does not yet expose a public Lua API for ranking consultation.
+ROM authoring is an iterative process. Some features are still evolving, and edge cases are expected as the platform grows. The goal of this documentation is to make those behaviors explicit and help makers build with confidence.
 
 ## Getting Started
 
 New to Moonshine ROM authoring? Start here:
 
-1. **[Moonshine Roles Ecosystem]({{ site.baseurl }}{% link roles-ecosystem.md %})** - Get the gist of Moonshine, Avalon, and Discord roles
+1. **[Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %})** - Get the gist of Moonshine, Avalon, and Discord roles
 2. **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Set up your development environment and create your first ROM
 
 ## Core Concepts
