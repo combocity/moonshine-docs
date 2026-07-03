@@ -11,7 +11,7 @@ Like many programmers, I once created a Tetris clone, specifically a *Tetris The
 
 Over the years, people in the TGM community have built amazing projects, each with its own ideas and strengths. Still, I wanted to revisit the online and community-driven ambitions behind my own game, this time on a foundation designed for them from the start.
 
-Moonshine is that foundation: an online-first platform where people can play, create, compete, and share community-made games without every author having to rebuild the same surrounding systems from scratch.
+Moonshine is that foundation: an online-first platform where people can play, create, compete, and share community-made games without every maker having to rebuild the same surrounding systems from scratch.
 
 New content can start privately, be tested with a trusted Discord group, and later become available more broadly. Competitive play and replay visualization are also part of the experience I want Moonshine to grow toward, so players can compare performances, study runs, share memorable sessions, and follow how a community evolves around a game.
 
@@ -19,11 +19,11 @@ The goal is simple: let makers focus on game design while Moonshine handles the 
 
 ## Authoring Overview
 
-Moonshine was originally designed for puzzle games, and its API is still intentionally small. However, because ROMs are scripted in Lua, authors have enough flexibility to experiment with many kinds of game ideas beyond the original puzzle-game focus.
+Moonshine was originally designed for puzzle games, and its API is still intentionally small. However, because ROMs are scripted in Lua, makers have enough flexibility to experiment with many kinds of game ideas beyond the original puzzle-game focus.
 
 ### What Is a ROM?
 
-In Moonshine, a **ROM** is the playable content you author: basically, a game.
+In Moonshine, a **ROM** is the playable content you create: basically, a game.
 
 When it is uploaded or distributed, it is packed into a **ROM file** (`*.t3rom`) that contains:
 
@@ -31,7 +31,7 @@ When it is uploaded or distributed, it is packed into a **ROM file** (`*.t3rom`)
 - one or more Lua scripts
 - optional resources, such as images, sounds, and music
 
-Internally, this packaged artifact may be called a cartridge, but authors and players can simply think of it as the ROM file.
+Internally, this ROM file is called a cartridge, but makers and players can simply think of it as the ROM file.
 
 ### Core authoring Features
 

@@ -68,7 +68,7 @@ use `..`, and must end with `.lua`.
 - Manifest gates must reference milestones declared here.
 
 Runtime progression is handled through `api.progress`, not through public
-author-managed files.
+maker-maintained files.
 
 ## Access Gates
 
@@ -226,16 +226,10 @@ and must be 32 characters or fewer.
 
 Resource file names are relative to the matching asset folder in the ROM.
 
-## ROM File Obfuscation
+## Preview Obfuscation
 
-`obfuscatePackageContent` controls whether manifest, scripts, and resources are
-stored obfuscated inside the packed `.t3rom` ROM file. It defaults to `true`.
-
-```json
-{
-  "obfuscatePackageContent": true
-}
-```
+Preview obfuscation is chosen during Preview publication. It is not a public
+manifest property.
 
 ## Related
 

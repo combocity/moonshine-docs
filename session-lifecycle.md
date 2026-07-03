@@ -11,11 +11,11 @@ For the publication flow, see [ROM Lifecycle]({% link rom-lifecycle.md %}).
 
 ## What A Session Represents
 
-When a player chooses a ROM entry from the Moonshine catalog, they are not just choosing a game name. They are choosing a specific package version. When they then choose a variant and menu options, Moonshine has enough information to start one run.
+When a player chooses a ROM entry from the Moonshine catalog, they are not just choosing a game name. They are choosing a specific ROM version and cartridge. When they then choose a variant and menu options, Moonshine has enough information to start one run.
 
 That run has its own session id, player id, random seed, starting save state, starting milestones, starting badges, menu selection, recorded inputs, result, and audit status.
 
-The public docs usually say **variant** because that is the author-facing idea. The current Lua runtime field is named `api.session.variation_id`, matching the older internal name. Use the runtime field name in Lua.
+The Lua runtime exposes the selected variant as `api.session.variant_id`.
 
 ## Local Maker Sessions
 
@@ -27,11 +27,11 @@ There is no server audit in local maker mode. If a run unlocks a milestone local
 
 ## Server-Backed Sessions
 
-In server-backed play, Moonshine starts from Avalon catalog data. The catalog entry tells Moonshine which ROM id, version id, package hash, package file name, variants, visible milestones, and earned progress are available to the player.
+In server-backed play, Moonshine starts from Avalon catalog data. The catalog entry tells Moonshine which ROM id, version id, cartridge hash, cartridge file name, variants, visible milestones, and earned progress are available to the player.
 
-If the package is not already cached locally, Moonshine downloads it from Avalon and checks the package hash. If the package is missing or the hash does not match, the session does not start.
+If the cartridge is not already cached locally, Moonshine downloads it from Avalon and checks the cartridge hash. If the cartridge is missing or the hash does not match, the session does not start.
 
-Moonshine then loads the package, resolves the selected variant, restores the last menu selection for that package when possible, and shows the menu prompt when the variant has configurable inputs. Once the player confirms the menu, Moonshine sends Avalon a session creation request. The request body contains only the input selection; the ROM id, version id, and variant id are already part of the route.
+Moonshine then loads the cartridge, resolves the selected variant, restores the last menu selection for that cartridge when possible, and shows the menu prompt when the variant has configurable inputs. Once the player confirms the menu, Moonshine sends Avalon a session creation request. The request body contains the ROM version id, variant id, and input selection.
 
 Avalon creates the session as authoritative state. Before opening the new session, it closes any still-open session for the same player, ROM, version, and variant as unreported. Then it finds the previous pending or validated session in that same chain, assigns the next node number, loads the player's current progression for that ROM version, chooses an RNG seed, and stores the starting state.
 
@@ -41,32 +41,32 @@ The response sent back to Moonshine contains the session id, player id, RNG seed
 
 After Moonshine has a session ticket, it builds the Lua runtime.
 
-The runtime seeds `math.random` with the session seed, then removes `math.randomseed` so the ROM cannot reseed itself. This matters for server audit: Avalon must be able to replay the same package, same seed, same selection, same starting save state, and same inputs and get the same result.
+The runtime seeds `math.random` with the session seed, then removes `math.randomseed` so the ROM cannot reseed itself. This matters for server audit: Avalon must be able to replay the same cartridge, same seed, same selection, same starting save state, and same inputs and get the same result.
 
 Moonshine exposes the launch context through `api.session`:
 
 ```lua
 api.session.player_id
-api.session.variation_id
+api.session.variant_id
 api.session.debug
 api.session.selection
 ```
 
-`api.session.debug` is true in local maker mode and false for normal server-backed packages. `api.session.selection` is a read-only table keyed by menu input id; values are strings selected before the session started.
+`api.session.debug` is true in local maker mode and false for normal server-backed sessions. `api.session.selection` is a read-only table keyed by menu input id; values are strings selected before the session started.
 
 Persistent ROM state is exposed as:
 
 ```lua
-api.state.save
+api.save
 ```
 
 It is always a table. On a fresh session, the save blob is empty and Moonshine provides an empty table. On later sessions, Moonshine decodes the previous save blob before `init()` runs.
 
-The API tables themselves are read-only, but the content of `api.state.save` is mutable. This is intentional:
+The API tables themselves are read-only, but the content of `api.save` is mutable. This is intentional:
 
 ```lua
 function init()
-  api.state.save.play_count = (api.state.save.play_count or 0) + 1
+  api.save.play_count = (api.save.play_count or 0) + 1
 end
 ```
 
@@ -80,7 +80,7 @@ Keep save data small and boring. The current encoded save state limit is 16 KB. 
 
 Use `update()` for game state, save state, progression, ending conditions, and anything that affects the result. Use `draw()` for rendering. Avoid making `draw()` change save state, progression, score, or run outcome. Server audit replays the run headlessly, and result timing is much easier to reason about when rendering has no gameplay side effects.
 
-Moonshine records held inputs every frame. When the result is submitted, those inputs are compressed and sent with the report. Avalon later decompresses them and replays the package headlessly to verify the submitted duration, save state, milestones, badges, scores, outcome, and crash information.
+Moonshine records held inputs every frame. When the result is submitted, those inputs are compressed and sent with the report. Avalon later decompresses them and replays the cartridge headlessly to verify the submitted duration, save state, milestones, badges, scores, outcome, and crash information.
 
 ## Progress During A Session
 
@@ -133,7 +133,7 @@ function update()
   frame = frame + 1
 
   if frame >= 600 then
-    api.state.save.best_frame = frame
+    api.save.best_frame = frame
     api.progress.unlock_milestone("survived_600_frames")
     api.session.end_game()
     ending = true
@@ -163,7 +163,7 @@ Avalon accepts reports only for an open session owned by the player. A session c
 
 If Lua crashes during `init()`, `update()`, or `draw()`, Moonshine records structured crash information when it can: phase, file, line, reason, and raw error text. Local maker mode shows that detail directly. In server-backed play, Moonshine marks the outcome as crashed and submits the report after the player acknowledges the error, as long as a server session was already open.
 
-Avalon requires crash information when the submitted outcome is crashed, and rejects crash information for non-crashed outcomes. Confirmed author-facing crash groups are created only after audit reproduces the crashed result.
+Avalon requires crash information when the submitted outcome is crashed, and rejects crash information for non-crashed outcomes. Confirmed Game Maker-facing crash groups are created only after audit reproduces the crashed result.
 
 Crash grouping uses the Preview version, phase, file, line, and normalized reason. This means two crashes in the same line can still be separate groups if their reason changes, and a crash fixed in a new Preview belongs to a different version history than the old Preview.
 
@@ -171,7 +171,7 @@ Crash grouping uses the Preview version, phase, file, line, and normalized reaso
 
 The audit worker is Avalon checking whether the submitted report can be reproduced.
 
-For each pending session, Avalon loads the stored package, rebuilds the same Lua configuration, provides the same player id, variation id, menu selection, starting save state, starting milestones, starting badges, and RNG seed, then replays the recorded inputs in a headless runtime. The replayed result must match the submitted result: duration, save state, progress, badges, outcome, crash info, and scores.
+For each pending session, Avalon loads the stored cartridge, rebuilds the same Lua configuration, provides the same player id, variant id, menu selection, starting save state, starting milestones, starting badges, and RNG seed, then replays the recorded inputs in a headless runtime. The replayed result must match the submitted result: duration, save state, progress, badges, outcome, crash info, and scores.
 
 If it matches, the session is validated. If the replayed result does not match, Avalon rejects that session branch, invalidates later pending/open sessions in that branch, and rebuilds player progress from validated session deltas.
 
