@@ -175,7 +175,7 @@ For each pending session, Avalon loads the stored cartridge, rebuilds the same L
 
 If it matches, the session is validated. If the replayed result does not match, Avalon rejects that session branch, invalidates later pending/open sessions in that branch, and rebuilds player progress from validated session deltas.
 
-This is why deterministic authoring matters. Do not base gameplay results on wall-clock time, filesystem state, network calls, operating system APIs, random reseeding, rendering measurements, or anything else that the audit runtime cannot reproduce. Use the session seed through `math.random`, use `api.input`, use `api.session.selection`, and keep result-changing logic in `update()`.
+This is why deterministic ROM creation matters. Do not base gameplay results on wall-clock time, filesystem state, network calls, operating system APIs, random reseeding, rendering measurements, or anything else that the audit runtime cannot reproduce. Use the session seed through `math.random`, use `api.input`, use `api.session.selection`, and keep result-changing logic in `update()`.
 
 ## Related
 

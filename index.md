@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Moonshine Lua ROM Authoring Documentation
+title: Moonshine Lua ROM Creation Documentation
 ---
 
 **Create, integrate, and share your own games.**
@@ -11,15 +11,15 @@ Like many programmers, I once created a Tetris clone, specifically a *Tetris The
 
 Over the years, people in the TGM community have built amazing projects, each with its own ideas and strengths. Still, I wanted to revisit the online and community-driven ambitions behind my own game, this time on a foundation designed for them from the start.
 
-Moonshine is that foundation: an online-first platform where people can play, create, compete, and share community-made games without every maker having to rebuild the same surrounding systems from scratch.
+Moonshine is that foundation: an online-first platform where people can play, create, compete, and share community-made games without every Game Maker having to rebuild the same surrounding systems from scratch.
 
 New content can start privately, be tested with a trusted Discord group, and later become available more broadly. Competitive play and replay visualization are also part of the experience I want Moonshine to grow toward, so players can compare performances, study runs, share memorable sessions, and follow how a community evolves around a game.
 
-The goal is simple: let makers focus on game design while Moonshine handles the surrounding structure.
+The goal is simple: let Game Makers focus on game design while Moonshine handles the surrounding structure.
 
-## Authoring Overview
+## Game Maker Overview
 
-Moonshine was originally designed for puzzle games, and its API is still intentionally small. However, because ROMs are scripted in Lua, makers have enough flexibility to experiment with many kinds of game ideas beyond the original puzzle-game focus.
+Moonshine was originally designed for puzzle games, and its API is still intentionally small. However, because ROMs are scripted in Lua, Game Makers have enough flexibility to experiment with many kinds of game ideas beyond the original puzzle-game focus.
 
 ### What Is a ROM?
 
@@ -31,9 +31,9 @@ When it is uploaded or distributed, it is packed into a **ROM file** (`*.t3rom`)
 - one or more Lua scripts
 - optional resources, such as images, sounds, and music
 
-Internally, this ROM file is called a cartridge, but makers and players can simply think of it as the ROM file.
+Internally, this ROM file is called a cartridge, but Game Makers and players can simply think of it as the ROM file.
 
-### Core authoring Features
+### Core Game Maker Features
 
 A ROM can define several **variants**, such as *Easy*, *Normal*, or *Hard*. A variant  can be seen as a game mode a game mode that appears as an entry in the *Play Menu*.
 
@@ -49,18 +49,18 @@ When a player starts a ROM variant, Moonshine provides the current player progre
 
 The manifest can also define one or more custom **ranking tables** for your ROM. Each ranking table can represent a different way to compare players, such as score, time, level, or any other result your game exposes. Access to these ranking tables can also be controlled through Milestones, allowing you to reveal rankings only after the player reaches specific progression goals.
 
-ROM authoring is an iterative process. Some features are still evolving, and edge cases are expected as the platform grows. The goal of this documentation is to make those behaviors explicit and help makers build with confidence.
+ROM creation is an iterative process. Some features are still evolving, and edge cases are expected as the platform grows. The goal of this documentation is to make those behaviors explicit and help Game Makers build with confidence.
 
 ## Getting Started
 
-New to Moonshine ROM authoring? Start here:
+New to Moonshine ROM creation? Start here:
 
 1. **[Moonshine Ecosystem]({{ site.baseurl }}{% link ecosystem.md %})** - Get the gist of Moonshine, Avalon, and Discord roles
 2. **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Set up your development environment and create your first ROM
 
 ## Core Concepts
 
-Master the key features of Moonshine ROM authoring:
+Master the key features of Moonshine ROM creation:
 
 - **[Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Design multiple game variants, difficulty tiers, and parallel game modes
 - **[Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %})** - Understand how a Lua session starts, submits results, and ends

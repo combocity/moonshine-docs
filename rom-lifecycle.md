@@ -5,11 +5,11 @@ title: ROM Lifecycle
 
 A ROM does not become public content in one jump. It starts as a local folder on your machine, becomes a Draft stored by Avalon, can be published as a Preview for a Discord community, and may later move toward wider visibility.
 
-This page follows that authoring and publication flow. If you want to understand what happens during one playable run, read [Runtime Session Lifecycle]({% link session-lifecycle.md %}) instead.
+This page follows that creation and publication flow. If you want to understand what happens during one playable run, read [Runtime Session Lifecycle]({% link session-lifecycle.md %}) instead.
 
 ## The Big Picture
 
-Moonshine is the authoring and play client. Avalon is the server that owns identity, permissions, ROM records, versions, cartridge storage, session records, crash groups, audit status, and progression. Discord is where human trust decisions happen.
+Moonshine is the client for Game Makers and players. Avalon is the server that owns identity, permissions, ROM records, versions, cartridge storage, session records, crash groups, audit status, and progression. Discord is where human trust decisions happen.
 
 The normal path is:
 
@@ -21,7 +21,7 @@ The normal path is:
 6. Review confirmed Lua crash groups and feedback.
 7. Upload a new Draft and publish a new Preview when you are ready.
 
-Guild/server live and global/public live states are already modeled by Avalon and Moonshine, but the full promotion workflow beyond Preview is still being defined. Today, Preview is the meaningful community testing state for game makers.
+Guild/server live and global/public live states are already modeled by Avalon and Moonshine, but the full promotion workflow beyond Preview is still being defined. Today, Preview is the meaningful community testing state for Game Makers.
 
 ## Local Work Comes First
 
@@ -33,7 +33,7 @@ Local testing is not the same as server-backed play. It is intentionally faster 
 
 ## Uploading the First Draft
 
-When you upload a ROM for the first time, the manifest does not yet contain a `modId`. Moonshine therefore treats the upload as Draft creation.
+When you upload a ROM for the first time, the manifest does not yet contain a server ROM identifier (`modId` in manifest JSON). Moonshine therefore treats the upload as Draft creation.
 
 Moonshine asks which Discord server the Draft belongs to, because Game Maker access is scoped to a server. Avalon checks that your Moonshine player account is allowed to create content for that server. If you were approved as a Game Maker in one Discord community, that does not automatically grant access in another.
 
@@ -50,13 +50,13 @@ Several details matter here:
 - A Game Maker can currently have only two Draft ROMs at the same time.
 - Avalon rejects another Draft with the same Game Maker, ROM name, and mode type.
 
-If the upload succeeds, Avalon creates a ROM identity and a Draft version, stores the cartridge, and returns the new ROM id. Moonshine writes that id back into your manifest as `modId`.
+If the upload succeeds, Avalon creates a ROM identity and a Draft version, stores the cartridge, and returns the new ROM id. Moonshine writes that id back into your manifest as the `modId` JSON field.
 
-Do not treat `modId` as a cosmetic field. It is the current JSON field name for the server-side ROM id. If you remove it or copy it into another unrelated project, Moonshine may create a new Draft or try to update the wrong one.
+Do not treat that field as cosmetic. It is the current JSON field name for the server-side ROM id. If you remove it or copy it into another unrelated project, Moonshine may create a new Draft or try to update the wrong one.
 
 ## Updating a Draft
 
-After the first upload, the manifest contains `modId`, so Moonshine no longer creates a new Draft. It updates the existing one.
+After the first upload, the manifest contains the server ROM identifier, so Moonshine no longer creates a new Draft. It updates the existing one.
 
 The update flow is incremental. Moonshine packs the current folder, builds an index of the declared cartridge files, and asks Avalon what changed compared with the current server Draft. If nothing changed, Avalon can report that the Draft is already up to date. If files changed, Moonshine uploads a Draft patch containing only changed or added files plus the list of deleted files.
 
@@ -92,13 +92,13 @@ A global live ROM can appear to any registered player. A server live ROM can app
 
 The catalog can contain more than one entry for the same ROM when distinct visible versions exist. Moonshine labels catalog entries with a scope prefix in the version text: global, server, or preview. If two visible entries would have the same SemVer, Avalon avoids adding a duplicate catalog entry for that same version.
 
-This is why SemVer matters. It is not only display text. It helps game makers, testers, Moonshine, and Avalon talk about which cartridge is being played.
+This is why SemVer matters. It is not only display text. It helps Game Makers, testers, Moonshine, and Avalon talk about which cartridge is being played.
 
 ## Crash Review Is Based on Confirmed Crashes
 
 Preview testing is useful because server-backed sessions produce server-side evidence. When a Lua session crashes, Moonshine can submit the crash outcome and structured crash information to Avalon. Avalon does not immediately turn every submitted crash into a Game Maker-facing crash group. It audits the session by replaying the submitted inputs against the stored cartridge.
 
-If the replay reproduces the submitted crashed result, Avalon marks the session validated and groups the crash by ROM version, phase, file, line, and normalized reason. Game makers can inspect confirmed crash groups from Discord:
+If the replay reproduces the submitted crashed result, Avalon marks the session validated and groups the crash by ROM version, phase, file, line, and normalized reason. Game Makers can inspect confirmed crash groups from Discord:
 
 ```text
 /game-maker rom-crashes
@@ -126,7 +126,7 @@ Keep local iteration fast. Use local maker mode to test manifest validity, resou
 
 Upload Drafts when you want Avalon to remember the ROM identity and cartridge. Publish Preview only when you want other people in the Discord community to test that exact cartridge.
 
-Do not rely on Draft version ids. They can change on each upload. The stable identity is the `modId` in your manifest, and the testable public identity is the Preview SemVer you publish.
+Do not rely on Draft version ids. They can change on each upload. The stable identity is the server ROM identifier in your manifest, and the testable public identity is the Preview SemVer you publish.
 
 Use Preview SemVer deliberately. A new Preview replaces the previous active Preview, and the next Preview must be strictly greater than the current one.
 

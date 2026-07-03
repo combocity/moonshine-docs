@@ -3,21 +3,21 @@ layout: page
 title: Moonshine Roles Ecosystem
 ---
 
-Moonshine authoring is not only a local Lua workflow. Published content moves through an online ecosystem made of the Moonshine client, the Avalon backend, and Discord communities.
+Moonshine ROM creation is not only a local Lua workflow. Published content moves through an online ecosystem made of the Moonshine client, the Avalon backend, and Discord communities.
 
-This page explains who does what, where permissions are decided, and how players, game makers, and Discord administrators take part in registration, testing, and publication workflows.
+This page explains who does what, where permissions are decided, and how players, Game Makers, and Discord administrators take part in registration, testing, and publication workflows.
 
 ## How the ecosystem fits together
 
 | Part | Purpose |
 |------|---------|
-| **Moonshine** | The game client. Players use it to play and browse available content. Game makers use it to create, test, debug, and upload ROMs. |
+| **Moonshine** | The game client. Players use it to play and browse available content. Game Makers use it to create, test, debug, and upload ROMs. |
 | **Avalon** | The trusted backend and source of truth. It owns player identities, community roles, permissions, ROM identity and versioning, ROM file storage, session records, audits, replays, crash reports, and ranking tables. |
-| **Discord** | The community and governance layer. A Discord server acts as a Moonshine community where players gather, administrators review trust decisions, and game makers coordinate testing and publication. |
+| **Discord** | The community and governance layer. A Discord server acts as a Moonshine community where players gather, administrators review trust decisions, and Game Makers coordinate testing and publication. |
 
-Moonshine is where games are played and authored. Avalon is where authoritative state and permissions live. Discord is where communities organize trust, access, and visibility.
+Moonshine is where games are played and created. Avalon is where authoritative state and permissions live. Discord is where communities organize trust, access, and visibility.
 
-Using Discord as the entry point keeps early community workflows simple. One Moonshine player is linked to one Discord user, and each Discord server can act as a separate Moonshine community with its own trusted game makers, testers, and content visibility decisions.
+Using Discord as the entry point keeps early community workflows simple. One Moonshine player is linked to one Discord user, and each Discord server can act as a separate Moonshine community with its own trusted Game Makers, testers, and content visibility decisions.
 
 ## Roles at a glance
 
@@ -66,7 +66,7 @@ Administrators provide the human governance layer. Avalon can enforce permission
 
 ## Where to go next
 
-- New to Moonshine ROM authoring? Return to the [main introduction]({{ site.baseurl }}{% link index.md %}).
+- New to Moonshine ROM creation? Return to the [main introduction]({{ site.baseurl }}{% link index.md %}).
 - Creating your first ROM? Follow [Getting Started]({{ site.baseurl }}{% link getting-started.md %}).
 - Want to understand how a ROM moves from local development to publication? read [ROM Lifecycle]({{ site.baseurl }}{% link rom-lifecycle.md %})
 - Want to understand what happens when a ROM starts, runs, submits results, and ends? Read [Runtime Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %}).
@@ -82,6 +82,6 @@ The ecosystem is still growing. These notes highlight the parts that are planned
 |------|----------------|
 | Discord community discovery | Moonshine does not currently list the Discord servers where the Moonshine bot is available. Players need an invite or an external announcement to find a community. In-game community discovery is planned. |
 | Player registration | The current registration path starts from Discord with `/public moonshine`, then finishes in Moonshine with a registration PIN. A non-Discord registration path is planned, but not available yet. |
-| Crash review | Avalon groups confirmed Lua crashes for Preview ROMs, and game makers can inspect them with `/game-maker rom-crashes` and `/game-maker rom-crash`. Notifications, triage workflows, and community-facing crash review may evolve. |
-| Preview testing | Game makers can publish Preview versions for community testing, but tester groups, feedback channels, and related Discord workflows are still being defined. |
+| Crash review | Avalon groups confirmed Lua crashes for Preview ROMs, and Game Makers can inspect them with `/game-maker rom-crashes` and `/game-maker rom-crash`. Notifications, triage workflows, and community-facing crash review may evolve. |
+| Preview testing | Game Makers can publish Preview versions for community testing, but tester groups, feedback channels, and related Discord workflows are still being defined. |
 | Guild Live and Public Live | Avalon and Moonshine already model server-scoped and global catalog visibility. The full promotion workflow from Preview to Guild Live or Public Live is still being defined. |

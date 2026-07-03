@@ -60,9 +60,9 @@ For a server-backed session, Avalon sends the player's earned milestones when
 the catalog and session are prepared. When the session ends, Moonshine reports
 newly unlocked milestones back to Avalon.
 
-In local maker mode, Moonshine may persist test progress locally so makers can
+In local maker mode, Moonshine may persist test progress locally so Game Makers can
 try gates without a server round-trip. Public ROM code should still use
-`api.progress`; do not rely on hand-edited progress files as an authoring API.
+`api.progress`; do not rely on hand-edited progress files as a Game Maker API.
 
 ## Gating Variants
 
