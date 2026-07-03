@@ -1,36 +1,30 @@
 ---
 layout: page
-title: Session Lifecycle
+title: Runtime Session Lifecycle
 ---
 
-A session is one playable run of one ROM variant. The ROM can have many
-variants, menus, save data, and progression gates; the session is the specific
-run Moonshine starts when a player chooses one of those variants.
+A session is one playable run of one ROM variant.
 
-This page describes what happens around a Lua solo session, from launch to
-submission.
+A ROM can define many variants, menus, save data, progression rules, badges, ranking tables, and resources. A session is the specific run Moonshine starts when a player chooses one of those variants.
 
-## Session and ROM Lifecycle
+This page focuses on the Lua runtime flow: what Moonshine prepares before Lua starts, how `init()`, `update()`, and `draw()` are called, and how a ROM submits and shuts down a completed run.
 
-The ROM lifecycle is the broad authoring and distribution flow: write the ROM,
-validate the manifest, package or load it, publish it, and make it available to
-players.
-
-The session lifecycle is narrower. It starts when the player launches a variant
-and ends when Moonshine leaves that run.
+For the broader authoring and publication flow, see the [Moonshine ROM LifeCycle]({{ site.baseurl }}{% link rom-lifecycle.md %}).
 
 ## Before Lua Starts
 
-When the player starts a ROM variant, Moonshine prepares the selected variant,
-the menu selections, the player's current progression, and the saved state for
-that ROM.
+When the player starts a ROM variant, Moonshine prepares:
 
-In local maker mode, Moonshine creates the session locally so you can test
-quickly. In server-backed play, Moonshine asks Avalon to create the session and
-later submits the result back to Avalon.
+- the selected variant
+- the menu selections
+- the player's current progression
+- the saved state for that ROM
 
-Moonshine then prepares the Lua runtime and exposes the session context through
-`api.session`:
+In local maker mode, Moonshine creates the session locally so you can test quickly.
+
+In server-backed play, Moonshine asks Avalon to create the session and later submits the result back to Avalon.
+
+Moonshine then prepares the Lua runtime and exposes the session context through `api.session`:
 
 | Field | Description |
 |-------|-------------|
@@ -39,8 +33,7 @@ Moonshine then prepares the Lua runtime and exposes the session context through
 | `api.session.debug` | `true` in local maker mode. |
 | `api.session.selection` | Menu selections keyed by menu input id. |
 
-Moonshine also exposes `api.save`, a persistent save table for your ROM. It is
-loaded before `init()` runs, so your script can read existing state immediately.
+Moonshine also exposes `api.save`, a persistent save table for your ROM. It is loaded before `init()` runs, so your script can read existing state immediately.
 
 ## Runtime Flow
 
@@ -48,13 +41,10 @@ Once the Lua runtime is ready, Moonshine drives the script in this order:
 
 1. `api.save` is loaded.
 2. `init()` runs once.
-3. `update()` runs once per frame with the current input state available
-   through `api.input`.
+3. `update()` runs once per frame with the current input state available through `api.input`.
 4. `draw()` runs so the ROM can render the current frame.
 
-During `update()`, your ROM usually reads input, updates game state, writes to
-`api.save`, unlocks progression through `api.progress`, and decides when the run
-is complete.
+During `update()`, your ROM usually reads input, updates game state, writes to `api.save`, unlocks progression through `api.progress`, and decides when the run is complete.
 
 ## Ending a Session
 
@@ -65,19 +55,13 @@ api.session.end_game()
 api.session.shutdown()
 ```
 
-`api.session.end_game()` submits the run result once. The submitted result
-includes the current save state, newly unlocked milestones and badges, session
-duration, and recorded inputs.
+`api.session.end_game()` submits the run result once. The submitted result includes the current save state, newly unlocked milestones and badges, session duration, and recorded inputs.
 
-The ROM keeps running after `end_game()`. This lets you show a result screen,
-play a fanfare, or wait for the player to acknowledge the end of the run.
+The ROM keeps running after `end_game()`. This lets you show a result screen, play a fanfare, or wait for the player to acknowledge the end of the run.
 
-When the ROM is ready to stop, call `api.session.shutdown()`. This ends the ROM
-session and lets Moonshine continue its own flow.
+When the ROM is ready to stop, call `api.session.shutdown()`. This ends the ROM session and lets Moonshine continue its own flow.
 
-Any save or progression changes made after `api.session.end_game()` are not
-included in the submitted result. Treat `end_game()` as the moment where the
-run's result is frozen.
+Any save or progression changes made after `api.session.end_game()` are not included in the submitted result. Treat `end_game()` as the moment where the run's result is frozen.
 
 ## Practical Pattern
 
@@ -108,11 +92,11 @@ function update()
 end
 ```
 
-This freezes the result at frame 600, keeps the ROM alive for two more seconds
-at 60 FPS, then shuts the session down.
+This freezes the result at frame 600, keeps the ROM alive for two more seconds at 60 FPS, then shuts the session down.
 
 ## Related
 
+- **[Moonshine Roles Ecosystem]({{ site.baseurl }}{% link ecosystem.md %})** - Understand Moonshine, Avalon, Discord, roles, permissions, and publication workflows.
 - **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create a first ROM.
 - **[Lua API v1 Reference]({{ site.baseurl }}{% link lua-api-v1.md %})** - Runtime API details.
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Feed `api.session.selection`.
