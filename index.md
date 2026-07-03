@@ -17,7 +17,7 @@ Moonshine is an attempt to be a platform that lets anyone create a puzzle game s
 
 Moonshine was originally designed for puzzle games, and its API is still intentionally small. However, because ROMs are scripted in Lua, authors have enough flexibility to experiment with many kinds of game ideas beyond the original puzzle-game focus.
 
-## What Is a ROM?
+### What Is a ROM?
 
 In Moonshine, a **ROM** is the playable content you author: basically, a game.
 
@@ -29,7 +29,7 @@ When it is uploaded or distributed, it is packed into a **ROM file** (`*.t3rom`)
 
 Internally, this packaged artifact may be called a cartridge, but authors and players can simply think of it as the ROM file.
 
-## Variants, Menus, and Progression
+### Variants, Menus, and Progression
 
 You can create several **variants** per ROM, such as *Easy*, *Normal*, or *Hard* modes. A variant can be seen as a game mode that appears as an entry in the *Play Menu*.
 
@@ -43,7 +43,7 @@ Milestones work like achievements internally, but they are not displayed directl
 
 When a session starts, Moonshine provides the current player progression and the variant save state so your game can react to what the player has already done.
 
-## Leaderboards
+### Leaderboards
 
 Leaderboards are still work in progress.
 
