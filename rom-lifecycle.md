@@ -109,7 +109,7 @@ The ROM publication workflow is still evolving.
 
 ## Related
 
-- **[Moonshine Roles Ecosystem]({{ site.baseurl }}{% link roles-ecosystem.md %})** - Understand Moonshine, Avalon, Discord, roles, permissions, and community governance.
+- **[Moonshine Roles Ecosystem]({{ site.baseurl }}{% link ecosystem.md %})** - Understand Moonshine, Avalon, Discord, roles, permissions, and community governance.
 - **[Runtime Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %})** - Understand what happens during one playable run.
 - **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - Create and test your first ROM.
 - **[Manifest Reference]({{ site.baseurl }}{% link manifest.md %})** - Prepare a valid ROM manifest.
