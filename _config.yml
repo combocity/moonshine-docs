@@ -5,6 +5,7 @@ header_pages:
   - ecosystem.md
   - getting-started.md
   - session-lifecycle.md
+  - rom-lifecycle.md
   - lua-api-v1.md
   - manifest.md
   - variants-and-modes.md
