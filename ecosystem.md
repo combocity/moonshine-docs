@@ -67,7 +67,6 @@ Administrators provide the human governance layer. Avalon can enforce permission
 
 ## Where to go next
 
-- New to Moonshine ROM authoring? Start with the [Introduction]({{ site.baseurl }}{% link index.md %}).
 - Creating your first ROM? Follow [Getting Started]({{ site.baseurl }}{% link getting-started.md %}).
 - add a link to Rom and Session lifecycle.
 - Preparing a valid ROM manifest? Read the [Manifest Reference]({{ site.baseurl }}{% link manifest.md %}).
