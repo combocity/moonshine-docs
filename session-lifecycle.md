@@ -11,7 +11,7 @@ For the publication flow, see [ROM Lifecycle]({% link rom-lifecycle.md %}).
 
 ## What A Session Represents
 
-When a player chooses a ROM entry from the Moonshine catalog, they are not just choosing a game name. They are choosing a specific ROM version and cartridge. When they then choose a variant and menu options, Moonshine has enough information to start one run.
+When a player chooses a ROM entry from the Moonshine catalog, they are choosing a specific ROM version. When they then choose a variant and menu options, Moonshine has enough information to start a session.
 
 That run has its own session id, player id, random seed, starting save state, starting milestones, starting badges, menu selection, recorded inputs, result, and audit status.
 
