@@ -241,7 +241,6 @@ Each variant can have configuration menus:
 ```json
 {
   "name": "Battle Royale Mini",
-  "author": "Game Designer",
   "version": "1.0.0",
   "modeType": "Solo",
   "variants": [

@@ -23,7 +23,6 @@ For a first ROM, start with [Getting Started]({{ site.baseurl }}{% link getting-
 
 ```json
 {
-  "author": "Your Name",
   "name": "My ROM",
   "version": "1.0.0",
   "modeType": "Solo",
@@ -42,7 +41,6 @@ For a first ROM, start with [Getting Started]({{ site.baseurl }}{% link getting-
 
 | Property | Required | Description |
 |----------|----------|-------------|
-| `author` | No | Informational author display name. |
 | `name` | Yes | ROM display name. |
 | `version` | Yes | SemVer version string. |
 | `modeType` | Yes | Must be `Solo`. |

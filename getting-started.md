@@ -43,7 +43,6 @@ Create `manifest.json`:
 
 ```json
 {
-  "author": "Your Name",
   "name": "My First ROM",
   "version": "1.0.0",
   "modeType": "Solo",
