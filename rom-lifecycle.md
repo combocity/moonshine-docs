@@ -43,8 +43,6 @@ After the first upload, the manifest contains the server ROM identifier, so Moon
 
 The update flow is incremental. Moonshine rebuilds the ROM content index and uploads only the changes to Avalon, if there are any.
 
-Avalon applies the patch to the current Draft cartridge, validates the rebuilt cartridge, and replaces the Draft version if the resulting file index changed. This means a Draft can have several internal Draft version ids over time even though the ROM id stays the same.
-
 The ROM id is the stable identity. The Draft name can change on update, but the mode type must still match the existing ROM.
 
 ## Publishing a Preview
@@ -61,23 +59,25 @@ The command runs inside a Discord server, and Avalon only lists Drafts that belo
 
 Preview publication requires a valid SemVer. If the Draft manifest already contains a valid version, Discord can propose it. You can also provide another SemVer from the Discord prompt. If a Preview already exists, the new SemVer must be strictly greater than the current Preview version.
 
-When the Preview is published, Avalon reads the current Draft cartridge, writes the selected Preview version and server-side author into the manifest stored inside the Preview cartridge, signs the cartridge, optionally obfuscates content, and creates a new Preview version. Obfuscation is enabled by default in the Discord prompt.
+Publishing creates a new Preview from the current Draft. Obfuscation is enabled by default in the Discord prompt.
 
-Publishing a new Preview replaces the previous active Preview for that ROM. Treat Preview data as test data tied to a specific Preview version. When a Preview is replaced, old Preview sessions and ranking data are not something an Author should rely on as lasting public history.
+A new Preview replaces the previous one. Treat Preview sessions and rankings as temporary test data.
 
 ## What Players See
 
 Players do not see Drafts. They see catalog entries that Avalon says they can access.
 
-A global live ROM can appear to any registered player. A server live ROM can appear to players who are active in that Discord server. A Preview can appear to players who have access to the server that owns the ROM. Moonshine downloads the cartridge for a catalog entry only when needed, verifies the expected cartridge hash, caches it locally, and then starts a server-backed session.
+ROM visibility depends on scope. Global live ROMs can appear to any registered player, server live ROMs to players active in that Discord server, and Previews to server players allowed to test them.
 
-The catalog can contain more than one entry for the same ROM when distinct visible versions exist. Moonshine labels catalog entries with a scope prefix in the version text: global, server, or preview. If two visible entries would have the same SemVer, Avalon avoids adding a duplicate catalog entry for that same version.
+Today, Preview access is effectively server-wide; it may become more selective later.
 
-This is why SemVer matters. It is not only display text. It helps Authors, testers, Moonshine, and Avalon talk about which cartridge is being played.
+When a player starts a catalog entry, Moonshine downloads the ROM file if needed, verifies and caches it locally, and starts a server-backed session.
+
+SemVer still matters: it helps Authors, testers, Moonshine, and Avalon talk about which ROM version is being played.
 
 ## Crash Review Is Based on Confirmed Crashes
 
-Preview testing is useful because server-backed sessions produce server-side evidence. When a Lua session crashes, Moonshine can submit the crash outcome and structured crash information to Avalon. Avalon does not immediately turn every submitted crash into an Author-facing crash group. It audits the session by replaying the submitted inputs against the stored cartridge.
+Preview testing is useful because server-backed sessions produce server-side evidence. When a Lua session crashes, Moonshine can submit the crash outcome and structured crash information to Avalon. Avalon does not immediately turn every submitted crash into an Author-facing crash group. It audits the session by replaying the submitted inputs against the stored ROM.
 
 If the replay reproduces the submitted crashed result, Avalon marks the session validated and groups the crash by ROM version, phase, file, line, and normalized reason. Authors can inspect confirmed crash groups from Discord:
 
@@ -92,26 +92,9 @@ This distinction is important. A crash group is not merely "a player reported a 
 
 ## Draft, Preview, And Live States
 
-A ROM identity can have several kinds of versions over time:
+A ROM currently moves through the Author workflow as Draft, then Preview. Draft is the editable upload; Preview is the version exposed for community testing.
 
-- **Draft** is the Author's current editable upload.
-- **Preview** is the current testable community version.
-- **Server live** is modeled for server-scoped release.
-- **Global live** is modeled for broader public release.
-
-The current Author workflow is strongest around Draft and Preview. Server live and global live are present in Avalon and Moonshine's catalog model, cartridge access checks, and display scopes, but the final human workflow for promoting content into those states is still expected to evolve.
-
-## Practical Author Guidance
-
-Keep local iteration fast. Use local maker mode to test manifest validity, resource loading, menu behavior, save state, progression, and Lua crashes before involving a server.
-
-Upload Drafts when you want Avalon to remember the ROM identity and cartridge. Publish Preview only when you want other people in the Discord community to test that exact cartridge.
-
-Do not rely on Draft version ids. They can change on each upload. The stable identity is the server ROM identifier in your manifest, and the testable public identity is the Preview SemVer you publish.
-
-Use Preview SemVer deliberately. A new Preview replaces the previous active Preview, and the next Preview must be strictly greater than the current one.
-
-Watch confirmed crash groups after testers play. They are often more useful than screenshots because they point to the phase and location that Avalon could reproduce.
+Server live and global live are modeled in Avalon and Moonshine, but they are not part of the current publication workflow yet.
 
 ## Related
 
