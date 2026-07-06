@@ -72,7 +72,6 @@ Administrators provide the human governance layer. Avalon can enforce permission
 - Want to understand what happens when a ROM starts, runs, submits results, and ends? Read [Runtime Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %}).
 - Preparing a valid ROM manifest? Read the [Manifest Reference]({{ site.baseurl }}{% link manifest.md %}).
 - Designing unlocks, menus, or leaderboards? See [Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %}), [Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %}), [Progression System]({{ site.baseurl }}{% link progression-milestones.md %}), and [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %}).
-- Polishing a ROM before sharing it? Check [Best Practices & Edge Cases]({{ site.baseurl }}{% link best-practices.md %}).
 
 ## Current limitations and planned work
 
