@@ -216,13 +216,22 @@ and must be 32 characters or fewer.
       { "id": "theme", "fileName": "theme.ogg" }
     ],
     "fonts": [
-      { "id": "main", "fileName": "main.ttf", "ttfFontSize": 16 }
+      {
+        "id": "main",
+        "fileName": "main.ttf",
+        "ttfFontSize": 16,
+        "localization": {
+          "title": "Ready"
+        }
+      }
     ]
   }
 }
 ```
 
 Resource file names are relative to the matching asset folder in the ROM.
+For practical resource usage, see
+[ROM Resources]({{ site.baseurl }}{% link resources.md %}).
 
 ## Preview Obfuscation
 
@@ -235,3 +244,4 @@ manifest property.
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Menu definitions.
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestones and badges.
 - **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - WIP ranking table definitions.
+- **[ROM Resources]({{ site.baseurl }}{% link resources.md %})** - Images, audio, fonts, and badge assets.

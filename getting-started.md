@@ -124,5 +124,6 @@ Crashes happen; nothing wrong with moonshing here (i hope). Read the error messa
 - **[Lua API v1 Reference]({{ site.baseurl }}{% link lua-api-v1.md %})** - Runtime lifecycle and `api.*` modules.
 - **[Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %})** - How a Lua session starts, submits, and ends.
 - **[Manifest Reference]({{ site.baseurl }}{% link manifest.md %})** - Full manifest fields and validation rules.
+- **[ROM Resources]({{ site.baseurl }}{% link resources.md %})** - Add images, sounds, music, fonts, and badge assets.
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Variant menu inputs.
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestones and badges.
