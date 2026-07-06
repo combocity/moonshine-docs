@@ -5,7 +5,7 @@ title: ROM Lifecycle
 
 A ROM does not become public content in one jump. It starts as a local folder on your machine, becomes a Draft stored by Avalon, can be published as a Preview for a Discord community, and may later move toward wider visibility.
 
-This page follows that creation and publication flow. If you want to understand what happens during one playable run, read [Runtime Session Lifecycle]({% link session-lifecycle.md %}) instead.
+This page follows that creation and publication flow. If you want to understand what happens during one playable run, read [Session Lifecycle]({% link session-lifecycle.md %}) instead.
 
 ## Lifecycle At A Glance
 
