@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Runtime Session Lifecycle
+title: Session Lifecycle
 ---
 
 A session is one playable run of one ROM version, one variant, and one set of menu selections.
