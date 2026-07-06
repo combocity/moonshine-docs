@@ -12,7 +12,6 @@ header_pages:
   - menus-configuration.md
   - progression-milestones.md
   - leaderboards.md
-  - best-practices.md
   - example-progression-mode.md
 exclude:
   - internal
