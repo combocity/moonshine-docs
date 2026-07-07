@@ -12,7 +12,7 @@ This page explains who does what, where permissions are decided, and how players
 | Part | Purpose |
 |------|---------|
 | **Moonshine** | The game client. Players use it to play and browse available content. Game Makers use it to create, test, debug, and upload ROMs. |
-| **Avalon** | The trusted backend and source of truth. It owns player identities, community roles, permissions, ROM identity and versioning, ROM file storage, session records, audits, replays, crash reports, and ranking tables. |
+| **Avalon** | The trusted backend and source of truth. It owns player identities, community roles, permissions, ROM identity and versioning, ROM packages, session records, audits, replays, crash reports, and ranking tables. |
 | **Discord** | The community and governance layer. A Discord server acts as a Moonshine community where players gather, administrators review trust decisions, and Game Makers coordinate testing and publication. |
 
 Moonshine is where games are played and created. Avalon is where authoritative state and permissions live. Discord is where communities organize trust, access, and visibility.
@@ -48,7 +48,7 @@ Moonshine is an online game, so your account can be used from any computer or ar
 1. Register as a Moonshine player.
 2. Join the Discord server where you want to create and publish content. This is often the community where you first registered as a player, but it can be another Moonshine community linked to your account.
 3. Request Game Maker access for that server with `/game-maker request`.
-4. Once Game Maker access is granted, the Moonshine maker tools let you create, test, debug, and upload a ROM file for your Draft ROM.
+4. Once Game Maker access is granted, the Moonshine maker tools let you create, test, debug, and upload a ROM package for your Draft ROM.
 5. Publish a Preview with `/game-maker publish-preview` when you are ready for community testing.
 6. Use `/game-maker rom-crashes` and `/game-maker rom-crash` to inspect confirmed Lua crash groups for your Preview ROMs.
 7. Iterate with feedback before moving toward a wider release.
