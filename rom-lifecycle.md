@@ -33,9 +33,9 @@ When you upload a ROM for the first time, the manifest does not yet contain a se
 
 If you have several Discord server linked to your author account, and since a ROM can only be linked to a single server, Moonshine will ask you which one you want.
 
-For now, only Solo ROMs are accepted (single player), ROM files are limited to 20 MB, and Avalon rejects another Draft with the same Author, ROM name, and mode type.
+For now, only Solo ROMs are accepted (single player), ROM packages are limited to 20 MB, and Avalon rejects another Draft with the same Author, ROM name, and mode type.
 
-If the upload and validation succeeds, Avalon creates the ROM as Draft, stores the ROM file, and returns the new ROM id. Moonshine writes that id back into your manifest as the `romId` JSON field.
+If the upload and validation succeeds, Avalon creates the ROM as Draft, stores the ROM package, and returns the new ROM id. Moonshine writes that id back into your manifest as the `romId` JSON field.
 
 ## Updating a Draft
 
@@ -71,7 +71,7 @@ ROM visibility depends on scope. Global live ROMs can appear to any registered p
 
 Today, Preview access is effectively server-wide; it may become more selective later.
 
-When a player starts a catalog entry, Moonshine downloads the ROM file if needed, verifies and caches it locally, and starts a server-backed session.
+When a player starts a catalog entry, Moonshine downloads the ROM package if needed, verifies and caches it locally, and starts a server-backed session.
 
 SemVer still matters: it helps Authors, testers, Moonshine, and Avalon talk about which ROM version is being played.
 
