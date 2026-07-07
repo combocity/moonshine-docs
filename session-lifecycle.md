@@ -33,11 +33,11 @@ There is no server audit in local maker mode. If a run unlocks a milestone local
 
 In server-backed play, Moonshine starts from Avalon catalog data. The catalog tells Moonshine which ROM version is available to the player, which variants can be played, and which progression state is currently known by the server.
 
-Before a session can start, Moonshine makes sure the ROM file is available locally. If it is missing, Moonshine downloads it from Avalon. If it is already cached, Moonshine verifies its hash. A missing ROM file or hash mismatch prevents the session from starting.
+Before a session can start, Moonshine makes sure the ROM package is available locally. If it is missing, Moonshine downloads it from Avalon. If it is already cached, Moonshine verifies its hash. A missing ROM package or hash mismatch prevents the session from starting.
 
-This protects the local side of the run: Moonshine only starts the session from the ROM version Avalon expects. Avalon also keeps the server-side cartridge used later for audit, so validation does not depend on whatever happens to exist on the player's machine after the run.
+This protects the local side of the run: Moonshine only starts the session from the ROM version Avalon expects. Avalon also keeps the server-side ROM package used later for audit, so validation does not depend on whatever happens to exist on the player's machine after the run.
 
-Moonshine then loads the ROM file, resolves the selected variant, restores menu choices when possible, and asks the player to confirm any startup options. Once the selection is fixed, Moonshine sends Avalon a session creation request.
+Moonshine then loads the ROM package, resolves the selected variant, restores menu choices when possible, and asks the player to confirm any startup options. Once the selection is fixed, Moonshine sends Avalon a session creation request.
 
 Avalon creates the session as authoritative state and returns a session ticket. From that point on, Moonshine and Avalon share the same starting point: the same player, ROM version, selected variant, menu selection, RNG seed, save state, milestones, and badges.
 
