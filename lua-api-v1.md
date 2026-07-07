@@ -76,7 +76,7 @@ Moonshine removes or blocks:
 
 `require()` can load ROM modules. In local maker mode, modules are resolved under
 the ROM package root. In packed or server-backed play, modules are loaded from
-the cartridge module map. Module names use dot notation, such as
+the package module map. Module names use dot notation, such as
 `require("lib.helper")`.
 
 Do not try to work around the sandbox. If a result depends on hidden filesystem
