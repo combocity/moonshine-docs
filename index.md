@@ -25,13 +25,11 @@ Moonshine was originally designed for puzzle games, and its API is still intenti
 
 In Moonshine, a **ROM** is the playable content you create: basically, a game.
 
-When it is uploaded or distributed, it is packed into a **ROM file** (`*.t3rom`) that contains:
+When it is uploaded or distributed, it is packed into a **package** (`*.t3rom`) that contains:
 
 - a manifest
 - one or more Lua scripts
 - optional resources, such as images, sounds, and music
-
-Internally, this ROM file is called a cartridge, but Game Makers and players can simply think of it as the ROM file.
 
 ### Core Game Maker Features
 
