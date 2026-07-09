@@ -237,16 +237,13 @@ unavailable, Moonshine resolves the selection again and falls back to the first
 accessible option for that input. Hidden or locked inputs are omitted from
 `api.session.selection`.
 
-Use `api.save` for game state that belongs to the ROM itself, not for copying
-menu choices just so Moonshine can restore them later. For example, a ROM may
-record that the player last cleared a difficulty:
+Do not copy menu choices into `api.save` just to make them persistent; Moonshine
+already handles that. Use `api.save` only when the ROM needs its own gameplay
+history derived from those choices.
 
-```lua
-function init()
-  local difficulty = api.session.selection.difficulty or "Easy"
-  api.save.last_cleared_difficulty = difficulty
-end
-```
+If a choice leads to player progression, such as clearing a difficulty, record
+that progression with milestones instead. Milestones are the data Moonshine uses
+for unlocks, visibility, and progression gates.
 
 ## Next
 
