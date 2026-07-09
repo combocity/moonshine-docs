@@ -228,12 +228,23 @@ For `Select` inputs, unavailable options are removed from the choice list. For
 
 ## Saving Player Choices
 
-Selections are provided at session start. If your ROM wants to remember the last
-choice, write it into `api.save`:
+Moonshine remembers menu choices for each variant. When a player starts the
+same variant again, Moonshine restores the previous valid selection and sends it
+through `api.session.selection`.
+
+If the manifest changed, or if progression gates make a remembered option
+unavailable, Moonshine resolves the selection again and falls back to the first
+accessible option for that input. Hidden or locked inputs are omitted from
+`api.session.selection`.
+
+Use `api.save` for game state that belongs to the ROM itself, not for copying
+menu choices just so Moonshine can restore them later. For example, a ROM may
+record that the player last cleared a difficulty:
 
 ```lua
 function init()
-  api.save.last_difficulty = api.session.selection.difficulty
+  local difficulty = api.session.selection.difficulty or "Easy"
+  api.save.last_cleared_difficulty = difficulty
 end
 ```
 
