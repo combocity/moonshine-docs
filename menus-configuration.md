@@ -44,9 +44,6 @@ The option `label` is the value sent to Lua.
 | `requiredMilestone` | string | No | Milestone required to access this input. |
 | `visibleFromMilestone` | string | No | Milestone required before this input is visible. |
 
-The first option of a menu input must not be milestone-gated. This guarantees a
-new player always has a selectable value.
-
 ## Option Properties
 
 ```json
@@ -188,6 +185,46 @@ Use milestones to control access:
 - `requiredMilestone` keeps the element visible but unavailable until earned.
 - `visibleFromMilestone` hides the element until the milestone is earned.
 - Both properties must reference a milestone declared in the manifest.
+
+## Fallback Option Rule
+
+Every menu input must keep a valid fallback choice available. This is why each
+menu input must define at least two options, and why the first option must not
+define either `requiredMilestone` or `visibleFromMilestone`.
+
+Use the first option as the safe default for a player who has not unlocked
+anything yet. Gate later options when progression should unlock stronger,
+harder, or more advanced choices:
+
+```json
+{
+  "id": "difficulty",
+  "label": "Difficulty",
+  "options": [
+    { "label": "Easy" },
+    {
+      "label": "Normal",
+      "requiredMilestone": "completed_easy"
+    },
+    {
+      "label": "Hard",
+      "visibleFromMilestone": "completed_normal"
+    }
+  ]
+}
+```
+
+Moonshine only adds a menu input to `api.session.selection` when that input is
+visible and accessible. If the input is hidden by `visibleFromMilestone` or
+locked by `requiredMilestone`, no selection key is sent for that input.
+
+If the input is available but a stored or preconfigured selection points to an
+unavailable option, Moonshine falls back to the first accessible option. If no
+accessible option remains, the menu input is not rendered and no selection key
+is sent.
+
+For `Select` inputs, unavailable options are removed from the choice list. For
+`Radio` inputs, unavailable options can remain visible but disabled.
 
 ## Saving Player Choices
 
