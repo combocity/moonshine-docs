@@ -404,6 +404,7 @@ measurements are useful for layout only.
 | Function | Description |
 |----------|-------------|
 | `api.graphics.get_sprite_handle(imageId, spriteId)` | Returns a sprite handle from manifest `resources.images`, or `-1` when missing. |
+| `api.graphics.get_sprite_handles(imageId)` | Returns a table of sprite handles keyed by sprite id for one image resource, or an empty table when missing. |
 | `api.graphics.draw_sprite(spriteHandle, x, y)` | Draws a sprite at top-left coordinates using its source size. |
 | `api.graphics.draw_sprite_ex(spriteHandle, x, y, width, height, rotation, originX, originY, color)` | Draws a sprite with explicit size, rotation, origin, and tint. |
 | `api.graphics.set_background(index)` | Selects the active background by index. |
@@ -420,10 +421,30 @@ function draw()
 end
 ```
 
+You can also load every sprite from one image resource at once:
+
+```lua
+local character_sprites = {}
+
+function init()
+  character_sprites = api.graphics.get_sprite_handles("characters")
+end
+
+function draw()
+  api.graphics.draw_sprite(character_sprites.player, 100, 120)
+end
+```
+
 `get_sprite_handle(imageId, spriteId)` looks up an image resource and one of its
 declared sprites. A resolved handle is stable and cached for the session. The
 function returns `-1` when either id is blank, the resource is missing, or the
 current renderer cannot provide texture handles.
+
+`get_sprite_handles(imageId)` resolves all declared sprites for an image resource
+and returns a table keyed by sprite id. Resolved handles use the same session
+cache as `get_sprite_handle()`. The function returns an empty table when the
+image id is blank, the image resource is missing, or the current renderer cannot
+provide texture handles.
 
 Invalid sprite handles are safe: `draw_sprite()` and `draw_sprite_ex()` simply
 do nothing.
@@ -511,7 +532,7 @@ Do not build gameplay behavior around this module.
 
 | Type | Shape |
 |------|-------|
-| `SpriteHandle` | Integer returned by `api.graphics.get_sprite_handle`; `-1` means missing. |
+| `SpriteHandle` | Integer returned by `api.graphics.get_sprite_handle` or `api.graphics.get_sprite_handles`; `-1` means missing. |
 | `FontHandle` | Integer returned by `api.graphics.get_font_handle`; `-1` means missing. |
 | `MusicHandle` | Integer returned by `api.audio.get_music_handle`; `-1` means missing. |
 | `Color` | `{ r?: integer, g?: integer, b?: integer, a?: integer }`, channel values `0` to `255`. |

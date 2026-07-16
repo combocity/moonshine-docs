@@ -128,19 +128,27 @@ Lua uses both ids:
 
 ```lua
 local player_idle = -1
+local character_sprites = {}
 
 function init()
   player_idle = api.graphics.get_sprite_handle("characters", "player_idle")
+  character_sprites = api.graphics.get_sprite_handles("characters")
 end
 
 function draw()
   api.graphics.draw_sprite(player_idle, 100, 120)
+  api.graphics.draw_sprite(character_sprites.player_run, 130, 120)
 end
 ```
 
 `get_sprite_handle(imageId, spriteId)` returns `-1` when the image, sprite, or
 texture cannot be resolved. Drawing with an invalid handle is safe and does
 nothing.
+
+Use `get_sprite_handles(imageId)` when you want every sprite declared in one
+image resource. It returns a table keyed by sprite id and uses the same cached
+handles as `get_sprite_handle()`. Missing images or unavailable textures return
+an empty table.
 
 Use `draw_sprite_ex()` when you need an explicit destination size, rotation,
 origin, or tint:
@@ -365,6 +373,7 @@ on rendering or audio behavior.
 |---------|---------------|
 | Resource file missing at load | The file is in the matching `assets/<type>/` folder, and `fileName` contains only the file name. |
 | `get_sprite_handle()` returns `-1` | Image id, sprite id, sprite rectangle, and image file are declared correctly. |
+| `get_sprite_handles()` returns an empty table | Image id, sprite rectangles, and image file are declared correctly. |
 | `get_music_handle()` returns `-1` | Music id exists in `resources.musics`, the file is `.ogg`, and the renderer supports music. |
 | `get_font_handle()` returns `-1` | Font id exists in `resources.fonts`, the file is `.ttf`, `ttfFontSize` is positive, and localization is not empty. |
 | Localized text draws the key | The key is missing or has an empty value in that font's `localization` map. |
