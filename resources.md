@@ -56,8 +56,12 @@ Resource ids follow the usual Moonshine id rules: use letters, numbers, `_`, or
       {
         "id": "tiles",
         "fileName": "tiles.png",
+        "mode": "manual",
         "sprites": [
-          { "id": "block", "x": 0, "y": 0, "width": 16, "height": 16 }
+          {
+            "id": "block",
+            "rect": { "x": 0, "y": 0, "w": 16, "h": 16 }
+          }
         ]
       }
     ],
@@ -94,6 +98,10 @@ Each image has:
 |-------|---------|
 | `id` | Image id used by Lua when requesting a sprite handle. |
 | `fileName` | Image file name under `assets/images/`. PNG is the normal format used by Moonshine examples. |
+| `mode` | Required sprite-definition mode: `manual` or `mask`. |
+| `maskColor` | Required `#RRGGBB` frame color in `mask` mode. |
+| `hash` | Optional texture SHA-256 maintained by mask synchronization. |
+| `definitionHash` | Optional canonical definition SHA-256 maintained by mask synchronization. |
 | `sprites` | Optional list of named rectangles inside the image. |
 
 Each sprite has:
@@ -101,11 +109,18 @@ Each sprite has:
 | Field | Meaning |
 |-------|---------|
 | `id` | Sprite id, unique inside that image. |
-| `x` / `y` | Top-left pixel in the image. |
-| `width` / `height` | Sprite rectangle size in pixels. |
+| `keyColor` | Optional technical `#RRGGBB` marker used by mask synchronization. |
+| `rect.x` / `rect.y` | Top-left pixel in the image. |
+| `rect.w` / `rect.h` | Sprite rectangle width and height in pixels. |
 
 Sprite ids only need to be unique within one image. Two different images can
 both define a sprite called `idle`.
+
+In `manual` mode, you maintain every `rect` yourself. In `mask` mode, Moonshine
+detects one-pixel colored frames, writes stable `keyColor` markers, and updates
+the rectangles through the local Game Maker flow. See
+[Sprite Atlases]({% link sprite-atlases.md %}) for the complete
+authoring and synchronization workflow.
 
 ```json
 {
@@ -114,9 +129,16 @@ both define a sprite called `idle`.
       {
         "id": "characters",
         "fileName": "characters.png",
+        "mode": "manual",
         "sprites": [
-          { "id": "player_idle", "x": 0, "y": 0, "width": 24, "height": 24 },
-          { "id": "player_run", "x": 24, "y": 0, "width": 24, "height": 24 }
+          {
+            "id": "player_idle",
+            "rect": { "x": 0, "y": 0, "w": 24, "h": 24 }
+          },
+          {
+            "id": "player_run",
+            "rect": { "x": 24, "y": 0, "w": 24, "h": 24 }
+          }
         ]
       }
     ]
@@ -372,8 +394,9 @@ on rendering or audio behavior.
 | Symptom | What to check |
 |---------|---------------|
 | Resource file missing at load | The file is in the matching `assets/<type>/` folder, and `fileName` contains only the file name. |
-| `get_sprite_handle()` returns `-1` | Image id, sprite id, sprite rectangle, and image file are declared correctly. |
+| `get_sprite_handle()` returns `-1` | Image id, image mode, sprite id, sprite `rect`, and image file are declared correctly. |
 | `get_sprite_handles()` returns an empty table | Image id, sprite rectangles, and image file are declared correctly. |
+| Mask synchronization reports conflicts | Keep each generated `keyColor` with its complete frame and avoid duplicate marker colors. |
 | `get_music_handle()` returns `-1` | Music id exists in `resources.musics`, the file is `.ogg`, and the renderer supports music. |
 | `get_font_handle()` returns `-1` | Font id exists in `resources.fonts`, the file is `.ttf`, `ttfFontSize` is positive, and localization is not empty. |
 | Localized text draws the key | The key is missing or has an empty value in that font's `localization` map. |
@@ -383,5 +406,6 @@ on rendering or audio behavior.
 ## Related
 
 - **[Manifest Reference]({{ site.baseurl }}{% link manifest.md %})** - Exact JSON fields and validation rules.
+- **[Sprite Atlases]({% link sprite-atlases.md %})** - Manual rectangles and mask-based synchronization.
 - **[Lua API v1 Reference]({{ site.baseurl }}{% link lua-api-v1.md %})** - Runtime functions for graphics and audio.
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestones and badges.

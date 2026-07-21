@@ -71,6 +71,7 @@ Master the key features of Moonshine ROM creation:
 - **[Lua API v1 Reference]({{ site.baseurl }}{% link lua-api-v1.md %})** - Runtime lifecycle and `api.*` modules
 - **[Manifest Essentials]({{ site.baseurl }}{% link manifest.md %})** - Complete technical reference for `manifest.json` configuration
 - **[ROM Resources]({{ site.baseurl }}{% link resources.md %})** - Add images, sounds, music, fonts, and badge assets
+- **[Sprite Atlases]({% link sprite-atlases.md %})** - Define sprite rectangles manually or synchronize mask-framed atlases
 - **[Complete Example]({{ site.baseurl }}{% link example-progression-mode.md %})** - TODO rewrite for the current Lua API
 
 ---
