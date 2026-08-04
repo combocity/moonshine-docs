@@ -404,7 +404,8 @@ measurements are useful for layout only.
 | Function | Description |
 |----------|-------------|
 | `api.graphics.create_sprite_grid(options)` | Creates a persistent grid backed by one image resource and returns `(handle, error)`. |
-| `api.graphics.update_sprite_grid_cells(handle, changes)` | Updates selected cells by their zero-based index, from left to right and top to bottom. |
+| `api.graphics.update_sprite_grid_cells(handle, changes)` | Changes the sprites of selected cells, numbered from `1` from left to right and then top to bottom. |
+| `api.graphics.update_sprite_grid_cell_alphas(handle, changes)` | Changes the opacity of selected cells using values from `0` to `255`. |
 | `api.graphics.draw_sprite_grid(handle, x, y, alpha)` | Draws a grid at top-left coordinates with its latest cell changes and an alpha from `0` to `255`. |
 | `api.graphics.get_sprite_handle(imageId, spriteId)` | Returns a sprite handle from manifest `resources.images`, or `-1` when missing. |
 | `api.graphics.get_sprite_handles(imageId)` | Returns a table of sprite handles keyed by sprite id for one image resource, or an empty table when missing. |
@@ -519,10 +520,16 @@ function init()
 
   -- The grid starts empty. Set only the non-empty cells.
   api.graphics.update_sprite_grid_cells(grid, {
-    [0] = 1,
-    [2] = 2,
+    [1] = 1,
     [3] = 2,
-    [4] = 1
+    [4] = 2,
+    [5] = 1
+  })
+
+  -- Fade the first cell and hide the bottom-middle cell.
+  api.graphics.update_sprite_grid_cell_alphas(grid, {
+    [1] = 128,
+    [5] = 0
   })
 end
 
@@ -532,7 +539,7 @@ function update()
 
     -- Change only the top-middle cell.
     api.graphics.update_sprite_grid_cells(grid, {
-      [1] = wall_visible and 2 or 0
+      [2] = wall_visible and 2 or 0
     })
   end
 end
@@ -548,29 +555,39 @@ end
 of `0` makes a cell empty, `1` selects the first sprite id, `2` selects the
 second sprite id, and so on.
 
-Cell keys are zero-based and ordered from left to right, then top to bottom. A
-`3 * 2` grid uses these indices:
+Cells are numbered from `1`, from left to right and then top to bottom. A
+`3 * 2` grid uses these numbers:
 
 ```text
-0 1 2
-3 4 5
+1 2 3
+4 5 6
 ```
 
-For a cell at zero-based `(column, row)` coordinates, its index is
-`row * columns + column`.
+For a cell at one-based `(column, row)` coordinates, its number is
+`(row - 1) * columns + column`.
 
-Each `update_sprite_grid_cells()` call can contain one or many changed cells.
-You can call it several times before drawing the grid; the latest value given
-for each cell is used. The changes are used the next time
-`draw_sprite_grid()` is called. If a call contains an invalid cell or palette
-index, the whole call is ignored and the previous grid state is kept.
+Use `update_sprite_grid_cells()` to change sprites and
+`update_sprite_grid_cell_alphas()` to change opacity. Both functions accept one
+or many cells and can be called several times before drawing; the latest value
+given for each cell is used the next time `draw_sprite_grid()` is called.
 
-Moving the grid or changing its opacity does not require a cell update. Pass
-the new position or alpha directly to `draw_sprite_grid()`.
+A cell alpha is between `0` and `255`: `0` makes that cell transparent and
+`255` keeps all the opacity allowed by the grid. Every cell starts at `255`.
+The alpha passed to `draw_sprite_grid()` applies to the complete grid, using
+`final alpha = cell alpha * grid alpha / 255`. For example, a cell at `128`
+drawn with a grid alpha of `128` has a final opacity of about `64`. Changing a
+cell alpha does not change its sprite.
 
-Invalid handles are safe: `update_sprite_grid_cells()` and
-`draw_sprite_grid()` do nothing. A draw call with an alpha outside `0` to `255`
-is also ignored.
+Sprite changes and opacity changes are validated separately. If one entry is
+invalid, all changes of the same kind are ignored for that draw; valid changes
+of the other kind are still applied.
+
+Moving the grid or changing the opacity of the whole grid does not require a
+cell update. Pass the new position or alpha directly to `draw_sprite_grid()`.
+
+Invalid handles are safe: `update_sprite_grid_cells()`,
+`update_sprite_grid_cell_alphas()`, and `draw_sprite_grid()` do nothing. A draw
+call with an alpha outside `0` to `255` is also ignored.
 
 The palette, dimensions, and cell size cannot be changed after creation. A
 handle remains valid for the current session, and a session can create at most
@@ -581,8 +598,9 @@ is not currently performed. For a large world, keep the full map in your game
 state and use a sprite grid for the visible playfield rather than the complete
 world.
 
-In headless replay, valid definitions and cell updates preserve deterministic
-control flow, while `draw_sprite_grid()` performs no rendering.
+In headless replay, valid definitions, sprite updates, and alpha updates
+preserve deterministic control flow, while `draw_sprite_grid()` performs no
+rendering.
 
 ## `api.audio`
 
