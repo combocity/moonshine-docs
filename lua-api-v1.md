@@ -404,8 +404,8 @@ measurements are useful for layout only.
 | Function | Description |
 |----------|-------------|
 | `api.graphics.create_sprite_grid(options)` | Creates a persistent grid backed by one image resource and returns `(handle, error)`. |
-| `api.graphics.set_sprite_grid_cells(handle, cells)` | Replaces every cell in a grid using row-major palette indices. |
-| `api.graphics.draw_sprite_grid(handle, x, y, alpha)` | Draws a grid at top-left coordinates with an alpha from `0` to `255`. |
+| `api.graphics.update_sprite_grid_cells(handle, changes)` | Updates selected cells by their zero-based index, from left to right and top to bottom. |
+| `api.graphics.draw_sprite_grid(handle, x, y, alpha)` | Draws a grid at top-left coordinates with its latest cell changes and an alpha from `0` to `255`. |
 | `api.graphics.get_sprite_handle(imageId, spriteId)` | Returns a sprite handle from manifest `resources.images`, or `-1` when missing. |
 | `api.graphics.get_sprite_handles(imageId)` | Returns a table of sprite handles keyed by sprite id for one image resource, or an empty table when missing. |
 | `api.graphics.draw_sprite(spriteHandle, x, y)` | Draws a sprite at top-left coordinates using its source size. |
@@ -471,16 +471,18 @@ renderer as the rotation origin.
 
 ### Sprite Grids
 
-Sprite grids efficiently draw many uniformly sized cells from one image
-resource. Create the grid once, replace its cell contents when they change, and
-draw it each frame at the required position and opacity.
+Sprite grids make tile maps, boards, inventories, and other regular layouts
+simple and efficient. Every cell has the same displayed size and uses a sprite
+from one image resource. Create the grid once, update only the cells that
+change, and draw it each frame. Moonshine keeps the grid ready to draw, so a
+small change does not require recreating the complete grid.
 
 `create_sprite_grid(options)` accepts a `SpriteGridDefinition` table:
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `image_id` | `string` | Image id from manifest `resources.images`. |
-| `sprite_ids` | `string[]` | Dense ordered palette of sprite ids from that image. The maximum is `256`. |
+| `sprite_ids` | `string[]` | Ordered list of sprite ids from that image. The maximum is `256`. |
 | `columns` | `integer` | Positive column count. The maximum is `120`. |
 | `rows` | `integer` | Positive row count. The maximum is `70`. |
 | `cell_width` | `integer` | Positive destination width applied uniformly to every cell. |
@@ -495,32 +497,43 @@ success. Creation returns `-1` and an actionable error string when the
 definition or rendering resource cannot be resolved:
 
 ```lua
+local GRID_COLUMNS = 3
 local grid = -1
-local grid_error = nil
-local cells = { 1, 0, 2, 2, 1, 0 }
+local wall_visible = false
 
 function init()
-  grid, grid_error = api.graphics.create_sprite_grid({
+  local creation_error
+  grid, creation_error = api.graphics.create_sprite_grid({
     image_id = "tiles",
     sprite_ids = { "grass", "wall" },
-    columns = 3,
+    columns = GRID_COLUMNS,
     rows = 2,
     cell_width = 16,
     cell_height = 16
   })
 
   if grid == -1 then
-    api.log.error("Unable to create sprite grid: " .. tostring(grid_error))
+    api.log.error("Unable to create sprite grid: " .. tostring(creation_error))
     return
   end
 
-  api.graphics.set_sprite_grid_cells(grid, cells)
+  -- The grid starts empty. Set only the non-empty cells.
+  api.graphics.update_sprite_grid_cells(grid, {
+    [0] = 1,
+    [2] = 2,
+    [3] = 2,
+    [4] = 1
+  })
 end
 
 function update()
   if grid ~= -1 and api.input.A.DownCount == 1 then
-    cells[2] = cells[2] == 0 and 2 or 0
-    api.graphics.set_sprite_grid_cells(grid, cells)
+    wall_visible = not wall_visible
+
+    -- Change only the top-middle cell.
+    api.graphics.update_sprite_grid_cells(grid, {
+      [1] = wall_visible and 2 or 0
+    })
   end
 end
 
@@ -531,27 +544,42 @@ function draw()
 end
 ```
 
-`sprite_ids` is a fixed, one-based palette. Each entry in `cells` selects a
-palette entry: `0` leaves the cell empty, `1` selects the first sprite id, and
-so on. Cells are ordered from left to right, then top to bottom. The array must
-contain exactly `columns * rows` entries.
+`sprite_ids` is the fixed, one-based sprite palette for the grid. A change value
+of `0` makes a cell empty, `1` selects the first sprite id, `2` selects the
+second sprite id, and so on.
 
-`set_sprite_grid_cells()` replaces the complete grid atomically. An invalid
-cell count or palette index is ignored and leaves the previous contents
-unchanged. Call it only when cell contents change; changing the grid position
-or opacity only requires another `draw_sprite_grid()` call.
+Cell keys are zero-based and ordered from left to right, then top to bottom. A
+`3 * 2` grid uses these indices:
 
-Invalid handles are safe: `set_sprite_grid_cells()` and `draw_sprite_grid()`
-do nothing. A draw call with an alpha outside `0` to `255` is also ignored.
+```text
+0 1 2
+3 4 5
+```
+
+For a cell at zero-based `(column, row)` coordinates, its index is
+`row * columns + column`.
+
+Each `update_sprite_grid_cells()` call can contain one or many changed cells.
+You can call it several times before drawing the grid; the latest value given
+for each cell is used. The changes are used the next time
+`draw_sprite_grid()` is called. If a call contains an invalid cell or palette
+index, the whole call is ignored and the previous grid state is kept.
+
+Moving the grid or changing its opacity does not require a cell update. Pass
+the new position or alpha directly to `draw_sprite_grid()`.
+
+Invalid handles are safe: `update_sprite_grid_cells()` and
+`draw_sprite_grid()` do nothing. A draw call with an alpha outside `0` to `255`
+is also ignored.
 
 The palette, dimensions, and cell size cannot be changed after creation. A
 handle remains valid for the current session, and a session can create at most
 `32` grids. There is currently no destroy function.
 
-A grid can contain at most `120 * 70 = 8,400` cells. Viewport culling is not
-performed: every non-empty cell is considered when the grid is drawn. Keep
-large world maps in Lua and use a grid for the visible playfield rather than
-creating a grid for an entire RPG map.
+A grid can contain at most `120 * 70 = 8,400` cells. Automatic viewport culling
+is not currently performed. For a large world, keep the full map in your game
+state and use a sprite grid for the visible playfield rather than the complete
+world.
 
 In headless replay, valid definitions and cell updates preserve deterministic
 control flow, while `draw_sprite_grid()` performs no rendering.
