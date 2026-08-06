@@ -403,6 +403,12 @@ measurements are useful for layout only.
 
 | Function | Description |
 |----------|-------------|
+| `api.graphics.create_sprite_grid(options)` | Creates a persistent grid backed by one image resource and returns `(handle, error)`. |
+| `api.graphics.set_sprite_grid_cells(handle, cells)` | Replaces the sprites of all cells in reading order. |
+| `api.graphics.set_sprite_grid_cell_alphas(handle, alphas)` | Replaces the opacity values of all cells in reading order. |
+| `api.graphics.update_sprite_grid_cells(handle, changes)` | Changes the sprites of selected cells. |
+| `api.graphics.update_sprite_grid_cell_alphas(handle, changes)` | Changes the opacity of selected cells using values from `0` to `255`. |
+| `api.graphics.draw_sprite_grid(handle, x, y, alpha)` | Draws a grid at top-left coordinates with its latest cell values and an alpha from `0` to `255`. |
 | `api.graphics.get_sprite_handle(imageId, spriteId)` | Returns a sprite handle from manifest `resources.images`, or `-1` when missing. |
 | `api.graphics.get_sprite_handles(imageId)` | Returns a table of sprite handles keyed by sprite id for one image resource, or an empty table when missing. |
 | `api.graphics.draw_sprite(spriteHandle, x, y)` | Draws a sprite at top-left coordinates using its source size. |
@@ -465,6 +471,145 @@ api.graphics.draw_sprite_ex(
 
 `rotation` is expressed in radians. `originX` and `originY` are passed to the
 renderer as the rotation origin.
+
+### Sprite Grids
+
+Sprite grids make tile maps, boards, inventories, and other regular layouts
+simple and efficient. Every cell has the same displayed size and uses a sprite
+from one image resource. Create the grid once, set its initial contents, then
+update only the cells that change. Moonshine keeps the grid ready to draw, so a
+small change does not require recreating the complete grid.
+
+`create_sprite_grid(options)` accepts a `SpriteGridDefinition` table:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `image_id` | `string` | Image id from manifest `resources.images`. |
+| `sprite_ids` | `string[]` | Ordered list of sprite ids from that image. The maximum is `256`. |
+| `columns` | `integer` | Positive column count. The maximum is `120`. |
+| `rows` | `integer` | Positive row count. The maximum is `70`. |
+| `cell_width` | `integer` | Positive destination width applied uniformly to every cell. |
+| `cell_height` | `integer` | Positive destination height applied uniformly to every cell. |
+
+Every palette entry must be declared under the same image resource. See
+[Sprite Atlases]({{ site.baseurl }}{% link sprite-atlases.md %}) for image and
+sprite definitions.
+
+The returned handle is positive and the second return value is `nil` on
+success. Creation returns `-1` and an actionable error string when the
+definition or rendering resource cannot be resolved:
+
+```lua
+local GRID_COLUMNS = 3
+local grid = -1
+local wall_visible = false
+
+function init()
+  local creation_error
+  grid, creation_error = api.graphics.create_sprite_grid({
+    image_id = "tiles",
+    sprite_ids = { "grass", "wall" },
+    columns = GRID_COLUMNS,
+    rows = 2,
+    cell_width = 16,
+    cell_height = 16
+  })
+
+  if grid == -1 then
+    api.log.error("Unable to create sprite grid: " .. tostring(creation_error))
+    return
+  end
+
+  -- Initialize the complete 3 x 2 grid.
+  api.graphics.set_sprite_grid_cells(grid, {
+    1, 0, 2,
+    2, 1, 0
+  })
+
+  api.graphics.set_sprite_grid_cell_alphas(grid, {
+    128, 255, 255,
+    255, 0, 255
+  })
+end
+
+function update()
+  if grid ~= -1 and api.input.A.DownCount == 1 then
+    wall_visible = not wall_visible
+
+    -- Change only the top-middle cell.
+    api.graphics.update_sprite_grid_cells(grid, {
+      [2] = wall_visible and 2 or 0
+    })
+    api.graphics.update_sprite_grid_cell_alphas(grid, {
+      [2] = wall_visible and 255 or 128
+    })
+  end
+end
+
+function draw()
+  if grid ~= -1 then
+    api.graphics.draw_sprite_grid(grid, 40, 24, 192)
+  end
+end
+```
+
+`sprite_ids` is the fixed, one-based sprite palette for the grid. A cell value
+of `0` makes a cell empty, `1` selects the first sprite id, `2` selects the
+second sprite id, and so on.
+
+Cells are numbered from `1`, from left to right and then top to bottom. A
+`3 * 2` grid uses these numbers:
+
+```text
+1 2 3
+4 5 6
+```
+
+For a cell at one-based `(column, row)` coordinates, its number is
+`(row - 1) * columns + column`.
+
+Use `set_sprite_grid_cells()` and `set_sprite_grid_cell_alphas()` to initialize
+or replace a complete grid. Their dense arrays must contain exactly
+`columns * rows` values in the cell order shown above. Use
+`update_sprite_grid_cells()` and `update_sprite_grid_cell_alphas()` when only a
+few cells change; their sparse tables are keyed by cell number.
+
+All four methods can be combined before drawing. A `set` replaces every earlier
+value of the same kind, while a following `update` changes only its selected
+cells. When a cell is assigned more than once, the latest value wins. Changes
+take effect the next time `draw_sprite_grid()` is called.
+
+A cell alpha is between `0` and `255`: `0` makes that cell transparent and
+`255` keeps all the opacity allowed by the grid. Every cell starts at `255`.
+The alpha passed to `draw_sprite_grid()` applies to the complete grid, using
+`final alpha = cell alpha * grid alpha / 255`. For example, a cell at `128`
+drawn with a grid alpha of `128` has a final opacity of about `64`. Changing a
+cell alpha does not change its sprite.
+
+Sprite changes and opacity changes are validated separately. If one entry is
+invalid, all changes of the same kind are ignored for that draw; valid changes
+of the other kind are still applied.
+
+Moving the grid or changing the opacity of the whole grid does not require a
+cell update. Pass the new position or alpha directly to `draw_sprite_grid()`.
+
+Invalid handles are safe: `update_sprite_grid_cells()`,
+`update_sprite_grid_cell_alphas()`, both `set` methods, and
+`draw_sprite_grid()` do nothing. A draw call with an alpha outside `0` to `255`
+is also ignored.
+
+The palette, dimensions, and cell size cannot be changed after creation. A
+handle remains valid for the current session, and a session can create at most
+`32` grids. There is currently no destroy function.
+
+A grid can contain at most `120 * 70 = 8,400` cells. Automatic viewport culling
+is not currently performed. For a large world, keep the full map in your game
+state and use a sprite grid for the visible playfield rather than the complete
+world.
+
+In headless replay, valid definitions, complete sets, and partial updates
+preserve deterministic control flow, while `draw_sprite_grid()` performs no
+rendering.
 
 ## `api.audio`
 
@@ -533,6 +678,8 @@ Do not build gameplay behavior around this module.
 | Type | Shape |
 |------|-------|
 | `SpriteHandle` | Integer returned by `api.graphics.get_sprite_handle` or `api.graphics.get_sprite_handles`; `-1` means missing. |
+| `SpriteGridHandle` | Positive session-local integer returned by `api.graphics.create_sprite_grid`; `-1` means creation failed. |
+| `SpriteGridDefinition` | `{ image_id: string, sprite_ids: string[], columns: integer, rows: integer, cell_width: integer, cell_height: integer }`. |
 | `FontHandle` | Integer returned by `api.graphics.get_font_handle`; `-1` means missing. |
 | `MusicHandle` | Integer returned by `api.audio.get_music_handle`; `-1` means missing. |
 | `Color` | `{ r?: integer, g?: integer, b?: integer, a?: integer }`, channel values `0` to `255`. |
