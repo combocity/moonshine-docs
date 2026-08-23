@@ -17,6 +17,6 @@ removed from the public guide until it can be rebuilt around the current Lua API
 - `api.ranking.submit_score`.
 - `api.session.end_game`.
 
-Score submission is now available. The next complete example should submit its
-deterministic score and duration before `api.session.end_game()`. Ranking queries
-and the final player-facing ranking display are still work in progress.
+A complete example should submit its deterministic score and duration before
+`api.session.end_game()`. Ranking queries and the final player-facing ranking
+display are outside the Lua API v1 contract.

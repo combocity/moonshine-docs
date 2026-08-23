@@ -198,7 +198,7 @@ regard to case. A `Chrono` value is a non-negative integer duration in
 milliseconds.
 
 See [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %}) for the Lua
-submission API, validation rules, and current limitations.
+submission API, validation rules, and ranking behavior.
 
 ## Resources
 

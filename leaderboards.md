@@ -4,17 +4,13 @@ title: Leaderboards
 ---
 
 A ROM can declare ranking tables in its manifest and submit results from Lua.
-Moonshine includes those results in the session report. Server-backed acceptance
-requires an Avalon version with compatible Lua ranking audit support.
+Moonshine includes those results in the session report, and Avalon verifies them
+during replay audit before persisting accepted ranking entries.
 
-> `api.ranking.submit_score()` is available in Moonshine `v0.1.2`. Until the
-> corresponding Avalon update is deployed, a successful local submission does
-> not become a server ranking entry.
+Querying rankings from Lua and the final player-facing ranking display are not
+part of the Lua API v1 contract.
 
-Querying rankings from Lua and the final player-facing ranking display are still
-work in progress.
-
-## Current Manifest Shape
+## Manifest Shape
 
 Declare ranking tables with `rankingTables`:
 
@@ -142,13 +138,13 @@ menus:
 These gates control access and visibility. They do not automatically select a
 ranking table for the current variant; the ROM chooses the table id it submits.
 
-## Not Available Yet
+## API v1 Limitations
 
-The following pieces are not part of the public API yet:
+The public API does not provide:
 
 - Querying a player's best score from Lua.
 - Querying global rankings from Lua.
-- Final ordering direction, tie-breaking, and ranking display behavior.
+- Ranking ordering direction, tie-breaking, and final display behavior.
 
 ## Next
 

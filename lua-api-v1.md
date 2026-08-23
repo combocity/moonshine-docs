@@ -317,7 +317,7 @@ Keep the calculation in deterministic gameplay code, not in `draw()` or a wall
 clock.
 
 See [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %}) for manifest
-examples, validation rules, and current limitations.
+examples, validation rules, and ranking behavior.
 
 ## `api.input`
 
@@ -736,7 +736,7 @@ Do not build gameplay behavior around this module.
 | `TextSize` | `{ width: integer, height: integer }`. |
 | `InputState` | `{ Key: string, DownCount: integer }`. |
 
-## Not Available Yet
+## Not Part of API v1
 
 These are not part of Lua API v1:
 
