@@ -27,7 +27,7 @@ Use milestones to:
 
 - Unlock variants.
 - Unlock or reveal menu inputs and options.
-- Unlock or reveal ranking table definitions.
+- Unlock or reveal ranking tables.
 - Let Lua check whether a player has already completed something.
 
 ## Unlocking Milestones in Lua
@@ -107,7 +107,7 @@ The first option of a menu input cannot be milestone-gated.
 ## Visibility vs Access
 
 `requiredMilestone` and `visibleFromMilestone` work on variants, menu inputs,
-menu options, badges, and ranking table definitions.
+menu options, badges, and ranking tables.
 
 ```json
 {
@@ -203,4 +203,4 @@ end
 ## Next
 
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Configure variants before launch.
-- **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Ranking table manifest definitions.
+- **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Ranking tables and score submission.

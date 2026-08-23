@@ -45,7 +45,7 @@ Milestones work like internal achievements, but they are not displayed directly 
 
 When a player starts a ROM variant, Moonshine provides the current player progression and the ROM save state, so your game can react to what the player has already done.
 
-The manifest can also define one or more custom **ranking tables** for your ROM. Each ranking table can represent a different way to compare players, such as score, time, level, or any other result your game exposes. Access to these ranking tables can also be controlled through Milestones, allowing you to reveal rankings only after the player reaches specific progression goals.
+The manifest can also define one or more custom **ranking tables** for your ROM. Each ranking table can represent a different way to compare players, such as score, time, level, or any other result your game exposes. Your Lua code can submit a deterministic result for these tables at the end of a run. Access to ranking tables can also be controlled through Milestones, allowing you to reveal rankings only after the player reaches specific progression goals.
 
 ROM creation is an iterative process. Some features are still evolving, and edge cases are expected as the platform grows. The goal of this documentation is to make those behaviors explicit and help Game Makers build with confidence.
 
@@ -64,7 +64,7 @@ Master the key features of Moonshine ROM creation:
 - **[Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %})** - Understand how a Lua session starts, submits results, and ends
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Create interactive menus and let players customize their experience before playing
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Build progression paths using milestones to unlock content and gate features
-- **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Work-in-progress ranking table definitions
+- **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Define ranking tables and submit results from Lua
 
 ## Reference & Examples
 
@@ -76,4 +76,4 @@ Master the key features of Moonshine ROM creation:
 
 ---
 
-**Last Updated:** June 2026
+**Last Updated:** August 2026
