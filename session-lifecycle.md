@@ -17,7 +17,7 @@ In other words, a session answers one question:
 
 > Starting from this exact state, with this exact ROM version and this exact input stream, did the game really produce this submitted result?
 
-This is what makes server-backed play trustworthy. If the replayed result matches the submitted result, the session can be accepted as evidence for player progression, save state updates, unlocked milestones, badges, crash reports, and ranking data when supported. If it does not match, Avalon can reject that session branch and rebuild player state from validated sessions.
+This is what makes server-backed play trustworthy. If the replayed result matches the submitted result, the session can be accepted as evidence for player progression, save state updates, unlocked milestones, badges, crash reports, and, when the server runtime supports it, ranking results. If it does not match, Avalon can reject that session branch and rebuild player state from validated sessions.
 
 For Authors, the practical rule is simple: anything that affects a submitted result must be deterministic and reproducible from the session context.
 
@@ -45,7 +45,7 @@ Avalon creates the session as authoritative state and returns a session ticket. 
 
 Once Moonshine has a session ticket, it starts the Lua runtime from that fixed context.
 
-The exact Lua lifecycle is documented in the Lua API reference: `init()` is optional, `update()` and `draw()` are required, `api.session` exposes the launch context, `api.save` exposes persistent ROM state, and `api.progress` exposes milestones and badges.
+The exact Lua lifecycle is documented in the Lua API reference: `init()` is optional, `update()` and `draw()` are required, `api.session` exposes the launch context, `api.save` exposes persistent ROM state, `api.progress` exposes milestones and badges, and `api.ranking` submits ranking results.
 
 For the session lifecycle, the important part is that Moonshine records the player's inputs every frame. Those inputs become part of the session report and are later replayed by Avalon during audit.
 
@@ -60,16 +60,21 @@ api.session.end_game()
 api.session.shutdown()
 ```
 
-`api.session.end_game()` freezes the result that should be submitted. Save state, newly unlocked milestones and badges, recorded inputs, outcome, crash information, and ranking data when supported are captured around that transition. Calling it more than once does not create multiple reports.
+`api.session.end_game()` freezes the result that should be submitted. Save state, newly unlocked milestones and badges, recorded inputs, outcome, crash information, and ranking results are captured around that transition. Calling it more than once does not create multiple reports.
+
+Call `api.ranking.submit_score()` before `api.session.end_game()`. Ranking
+submissions are frozen as soon as the end-game request is made, and later score
+submissions are rejected.
 
 `api.session.shutdown()` tells Moonshine the ROM is finished and can return control to the surrounding UI.
 
 The safest pattern is:
 
 1. Update all final state.
-2. Call `api.session.end_game()`.
-3. Optionally show a short result or acknowledgement screen.
-4. Call `api.session.shutdown()`.
+2. Submit every ranking result with `api.ranking.submit_score()`.
+3. Call `api.session.end_game()`.
+4. Optionally show a short result or acknowledgement screen.
+5. Call `api.session.shutdown()`.
 
 Do not rely on long post-result gameplay. Once the result has been frozen, later changes should not be treated as part of the submitted run.
 
@@ -85,9 +90,13 @@ Audit is Avalon checking whether the submitted session can be reproduced.
 
 Avalon does not trust the final save state, unlocked milestones, badges, crash information, or ranking data just because the player submitted them. It replays the session from the same starting context and applies the recorded inputs in a headless runtime. The replayed result must match the submitted report.
 
+Ranking result comparison requires an Avalon version with compatible Lua
+ranking audit support. The Moonshine submission API being available locally does
+not by itself guarantee that the deployed server accepts ranking results yet.
+
 Avalon also knows when the session was created and when the report was received. That wall-clock window can be used to reject or flag sessions whose real elapsed time is inconsistent with their frame duration. This complements replay audit: the ROM result must be reproducible, and the session must still make sense as one real playable attempt.
 
-If the replay matches, the session is validated. Validated sessions can update player progression and add submitted score entries to their associated ranking tables when score submission is supported by the runtime. If the replay does not match, Avalon rejects the submitted result and handles the session according to server policy.
+If the replay matches, the session is validated. With compatible ranking support, validated sessions can update player progression and add submitted score entries to their associated ranking tables. If the replay does not match, Avalon rejects the submitted result and handles the session according to server policy.
 
 This is why deterministic ROM creation matters. The Lua runtime is sandboxed: direct filesystem and operating system access, native modules, and blocked modules such as `os`, `io`, and `debug` are removed. Stay inside that sandbox instead of trying to work around it.
 
@@ -99,4 +108,4 @@ For gameplay results, rely on the session context: the seeded `math.random`, `ap
 - **[Lua API v1 Reference]({% link lua-api-v1.md %})** - Runtime lifecycle and API details.
 - **[Menus & Configuration]({% link menus-configuration.md %})** - Configure startup choices used by `api.session.selection`.
 - **[Progression System]({% link progression-milestones.md %})** - Unlock milestones and badges.
-- **[Leaderboards]({% link leaderboards.md %})** - Ranking table status and limitations.
+- **[Leaderboards]({% link leaderboards.md %})** - Ranking tables, score submission, and current limitations.

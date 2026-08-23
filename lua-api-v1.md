@@ -21,6 +21,7 @@ sdk/api/v1/
 ├── input.lua
 ├── log.lua
 ├── progress.lua
+├── ranking.lua
 ├── safety.lua
 ├── session.lua
 └── types.lua
@@ -98,6 +99,7 @@ persistent ROM state.
 | `api.session` | Session context and lifecycle helpers. |
 | `api.save` | Mutable persistent save table. |
 | `api.progress` | Milestone and badge helpers. |
+| `api.ranking` | Ranking result submission helper. |
 | `api.input` | Per-frame input snapshot. |
 | `api.graphics` | Rendering and visual resource helpers. |
 | `api.audio` | Sound and music helpers. |
@@ -268,6 +270,54 @@ end
 
 Only milestones and badges added during the session are included as newly added
 progress in the session result.
+
+## `api.ranking`
+
+`api.ranking` submits deterministic results to ranking tables declared in the
+manifest.
+
+```lua
+local submitted, submission_error = api.ranking.submit_score(
+  "easy",
+  score,
+  {
+    Score = score,
+    Time = elapsed_ms,
+    Apples = apples_eaten
+  })
+
+if not submitted then
+  error(submission_error)
+end
+
+api.session.end_game()
+```
+
+| Function | Returns | Description |
+|----------|---------|-------------|
+| `api.ranking.submit_score(ranking_table_id, score, values)` | `boolean, string \| nil` | Submits one result to a ranking table declared in the manifest. |
+
+`true` means the result was accepted into the current session report. It does
+not mean the result has already been audited, persisted, or displayed in a
+public ranking.
+
+`score` is the integer technical ordering value. It is stored separately from
+the table columns. `values` must contain exactly one Lua integer for every
+declared column label, with no missing or additional columns. `Chrono` values
+are non-negative durations in milliseconds.
+
+Ranking table ids and column labels are matched without regard to case. Only one
+successful result can be submitted per table in a session. A later submission
+to the same table returns `false` and an error message, as does an invalid table,
+score, or values table.
+
+Submit every result before `api.session.end_game()`. Ranking submissions are
+frozen when that function is called, so later calls to `submit_score()` fail.
+Keep the calculation in deterministic gameplay code, not in `draw()` or a wall
+clock.
+
+See [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %}) for manifest
+examples, validation rules, and current limitations.
 
 ## `api.input`
 
@@ -690,12 +740,8 @@ Do not build gameplay behavior around this module.
 
 These are not part of Lua API v1:
 
-- Leaderboard score submission.
 - Leaderboard score querying.
 - Multi-player Lua session APIs.
-
-Ranking tables can currently be declared in the manifest, but Moonshine does not
-yet expose a public Lua score API.
 
 ## Related
 
@@ -705,3 +751,4 @@ yet expose a public Lua score API.
 - **[ROM Resources]({{ site.baseurl }}{% link resources.md %})** - Images, audio, fonts, and badge assets.
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - `api.session.selection`.
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestones and badges.
+- **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Ranking tables and score submission.

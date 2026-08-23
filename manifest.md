@@ -168,8 +168,8 @@ At most 32 badges can be declared.
 
 ## Ranking Tables
 
-Ranking tables are currently a manifest definition. Score submission from Lua is
-not available yet.
+Ranking tables define the result columns a ROM can submit through
+`api.ranking.submit_score()`.
 
 ```json
 {
@@ -192,8 +192,13 @@ not available yet.
 | `label` | Yes | Display label, max 32 chars. |
 | `columns` | Yes | At least one column. |
 
-Column `type` must be `Badge`, `Chrono`, or `Point`. Column `label` is required
-and must be 32 characters or fewer.
+Column `type` must be `Badge`, `Chrono`, or `Point`. Column `label` is required,
+must be 32 characters or fewer, and must be unique inside the table without
+regard to case. A `Chrono` value is a non-negative integer duration in
+milliseconds.
+
+See [Leaderboards]({{ site.baseurl }}{% link leaderboards.md %}) for the Lua
+submission API, validation rules, and current limitations.
 
 ## Resources
 
@@ -269,6 +274,6 @@ manifest property.
 - **[Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Variant design.
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Menu definitions.
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestones and badges.
-- **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - WIP ranking table definitions.
+- **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Ranking tables and score submission.
 - **[ROM Resources]({{ site.baseurl }}{% link resources.md %})** - Images, audio, fonts, and badge assets.
 - **[Sprite Atlases]({% link sprite-atlases.md %})** - Manual sprite rectangles and mask synchronization.
