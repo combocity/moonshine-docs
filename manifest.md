@@ -100,8 +100,11 @@ Both must reference known milestone ids.
 | `description` | No | Longer description. |
 | `earnedDescription` | No | Text for earned/available states when supported. |
 | `refreshRate` | No | Valid range is 30 to 120. |
-| `inputBuffer` | No | Valid range is 0 to 5. |
+| `inputBuffer` | No | Number of additional logical updates applied as input delay. Defaults to `0`. |
 | `menuInputs` | No | Variant-specific menu inputs. |
+
+An `inputBuffer` of `0` delivers input immediately. A positive value `N`
+delays press, hold, and release states by exactly `N` logical updates.
 
 ## Menu Inputs
 
