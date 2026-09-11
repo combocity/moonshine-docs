@@ -123,6 +123,18 @@ This restriction applies to the complete entry point module name. A nested
 entry point such as `modes/math.lua`, which resolves to `modes.math`, remains
 valid.
 
+## Default Save State
+
+A ROM may place an optional `default-save-state.json` companion file next to
+its manifest. This is a fixed file name, not a manifest property or configurable
+path. Moonshine converts its root JSON object into the initial `api.save` table
+when the player has no persisted save.
+
+The file belongs to the ROM folder rather than to a variant. All variants and
+all manifests in that folder therefore share the same default. See
+[Default Save State]({{ site.baseurl }}{% link default-save-state.md %}) for the
+format, precedence, safety limits, and packaging behavior.
+
 ## Milestones
 
 ```json
@@ -352,5 +364,6 @@ manifest property.
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Menu definitions.
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestones and badges.
 - **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Ranking tables and score submission.
+- **[Default Save State]({{ site.baseurl }}{% link default-save-state.md %})** - Optional initial `api.save` data.
 - **[ROM Resources]({{ site.baseurl }}{% link resources.md %})** - Images, audio, fonts, and badge assets.
 - **[Sprite Atlases]({% link sprite-atlases.md %})** - Manual sprite rectangles and mask synchronization.
