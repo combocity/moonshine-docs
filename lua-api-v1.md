@@ -177,9 +177,18 @@ For the broader server-backed flow, see
 
 ## `api.save`
 
-`api.save` is a persistent table loaded before `init()` and encoded when the
-session result is collected. On the first execution of a ROM for a player, it
-starts as an empty table.
+`api.save` is a persistent table selected before Moonshine loads the variant's
+entry-point module, so both top-level Lua code and `init()` can read it. Its
+initial contents come from the first available source in this order:
+
+1. The player's persisted save, including an explicitly saved empty table.
+2. The ROM's optional `default-save-state.json` file.
+3. An empty table.
+
+The default file is used only when no persisted save exists; its fields are
+never merged into a player's save. See
+[Default Save State]({{ site.baseurl }}{% link default-save-state.md %}) for its
+JSON format and validation limits.
 
 The `api` root is read-only, so a ROM cannot replace `api.save`. The table
 contents are mutable:
@@ -230,7 +239,8 @@ Save data should stay plain and small. Supported values are:
 
 Do not store functions, threads, userdata, tables as keys, boolean keys,
 metatables, or self-referencing tables. If Moonshine cannot encode `api.save`,
-it keeps the previous save state blob instead of saving the invalid value.
+it keeps the initial state selected for that session instead of saving the
+invalid value.
 
 The encoded save state is currently limited to 16 KiB. Treat save data as player
 progress and preferences, not as a full replay log or large content store.
@@ -748,6 +758,7 @@ These are not part of Lua API v1:
 - **[Getting Started]({{ site.baseurl }}{% link getting-started.md %})** - First ROM setup.
 - **[Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %})** - Session start, result submission, and shutdown flow.
 - **[Manifest Reference]({{ site.baseurl }}{% link manifest.md %})** - Manifest fields and validation.
+- **[Default Save State]({{ site.baseurl }}{% link default-save-state.md %})** - Initial `api.save` data for new players.
 - **[ROM Resources]({{ site.baseurl }}{% link resources.md %})** - Images, audio, fonts, and badge assets.
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - `api.session.selection`.
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestones and badges.
