@@ -29,6 +29,7 @@ When it is uploaded or distributed, it is packed into a **package** (`*.t3rom`) 
 
 - a manifest
 - one or more Lua scripts
+- an optional default save-state file for new players
 - optional resources, such as images, sounds, and music
 
 ### Core Game Maker Features
@@ -62,6 +63,7 @@ Master the key features of Moonshine ROM creation:
 
 - **[Variants & Modes]({{ site.baseurl }}{% link variants-and-modes.md %})** - Design multiple game variants, difficulty tiers, and parallel game modes
 - **[Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %})** - Understand how a Lua session starts, submits results, and ends
+- **[Default Save State]({{ site.baseurl }}{% link default-save-state.md %})** - Initialize `api.save` before a player has persisted data
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Create interactive menus and let players customize their experience before playing
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Build progression paths using milestones to unlock content and gate features
 - **[Leaderboards]({{ site.baseurl }}{% link leaderboards.md %})** - Define ranking tables and submit results from Lua

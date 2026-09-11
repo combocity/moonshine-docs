@@ -22,6 +22,7 @@ GAME_ROOT/Roms/
 └── my-first-rom/
     ├── .emmyrc.json
     ├── manifest.json
+    ├── default-save-state.json  # optional
     ├── main.lua
     ├── sdk/
     │   └── api/
@@ -38,6 +39,10 @@ GAME_ROOT/Roms/
 variant declares its own `entryPoint`. Open the ROM folder itself in VS Code so
 EmmyLua can use `.emmyrc.json` and the local `sdk/api` stubs for autocompletion
 (initially in the /Roms folder, move them accordingly).
+
+`default-save-state.json` is optional. Add it when new players should receive
+initial `api.save` values instead of an empty table. It must sit next to the
+manifest and use that exact file name.
 
 ## Step 1: Create the Manifest
 
@@ -126,6 +131,7 @@ Crashes happen; nothing wrong with moonshing here (i hope). Read the error messa
 - **[Lua API v1 Reference]({{ site.baseurl }}{% link lua-api-v1.md %})** - Runtime lifecycle and `api.*` modules.
 - **[Session Lifecycle]({{ site.baseurl }}{% link session-lifecycle.md %})** - How a Lua session starts, submits, and ends.
 - **[Manifest Reference]({{ site.baseurl }}{% link manifest.md %})** - Full manifest fields and validation rules.
+- **[Default Save State]({{ site.baseurl }}{% link default-save-state.md %})** - Optional initial `api.save` values for new players.
 - **[ROM Resources]({{ site.baseurl }}{% link resources.md %})** - Add images, sounds, music, fonts, and badge assets.
 - **[Menus & Configuration]({{ site.baseurl }}{% link menus-configuration.md %})** - Variant menu inputs.
 - **[Progression System]({{ site.baseurl }}{% link progression-milestones.md %})** - Milestones and badges.
