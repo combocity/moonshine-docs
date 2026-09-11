@@ -33,9 +33,11 @@ GAME_ROOT/Roms/
         └── fonts/
 ```
 
-`manifest.json` and `main.lua` are the important files. Open the ROM folder
-itself in VS Code so EmmyLua can use `.emmyrc.json` and the local `sdk/api`
-stubs for autocompletion (initially in the /Roms folder, move them accordingly).
+`manifest.json` and `main.lua` are the important files for this example.
+`main.lua` is the default entry point; it becomes optional only when every
+variant declares its own `entryPoint`. Open the ROM folder itself in VS Code so
+EmmyLua can use `.emmyrc.json` and the local `sdk/api` stubs for autocompletion
+(initially in the /Roms folder, move them accordingly).
 
 ## Step 1: Create the Manifest
 

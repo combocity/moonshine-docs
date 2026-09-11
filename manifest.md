@@ -46,10 +46,82 @@ For a first ROM, start with [Getting Started]({{ site.baseurl }}{% link getting-
 | `modeType` | Yes | Must be `Solo`. |
 | `manifestApiVersion` | No | Defaults to `1`; only `1` is supported. |
 | `description` | No | Longer ROM description. |
-| `scripts` | No | Relative Lua script paths. If provided, it must include `main.lua`. |
+| `scripts` | No | Relative Lua script paths. If non-empty, it must include every variant's effective entry point with exact casing. |
 
-`main.lua` must be present in the ROM. Script paths cannot be absolute, cannot
-use `..`, and must end with `.lua`.
+Script paths are relative to the manifest folder. They cannot be absolute, use
+backslashes, contain empty, `.` or `..` path segments, or contain a colon, and
+they must end with `.lua`.
+
+## Variant Entry Points
+
+Each variant can select its own Lua entry point with `entryPoint`:
+
+```json
+{
+  "variants": [
+    {
+      "id": "classic",
+      "label": "Classic"
+    },
+    {
+      "id": "sprint",
+      "label": "Sprint",
+      "entryPoint": "variants/sprint.lua"
+    }
+  ]
+}
+```
+
+If `entryPoint` is omitted, that variant uses `main.lua`. Consequently,
+`main.lua` is required only when at least one variant omits `entryPoint`.
+The fallback does not apply to an empty or whitespace-only value, which is
+invalid. The selected file follows the normal Lua lifecycle: `init()` is
+optional, while `update()` and `draw()` are required.
+
+Entry point paths follow stricter rules than other script paths:
+
+- The extension must be exactly lowercase `.lua`.
+- Each slash-separated segment before the extension must be non-empty and
+  cannot contain `.`. For example, `variants/sprint.lua` is valid, while
+  `variants/sprint.v2.lua` is not.
+- Moonshine converts the path to a Lua module name by removing `.lua` and
+  replacing `/` with `.`. For example, `variants/sprint.lua` becomes
+  `variants.sprint`.
+- When `scripts` is non-empty, it must contain the effective entry point of
+  every variant with exactly the same path and casing.
+- Multiple variants may share the exact same entry point. Paths that differ
+  only by casing are rejected.
+- Two different script paths cannot resolve to the same Lua module name. For
+  example, `foo/bar.lua` and `foo.bar.lua` both resolve to `foo.bar` and cannot
+  coexist.
+
+During packaging, Moonshine discovers the literal `require()` graph starting
+from every variant entry point and packages the union of those scripts. Shared
+entry points and dependencies are included only once. Calls whose module name
+is computed at runtime are not discovered. Package generation rewrites
+`scripts` with the discovered union, so source manifests normally omit that
+property instead of maintaining it manually.
+
+### Reserved entry-point module names
+
+An entry point at the manifest root cannot use one of these exact,
+case-sensitive module names reserved by the Lua runtime or Moonshine:
+
+- `_G`
+- `coroutine`
+- `debug`
+- `emmy_core`
+- `io`
+- `math`
+- `os`
+- `package`
+- `string`
+- `table`
+- `utf8`
+
+This restriction applies to the complete entry point module name. A nested
+entry point such as `modes/math.lua`, which resolves to `modes.math`, remains
+valid.
 
 ## Milestones
 
@@ -86,6 +158,7 @@ Both must reference known milestone ids.
   "id": "hard",
   "label": "Hard",
   "description": "A harder ruleset",
+  "entryPoint": "variants/hard.lua",
   "refreshRate": 60,
   "inputBuffer": 3,
   "requiredMilestone": "beat_easy",
@@ -99,6 +172,7 @@ Both must reference known milestone ids.
 | `label` | Yes | Display label, max 32 chars. |
 | `description` | No | Longer description. |
 | `earnedDescription` | No | Text for earned/available states when supported. |
+| `entryPoint` | No | Relative canonical Lua entry point. Defaults to `main.lua`. |
 | `refreshRate` | No | Valid range is 30 to 120. |
 | `inputBuffer` | No | Number of additional logical updates applied as input delay. Defaults to `0`. |
 | `menuInputs` | No | Variant-specific menu inputs. |
