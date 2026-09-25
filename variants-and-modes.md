@@ -80,9 +80,39 @@ With multiple variants, players choose which one to play:
 | `id` | string | Yes | Internal ID (≤32 chars, unique) |
 | `label` | string | Yes | Display name (≤32 chars) |
 | `description` | string | No | Longer description |
+| `entryPoint` | string | No | Lua entry point for this variant; defaults to `main.lua` |
 | `menuInputs` | array | No | Configuration options (see Menus) |
 | `requiredMilestone` | string | No | Milestone to unlock this variant |
 | `visibleFromMilestone` | string | No | Milestone to show as "coming soon" |
+
+### Separate Lua Entry Points
+
+Variants can run different Lua programs instead of branching from one shared
+`main.lua`:
+
+```json
+{
+  "variants": [
+    {
+      "id": "classic",
+      "label": "Classic"
+    },
+    {
+      "id": "sprint",
+      "label": "Sprint",
+      "entryPoint": "variants/sprint.lua"
+    }
+  ]
+}
+```
+
+Here, `classic` uses the default `main.lua`, while `sprint` starts from
+`variants/sprint.lua`. Multiple variants may also declare the exact same entry
+point.
+
+See [Variant Entry Points]({{ site.baseurl }}{% link manifest.md %}#variant-entry-points)
+for path rules, Lua module mapping, reserved entry-point modules, and packaging
+behavior.
 
 ## Progression-Gated Variants
 

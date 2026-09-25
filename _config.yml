@@ -8,6 +8,7 @@ header_pages:
   - session-lifecycle.md
   - lua-api-v1.md
   - manifest.md
+  - default-save-state.md
   - resources.md
   - sprite-atlases.md
   - variants-and-modes.md
